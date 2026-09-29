@@ -628,7 +628,7 @@
       "product_basis": "corn grain",
       "source_table": "Table 1.2.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's published 2020 reference value is not a new 2020 erosion survey; its latest underlying NRI erosion survey was 2012."
+      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's published 2020 value is a modeled national reference estimate based on NRI erosion survey data through 2017, not a new 2020 NRI survey measurement."
     },
     {
       "product": "corn",
@@ -643,7 +643,7 @@
       "product_basis": "corn grain",
       "source_table": "Table 1.2.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "Derived as Field to Market soil loss (tons/crop acre) \u00d7 its land-use indicator (planted acres/unit of crop output) \u00d7 2,000 lb/ton, using matched crop and reference year. This is an output-intensity index, not directly measured soil loss per harvested unit. Falling intensity can coexist with substantial erosion per acre. The 2020 erosion value is not a new 2020 survey."
+      "comparison_note": "Derived as Field to Market soil loss (tons/crop acre) \u00d7 its land-use indicator (planted acres/unit of crop output) \u00d7 2,000 lb/ton, using matched crop and reference year. This is an output-intensity index, not directly measured soil loss per harvested unit. Falling intensity can coexist with substantial erosion per acre. The published 2020 erosion input is a modeled national reference estimate based on NRI surveys through 2017, not a new 2020 measurement."
     },
     {
       "product": "cotton",
@@ -658,7 +658,7 @@
       "product_basis": "cotton",
       "source_table": "Table 1.4.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's published 2020 reference value is not a new 2020 erosion survey; its latest underlying NRI erosion survey was 2012."
+      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's published 2020 value is a modeled national reference estimate based on NRI erosion survey data through 2017, not a new 2020 NRI survey measurement."
     },
     {
       "product": "cotton",
@@ -673,7 +673,7 @@
       "product_basis": "cotton",
       "source_table": "Table 1.4.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "Derived as Field to Market soil loss (tons/crop acre) \u00d7 its land-use indicator (planted acres/unit of crop output) \u00d7 2,000 lb/ton, using matched crop and reference year. This is an output-intensity index, not directly measured soil loss per harvested unit. Falling intensity can coexist with substantial erosion per acre. The 2020 erosion value is not a new 2020 survey."
+      "comparison_note": "Derived as Field to Market soil loss (tons/crop acre) \u00d7 its land-use indicator (planted acres/unit of crop output) \u00d7 2,000 lb/ton, using matched crop and reference year. This is an output-intensity index, not directly measured soil loss per harvested unit. Falling intensity can coexist with substantial erosion per acre. The published 2020 erosion input is a modeled national reference estimate based on NRI surveys through 2017, not a new 2020 measurement."
     },
     {
       "product": "soy",
@@ -688,7 +688,7 @@
       "product_basis": "soybeans",
       "source_table": "Table 1.9.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's published 2020 reference value is not a new 2020 erosion survey; its latest underlying NRI erosion survey was 2012."
+      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's published 2020 value is a modeled national reference estimate based on NRI erosion survey data through 2017, not a new 2020 NRI survey measurement."
     },
     {
       "product": "soy",
@@ -703,7 +703,7 @@
       "product_basis": "soybeans",
       "source_table": "Table 1.9.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "Derived as Field to Market soil loss (tons/crop acre) \u00d7 its land-use indicator (planted acres/unit of crop output) \u00d7 2,000 lb/ton, using matched crop and reference year. This is an output-intensity index, not directly measured soil loss per harvested unit. Falling intensity can coexist with substantial erosion per acre. The 2020 erosion value is not a new 2020 survey."
+      "comparison_note": "Derived as Field to Market soil loss (tons/crop acre) \u00d7 its land-use indicator (planted acres/unit of crop output) \u00d7 2,000 lb/ton, using matched crop and reference year. This is an output-intensity index, not directly measured soil loss per harvested unit. Falling intensity can coexist with substantial erosion per acre. The published 2020 erosion input is a modeled national reference estimate based on NRI surveys through 2017, not a new 2020 measurement."
     },
     {
       "product": "wheat",
@@ -718,7 +718,7 @@
       "product_basis": "wheat",
       "source_table": "Table 1.11.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's published 2020 reference value is not a new 2020 erosion survey; its latest underlying NRI erosion survey was 2012."
+      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's published 2020 value is a modeled national reference estimate based on NRI erosion survey data through 2017, not a new 2020 NRI survey measurement."
     },
     {
       "product": "wheat",
@@ -733,7 +733,7 @@
       "product_basis": "wheat",
       "source_table": "Table 1.11.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "Derived as Field to Market soil loss (tons/crop acre) \u00d7 its land-use indicator (planted acres/unit of crop output) \u00d7 2,000 lb/ton, using matched crop and reference year. This is an output-intensity index, not directly measured soil loss per harvested unit. Falling intensity can coexist with substantial erosion per acre. The 2020 erosion value is not a new 2020 survey."
+      "comparison_note": "Derived as Field to Market soil loss (tons/crop acre) \u00d7 its land-use indicator (planted acres/unit of crop output) \u00d7 2,000 lb/ton, using matched crop and reference year. This is an output-intensity index, not directly measured soil loss per harvested unit. Falling intensity can coexist with substantial erosion per acre. The published 2020 erosion input is a modeled national reference estimate based on NRI surveys through 2017, not a new 2020 measurement."
     }
   ]
 }

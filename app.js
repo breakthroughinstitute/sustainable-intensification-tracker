@@ -10,6 +10,7 @@ const sourceLinks = {
   epa: '<a href="https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P101EZHC.TXT" target="_blank" rel="noopener">EPA, Inventory of U.S. Greenhouse Gas Emissions and Sinks: 1990–2023</a>',
   faostatCrops: '<a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" rel="noopener">FAOSTAT, Crops and livestock products</a>',
   nass: '<a href="https://quickstats.nass.usda.gov/" target="_blank" rel="noopener">USDA NASS Quick Stats</a>',
+  nassCotton: '<a href="https://www.nass.usda.gov/Publications/Todays_Reports/reports/croptr25.pdf" target="_blank" rel="noopener">USDA NASS, historical all-cotton yields, pp. 53–54</a>',
   nitrogen: '<a href="https://www.fao.org/faostat/en/#data/ESB" target="_blank" rel="noopener">FAOSTAT, Cropland nutrient balance</a>',
   water: '<a href="https://water.usgs.gov/watuse/data/" target="_blank" rel="noopener">USGS Water Use in the United States</a>',
   herbicide: '<a href="https://doi.org/10.1038/ncomms14865" target="_blank" rel="noopener">Kniss (2017), Nature Communications</a>',
@@ -17,6 +18,7 @@ const sourceLinks = {
   fieldToMarketSoil: '<a href="https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf" target="_blank" rel="noopener">Field to Market, 2021 National Indicators Report, Tables 1.2.1, 1.4.1, 1.9.1 and 1.11.1</a>',
   faostatEmissions: '<a href="https://www.fao.org/faostat/en/#data/EI" target="_blank" rel="noopener">FAOSTAT, Emissions intensities</a>',
   rd: '<a href="https://ers.usda.gov/data-products/agricultural-and-food-research-and-development-expenditures-in-the-united-states" target="_blank" rel="noopener">USDA ERS, Agricultural and Food R&amp;D Expenditures</a>',
+  herd: '<a href="https://ncses.nsf.gov/surveys/higher-education-research-development/2024" target="_blank" rel="noopener">NCSES, Higher Education R&amp;D Survey annual funding tables</a>',
   bea: '<a href="https://apps.bea.gov/iTable/?reqid=19&step=3&isuri=1&nipa_table_list=13" target="_blank" rel="noopener">BEA, NIPA Table 1.3.5</a>',
   epaExplorer: '<a href="https://cfpub.epa.gov/ghgdata/inventoryexplorer/" target="_blank" rel="noopener">EPA, Greenhouse Gas Inventory Data Explorer</a>',
   ge: '<a href="https://www.ers.usda.gov/data-products/adoption-of-genetically-engineered-crops-in-the-united-states" target="_blank" rel="noopener">USDA ERS, GE crop adoption</a>',
@@ -66,6 +68,7 @@ const STUDY_METRICS = {
 };
 const STUDY_METRIC_NAMES = { greenhouse_gas: "Greenhouse gases", land: "Land use", water: "Water use", energy: "Energy use", fertilizer_n: "Fertilizer nitrogen", soil_erosion: "Soil loss/output" };
 const MATRIX_METRICS = ["greenhouse_gas", "land", "water", "energy", "soil_erosion"];
+const MATRIX_METRIC_NAMES = { greenhouse_gas: "GHGs/output", land: "Land/output", water: "Water/output", energy: "Energy/output", soil_erosion: "Soil loss/output" };
 const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const studyNumber = value => Number(value).toLocaleString("en-US", { maximumFractionDigits: 4 });
 const studyRows = metric => PRODUCT_ORDER.map(product => STUDIES.find(row => row.product === product && row.comparison_role !== "historical" && STUDY_METRICS[metric].includes(row.metric))).filter(Boolean);
@@ -167,7 +170,7 @@ function openMatrixPopover(anchor, pinned = false) {
 }
 function renderProducts() {
   closeMatrixPopover();
-  panel.innerHTML = `<div class="panel-lead"><h2>Explore changes by product</h2><p>Annualized percentage change.</p></div><div class="matrix-wrap"><table class="product-matrix"><caption>Annualized percentage change by product and measure</caption><thead><tr><th scope="col">Product</th>${MATRIX_METRICS.map(metric => `<th scope="col">${STUDY_METRIC_NAMES[metric]}</th>`).join("")}</tr></thead><tbody>${PRODUCT_ORDER.map(product => `<tr class="${product === "corn" ? "matrix-crops-start" : ""}"><th scope="row">${PRODUCT_NAMES[product]}</th>${MATRIX_METRICS.map(metric => matrixCell(product, metric)).join("")}</tr>`).join("")}</tbody></table></div><p class="product-boundary">Rates are compound annual changes between study endpoints. Crop soil loss per unit of output is derived from Field to Market's soil loss per acre and planted acres per unit of output. Its 2020 erosion value is not a new survey. Select a cell for values, methods and sources.</p>`;
+  panel.innerHTML = `<div class="panel-lead"><h2>Explore changes in product footprints</h2><p>Annualized change in resource use or impact per unit of product.</p></div><div class="matrix-wrap"><table class="product-matrix"><caption>Annualized change in per-unit product footprints, not total sector impacts</caption><thead><tr><th scope="col">Product</th>${MATRIX_METRICS.map(metric => `<th scope="col">${MATRIX_METRIC_NAMES[metric]}</th>`).join("")}</tr></thead><tbody>${PRODUCT_ORDER.map(product => `<tr class="${product === "corn" ? "matrix-crops-start" : ""}"><th scope="row">${PRODUCT_NAMES[product]}</th>${MATRIX_METRICS.map(metric => matrixCell(product, metric)).join("")}</tr>`).join("")}</tbody></table></div><p class="product-boundary">Rates are compound annual changes between study endpoints. Crop soil loss per unit of output is derived from Field to Market's soil loss per acre and planted acres per unit of output. Its published 2020 soil-loss figure is a model estimate based on USDA survey inputs through 2017, not a direct 2020 erosion survey. Select a cell for values, methods and sources.</p>`;
 }
 function studyBarRows(metric) {
   const rows = studyRows(metric);
@@ -179,10 +182,10 @@ function studyBarRows(metric) {
 function studyBars(metric) {
   // EDIT PRODUCT CARD TITLES HERE. Keep each key so its tab can find the title.
   const titles = {
-    land: "Land use by product",
-    water: "Water use by product",
-    greenhouse_gas: "Life cycle emissions by product",
-    fertilizer_n: "Nitrogen-related change by product"
+    land: "Land-use intensity by product",
+    water: "Water-use intensity by product",
+    greenhouse_gas: "Life-cycle emissions intensity by product",
+    fertilizer_n: "Nitrogen-related measures per unit of product"
   };
   return `<details class="product-evidence" ${metric === "greenhouse_gas" ? "" : "open"}><summary>${titles[metric]}</summary><div class="product-evidence-controls">${changeToggle()}<button type="button" class="product-explore-link">Explore all measures →</button></div><div class="product-bars">${studyBarRows(metric)}</div></details>`;
 }
@@ -233,11 +236,11 @@ const TOPICS = {
     charts: [
       {
         title: "Land-use intensity",
-        subtitle: "",
+        subtitle: "Harvested area per ton of crop; cotton refers to lint",
         yLabel: "Hectares per metric ton",
         tooltipUnit: "hectares per metric ton",
-        series: DATA.land.intensity,
-        source: `${sourceLinks.faostatCrops}; ${sourceLinks.nass}`,
+        series: DATA.land.intensity.filter(d => d.name !== "Rice"),
+        source: `${sourceLinks.faostatCrops}; ${sourceLinks.nassCotton}`,
         decimals: 2
       },
       {
@@ -254,8 +257,8 @@ const TOPICS = {
   nitrogen: () => ({
     title: "Nitrogen efficiency improved, but Gulf hypoxia persists",
     intro: "",
-    why: "Nitrogen not taken up by crops can contribute to nitrous oxide emissions, drinking-water contamination, and algal blooms. Higher nitrogen-use efficiency and lower nitrogen surpluses reduce these losses without reducing production.",
-    happened: "Nitrogen surplus per hectare rose sharply through the 1970s before plateauing. Nitrogen-use efficiency reached 71 percent in 2023. Gulf hypoxia varies widely from year to year; its 2022–26 five-survey average was 3,754 square miles, above the Task Force's goal of less than 5,000 square kilometers (about 1,930 square miles). Nitrogen loading is the strongest single predictor of the surveyed area, while phosphorus, river flow, and weather also matter.",
+    why: "Nitrogen not taken up by crops can contribute to nitrous oxide emissions, drinking-water contamination, and algal blooms. In the Gulf, nutrient-fueled blooms can drain oxygen from bottom waters, creating a summer dead zone where aquatic life struggles to survive. Higher nitrogen-use efficiency and lower nitrogen surpluses reduce these losses without reducing production.",
+    happened: "Nitrogen surplus—the nitrogen added to cropland but not removed in crops—rose sharply through the 1970s before plateauing. Nitrogen-use efficiency reached 71 percent in 2023. The Gulf dead zone varies widely from year to year; its 2022–26 five-survey average was 3,754 square miles, above the Task Force's goal of less than about 1,930 square miles. Nitrogen loading is the strongest single predictor of the surveyed area, while phosphorus, river flow, and weather also matter.",
     charts: [
       {
         title: "Cropland nitrogen surplus",
@@ -276,7 +279,7 @@ const TOPICS = {
         decimals: 1
       },
       {
-        title: "Gulf hypoxic area",
+        title: "Gulf dead zone area",
         subtitle: "Mid-summer area with bottom-water oxygen below 2 mg/L",
         yLabel: "Square miles",
         tooltipUnit: "square miles",
@@ -286,7 +289,7 @@ const TOPICS = {
         goalValue: 5000 / 2.589988110336,
         summaryMode: "latest",
         fullWidth: true,
-        caption: "Bars are annual surveys; the line averages the latest five surveyed summers (skipping missing 1989 and 2016). Dashed goal: below 5,000 km² (about 1,930 sq mi) for a five-survey average. The latest mean, 2022–26, is 3,754 sq mi.",
+        caption: "Bars are annual surveys; the line averages the latest five surveyed summers (skipping missing 1989 and 2016). Dashed goal: below about 1,930 square miles for a five-survey average. The latest mean, 2022–26, is 3,754 square miles.",
         source: `${sourceLinks.hypoxia}; ${sourceLinks.hypoxiaGoal}`,
         decimals: 0
       }
@@ -382,7 +385,7 @@ const TOPICS = {
         tooltipUnit: "tons per acre per year",
         series: DATA.soil.by_crop,
         source: sourceLinks.fieldToMarketSoil,
-        caption: "Published reference-year estimates for corn grain, cotton, soybeans and wheat; intervening years are not observations. The underlying erosion surveys ended in 2012, so 2020 is not a new survey estimate.",
+        caption: "Field to Market's 2020 points are modeled national reference estimates, using USDA NRI erosion survey data through 2017. They are not new 2020 survey measurements; lines between reference years do not add annual observations.",
         decimals: 1,
         fullWidth: true
       }
@@ -424,8 +427,8 @@ const TOPICS = {
         source: `${sourceLinks.historicTillage}; ${sourceLinks.censusPractices}; ${sourceLinks.censusLand}`
       },
       {
-        title: "Irrigation technology · 17 western states",
-        subtitle: "Pressurized systems apply water more evenly, limiting field losses and supporting yields.",
+        title: "Irrigation technology",
+        subtitle: "Pressurized systems, such as sprinklers and drip irrigation, can apply water more evenly and limit field losses.",
         yLabel: "Million irrigated acres", tooltipUnit: "million acres",
         yMin: 0, yMax: 35, yTicks: [0, 5, 10, 15, 20, 25, 30, 35],
         series: [
@@ -527,6 +530,17 @@ const TOPICS = {
           series: single("R&D intensity", DATA.rd.intensity || []),
           source: `${sourceLinks.rd}; ${sourceLinks.bea}`,
           decimals: 1
+        },
+        {
+          title: "Funding for university agricultural R&D",
+          subtitle: "Federal and state/local support for agricultural sciences, 2019–24",
+          yLabel: "Billion current dollars",
+          tooltipUnit: "billion current dollars",
+          series: DATA.rd.fundingSources || [],
+          fullWidth: true,
+          caption: "University agricultural sciences R&D only. Other funding sources and USDA in-house research are excluded. Dollar values are not adjusted for inflation; the series is separate from the broader public-spending chart above.",
+          source: sourceLinks.herd,
+          decimals: 2
         }
       ]
     };
