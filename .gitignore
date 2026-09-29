@@ -1,0 +1,14 @@
+# Only the finished tracker and deployment recipe belong in the Git repository.
+# Research, local Netlify state, archives, previews, and working files stay local.
+/*
+!/.gitignore
+!/netlify.toml
+!/build.sh
+!/index.html
+!/app.js
+!/styles.css
+!/data.json
+!/product-studies.json
+!/assets/
+/assets/*
+!/assets/bti-logo.png
