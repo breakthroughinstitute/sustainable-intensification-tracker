@@ -10,9 +10,7 @@ state now points to this BTI project rather than the older unrelated site.
 The public BTI GitHub repository is
 `https://github.com/breakthroughinstitute/sustainable-intensification-tracker`.
 This folder's Git `main` branch tracks `origin/main` and is aligned with the
-GitHub history. The computer can fetch the public repository, but Git push
-still needs GitHub authentication. The initial files were uploaded through the
-connected GitHub account.
+GitHub history. Pushing from a local Git client requires GitHub authentication.
 
 The `.gitignore` allows only the five finished site files, the logo, deployment
 configuration, and these instructions into Git. `sh build.sh` copies only the
