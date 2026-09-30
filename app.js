@@ -509,7 +509,6 @@ const TOPICS = {
   rd: () => {
     return {
       title: "Public agricultural R&D remains below its peak",
-      intro: "The first two charts show ERS public agricultural and food research spending in dollars and relative to the farm economy. The federal budget chart shows allocations for the agriculture research objective, including research facilities. Their scopes overlap, so the amounts should not be added together.",
       why: "Public and private research drives improvements in yields, resource efficiency, resilience, animal health, and environmental performance. Because its benefits compound over decades, sustained investment matters.",
       happened: "Inflation-adjusted public spending on agricultural and food research peaked in 2002. By 2021 it was 29 percent lower, while spending as a share of gross farm value added fell by about half.",
       charts: [
