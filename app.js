@@ -509,13 +509,13 @@ const TOPICS = {
   rd: () => {
     return {
       title: "Public agricultural R&D remains below its peak",
-      intro: "",
+      intro: "The first two charts show ERS public agricultural and food research spending in dollars and relative to the farm economy. The university chart covers selected funders of a narrower research field; the federal chart shows budget allocations. Their scopes overlap, so the amounts should not be added together.",
       why: "Public and private research drives improvements in yields, resource efficiency, resilience, animal health, and environmental performance. Because its benefits compound over decades, sustained investment matters.",
       happened: "Inflation-adjusted public spending on agricultural and food research peaked in 2002. By 2021 it was 29 percent lower, while spending as a share of gross farm value added fell by about half.",
       charts: [
         {
           title: "Total public agricultural R&D spending",
-          subtitle: "",
+          subtitle: "USDA agencies and state universities: agricultural and food research, all funding sources",
           yLabel: "Billion 2022 dollars",
           tooltipUnit: "billion 2022 dollars",
           type: "stacked",
@@ -525,7 +525,7 @@ const TOPICS = {
         },
         {
           title: "Public agricultural R&D intensity",
-          subtitle: "",
+          subtitle: "The same ERS spending total, as a share of gross farm value added",
           yLabel: "% of gross farm value added",
           tooltipUnit: "%",
           tickSuffix: "%",
@@ -535,24 +535,23 @@ const TOPICS = {
         },
         {
           title: "Funding for university agricultural R&D",
-          subtitle: "Federal and state/local support for agricultural sciences, 2010–24",
+          subtitle: "University agricultural sciences only: federal and state/local funding, 2010–24",
           yLabel: "Billion 2022 dollars",
           tooltipUnit: "billion 2022 dollars",
           series: DATA.rd.fundingSources || [],
-          latestYearLabel: true,
-          summaryMode: "latest", fullWidth: true,
-          caption: "Inflation-adjusted using the research price index ERS uses (NIH BRDPI). Dashed lines use the pre-2016 field definition; forestry, fisheries and veterinary research moved out in 2016. University agricultural sciences only; other funders and USDA in-house research are excluded. The 2024 price index is preliminary.",
+          showChangeYears: true, fullWidth: true,
+          caption: "Inflation-adjusted using the research price index ERS uses (NIH BRDPI). Dashed lines use the pre-2016 field definition; forestry, fisheries and veterinary research moved out in 2016. University agricultural sciences only; other funders and USDA in-house research are excluded. Legend changes span the 2016 classification change, so they include changes in coverage. The 2024 price index is preliminary.",
           source: `${sourceLinks.herd}; ${sourceLinks.brdpi}`,
           decimals: 2
         },
         {
           title: "Federal agricultural R&D budget",
-          subtitle: "Agriculture objective: research and development plus research facilities, 2000–26",
+          subtitle: "Federal allocations across recipients, including research facilities; not actual expenditures",
           yLabel: "Billion 2022 dollars",
           tooltipUnit: "billion 2022 dollars",
           series: DATA.rd.federalBudget || [],
-          summaryMode: "latest", fullWidth: true,
-          caption: "Federal budget authority, not expenditures or university funding alone. The 2025 point is preliminary; 2026 is the President's proposed budget, not enacted funding. Adjusted using NIH BRDPI: the 2024 index is preliminary and 2025–26 indices are projected.",
+          showChangeYears: true, labelPointSeriesOnly: true, fullWidth: true,
+          caption: "Federal budget authority, not expenditures or university funding alone. Legend change covers 2000–2024 only. The 2025 point is preliminary; 2026 is the President's proposed budget, not enacted funding. Adjusted using NIH BRDPI: the 2024 index is preliminary and 2025–26 indices are projected.",
           source: `${sourceLinks.gbard}; ${sourceLinks.brdpi}`,
           decimals: 2
         }
@@ -747,7 +746,9 @@ function drawLineChart(container, chart) {
       svg.append(path);
     };
     if (!series.pointsOnly && series.definitionBreak) {
-      appendPath(sorted.filter(point => point.year <= series.definitionBreak.earlierEnd), "5 4");
+      const earlier = sorted.filter(point => point.year <= series.definitionBreak.earlierEnd);
+      const firstLater = sorted.find(point => point.year >= series.definitionBreak.laterStart);
+      appendPath(firstLater ? [...earlier, firstLater] : earlier, "5 4");
       appendPath(sorted.filter(point => point.year >= series.definitionBreak.laterStart));
     } else if (!series.pointsOnly && series.sourceBoundary) {
       const earlier = sorted.filter(point => point.year <= series.sourceBoundary.earlierEnd);
@@ -824,7 +825,7 @@ function renderSeriesSummary(summary, chart) {
     total = `<strong class="total-change">${chart.totalLabel}: ${pct((last / first - 1) * 100)} <small>${firstYear}–${lastYear}</small></strong>`;
   }
   const rows = chart.series.map((series, index) => {
-    const delta = chart.summaryMode === "latest" ? formatValue(chart, series.values.at(-1).value) : pct(change(series.values));
+    const delta = chart.labelPointSeriesOnly && series.pointsOnly ? "" : chart.summaryMode === "latest" ? formatValue(chart, series.values.at(-1).value) : pct(change(series.values));
     const range = `${series.values[0].year}–${series.values.at(-1).year}`;
     if (series.sourceBoundary) {
       const earlier = series.values.find(point => point.year === series.sourceBoundary.earlierEnd);
@@ -835,7 +836,7 @@ function renderSeriesSummary(summary, chart) {
       ? `<span class="single-change"><strong>${delta}</strong> <small>${chart.summaryMode === "latest" ? series.values.at(-1).year : range}</small></span>`
       : chart.type === "stacked"
         ? `<span><i style="background:${COLORS[index % COLORS.length]}"></i><b>${series.name} ${delta}</b></span>`
-        : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="2" fill="${series.color || COLORS[index % COLORS.length]}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}${chart.latestYearLabel ? ` <small>${series.values.at(-1).year}</small>` : ""}</b></span>`;
+        : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="2" fill="${series.color || COLORS[index % COLORS.length]}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}${chart.showChangeYears && !(chart.labelPointSeriesOnly && series.pointsOnly) ? ` <small>${range}</small>` : chart.latestYearLabel ? ` <small>${series.values.at(-1).year}</small>` : ""}</b></span>`;
   }).join("");
   const overlayKey = chart.rollingSeries ? `<div class="overlay-key"><span><i class="key-bar"></i> Annual survey</span><span><i class="key-average"></i> Five-survey mean</span><span><i class="key-goal"></i> Task Force goal</span></div>` : "";
   summary.innerHTML = note + overlayKey + total + rows;
