@@ -21,7 +21,7 @@ This folder contains the responsive, dependency-light visualization for the Brea
 - Compact product-study percentage-change bars in Land and Water; Nitrogen groups crop fertilizer input with explicitly labeled beef, milk and chicken nitrogen-related impacts. Climate has an optional collapsed study panel, where annual FAOSTAT product lines are already shown.
 - A Total / Per year toggle in topic-specific product study cards. The By product matrix always uses equivalent compound annual rates between endpoints, not observed annual time series.
 - Updated cropland soil-erosion rates through 2022 using the 2022 National Resources Inventory summary, with Field to Market reference-year trends for corn grain, cotton, soybeans, and wheat displayed separately.
-- Public agricultural and food R&D through 2021, split into two reconciling performer categories, plus spending as a share of BEA gross farm value added. A separate NCSES chart compares federal with state/local funding for university agricultural-sciences R&D, 2019–2024; it is a narrower series in current dollars.
+- Public agricultural and food R&D through 2021, split into two reconciling performer categories, plus spending as a share of BEA gross farm value added. A separate NCSES chart compares federal with state/local funding for university agricultural-sciences R&D, 2010–2024 in constant 2022 dollars, with a marked 2016 field-definition break. An additional NCSES federal agricultural R&D budget chart covers 2000–2026, distinguishing preliminary and proposed funding.
 - Long-run land, water, and herbicide series retained where newer national data are not directly comparable.
 
 ## Current data boundaries
@@ -42,9 +42,10 @@ This folder contains the responsive, dependency-light visualization for the Brea
 | High Plains groundwater decline | 2019 | USGS regional area-weighted water-level series, not a national storage estimate |
 | Product-level GHG intensity | 2023 | FAOSTAT |
 | Cropland erosion rates | 2022 | Updated official series |
-| Crop-specific soil loss per acre and derived loss per output | 2020 reference year | Field to Market modeled national estimates; the 2020 reference value uses NRI erosion survey data through 2017, not a new 2020 survey |
+| Crop-specific soil loss per acre and derived loss per output | 2020 reference year | Field to Market published smoothed trend estimates; 2020 uses USDA erosion-model inputs through 2017 |
 | Public agricultural and food R&D | 2021 | USDA ERS; BEA gross farm value added for intensity |
-| Federal versus state/local university agricultural-sciences R&D | 2024 | NCSES HERD Survey, 2019–2024; current-dollar funding sources, not the full public R&D total |
+| Federal versus state/local university agricultural-sciences R&D | 2024 | NCSES HERD public-use data, 2010–2024; constant 2022 dollars using NIH BRDPI; 2016 definition break; not the full public R&D total |
+| Federal agricultural R&D budget | 2026 proposed | NCSES GBARD agriculture objective, 2000–2026; budget authority plus capital R&D, constant 2022 dollars; 2025 preliminary, 2026 proposed |
 | Published product-study comparisons | 2010–2022, depending on study | Separate retrospective study endpoints; periods, product bases, and accounting boundaries vary |
 | Land use by crop | 2017 | FAOSTAT; cotton lint intensity from USDA NASS historical yields |
 | Water withdrawals | 2015 | Comparable national series; a 2020 modeled estimate is noted separately |

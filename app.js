@@ -10,7 +10,7 @@ const sourceLinks = {
   epa: '<a href="https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P101EZHC.TXT" target="_blank" rel="noopener">EPA, Inventory of U.S. Greenhouse Gas Emissions and Sinks: 1990–2023</a>',
   faostatCrops: '<a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" rel="noopener">FAOSTAT, Crops and livestock products</a>',
   nass: '<a href="https://quickstats.nass.usda.gov/" target="_blank" rel="noopener">USDA NASS Quick Stats</a>',
-  nassCotton: '<a href="https://www.nass.usda.gov/Publications/Todays_Reports/reports/croptr25.pdf" target="_blank" rel="noopener">USDA NASS, historical all-cotton yields, pp. 53–54</a>',
+  nassCotton: '<a href="https://www.nass.usda.gov/Publications/Todays_Reports/reports/croptr25.pdf" target="_blank" rel="noopener">USDA NASS, historical all-cotton area and yields, pp. 53–54</a>',
   nitrogen: '<a href="https://www.fao.org/faostat/en/#data/ESB" target="_blank" rel="noopener">FAOSTAT, Cropland nutrient balance</a>',
   water: '<a href="https://water.usgs.gov/watuse/data/" target="_blank" rel="noopener">USGS Water Use in the United States</a>',
   herbicide: '<a href="https://doi.org/10.1038/ncomms14865" target="_blank" rel="noopener">Kniss (2017), Nature Communications</a>',
@@ -18,7 +18,9 @@ const sourceLinks = {
   fieldToMarketSoil: '<a href="https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf" target="_blank" rel="noopener">Field to Market, 2021 National Indicators Report, Tables 1.2.1, 1.4.1, 1.9.1 and 1.11.1</a>',
   faostatEmissions: '<a href="https://www.fao.org/faostat/en/#data/EI" target="_blank" rel="noopener">FAOSTAT, Emissions intensities</a>',
   rd: '<a href="https://ers.usda.gov/data-products/agricultural-and-food-research-and-development-expenditures-in-the-united-states" target="_blank" rel="noopener">USDA ERS, Agricultural and Food R&amp;D Expenditures</a>',
-  herd: '<a href="https://ncses.nsf.gov/surveys/higher-education-research-development/2024" target="_blank" rel="noopener">NCSES, Higher Education R&amp;D Survey annual funding tables</a>',
+  herd: '<a href="https://ncses.nsf.gov/explore-data/microdata/higher-education-research-development" target="_blank" rel="noopener">NCSES, Higher Education R&amp;D Survey public-use data</a>',
+  brdpi: '<a href="https://officeofbudget.od.nih.gov/gbipriceindexes.html" target="_blank" rel="noopener">NIH/BEA, research price index (BRDPI)</a>',
+  gbard: '<a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab026.pdf" target="_blank" rel="noopener">NCSES, Federal R&amp;D Funding, Table 26</a>',
   bea: '<a href="https://apps.bea.gov/iTable/?reqid=19&step=3&isuri=1&nipa_table_list=13" target="_blank" rel="noopener">BEA, NIPA Table 1.3.5</a>',
   epaExplorer: '<a href="https://cfpub.epa.gov/ghgdata/inventoryexplorer/" target="_blank" rel="noopener">EPA, Greenhouse Gas Inventory Data Explorer</a>',
   ge: '<a href="https://www.ers.usda.gov/data-products/adoption-of-genetically-engineered-crops-in-the-united-states" target="_blank" rel="noopener">USDA ERS, GE crop adoption</a>',
@@ -170,7 +172,7 @@ function openMatrixPopover(anchor, pinned = false) {
 }
 function renderProducts() {
   closeMatrixPopover();
-  panel.innerHTML = `<div class="panel-lead"><h2>Explore changes in product footprints</h2><p>Annualized change in resource use or impact per unit of product.</p></div><div class="matrix-wrap"><table class="product-matrix"><caption>Annualized change in per-unit product footprints, not total sector impacts</caption><thead><tr><th scope="col">Product</th>${MATRIX_METRICS.map(metric => `<th scope="col">${MATRIX_METRIC_NAMES[metric]}</th>`).join("")}</tr></thead><tbody>${PRODUCT_ORDER.map(product => `<tr class="${product === "corn" ? "matrix-crops-start" : ""}"><th scope="row">${PRODUCT_NAMES[product]}</th>${MATRIX_METRICS.map(metric => matrixCell(product, metric)).join("")}</tr>`).join("")}</tbody></table></div><p class="product-boundary">Rates are compound annual changes between study endpoints. Crop soil loss per unit of output is derived from Field to Market's soil loss per acre and planted acres per unit of output. Its published 2020 soil-loss figure is a model estimate based on USDA survey inputs through 2017, not a direct 2020 erosion survey. Select a cell for values, methods and sources.</p>`;
+  panel.innerHTML = `<div class="panel-lead"><h2>Explore changes in product footprints</h2><p>Annualized change in resource use or impact per unit of product.</p></div><div class="matrix-wrap"><table class="product-matrix"><caption>Annualized change in per-unit product footprints, not total sector impacts</caption><thead><tr><th scope="col">Product</th>${MATRIX_METRICS.map(metric => `<th scope="col">${MATRIX_METRIC_NAMES[metric]}</th>`).join("")}</tr></thead><tbody>${PRODUCT_ORDER.map(product => `<tr class="${product === "corn" ? "matrix-crops-start" : ""}"><th scope="row">${PRODUCT_NAMES[product]}</th>${MATRIX_METRICS.map(metric => matrixCell(product, metric)).join("")}</tr>`).join("")}</tbody></table></div><p class="product-boundary">Rates are compound annual changes between study endpoints. Crop soil loss per unit of output is derived from Field to Market's soil loss per acre and planted acres per unit of output. Its 2020 soil-loss figure is the report’s published smoothed trend estimate, using USDA erosion-model inputs through 2017. Select a cell for values, methods and sources.</p>`;
 }
 function studyBarRows(metric) {
   const rows = studyRows(metric);
@@ -249,7 +251,7 @@ const TOPICS = {
         yLabel: "Million acres",
         tooltipUnit: "million acres",
         series: DATA.land.area,
-        source: sourceLinks.nass,
+        source: `${sourceLinks.nass}; ${sourceLinks.nassCotton}`,
         decimals: 0
       }
     ]
@@ -385,7 +387,7 @@ const TOPICS = {
         tooltipUnit: "tons per acre per year",
         series: DATA.soil.by_crop,
         source: sourceLinks.fieldToMarketSoil,
-        caption: "Field to Market's 2020 points are modeled national reference estimates, using USDA NRI erosion survey data through 2017. They are not new 2020 survey measurements; lines between reference years do not add annual observations.",
+        caption: "Points are Field to Market's published smoothed trend estimates for the labeled years. Its 2020 estimate uses USDA erosion-model inputs through 2017; it is not simply the 2017 survey value.",
         decimals: 1,
         fullWidth: true
       }
@@ -432,11 +434,11 @@ const TOPICS = {
         yLabel: "Million irrigated acres", tooltipUnit: "million acres",
         yMin: 0, yMax: 35, yTicks: [0, 5, 10, 15, 20, 25, 30, 35],
         series: [
-          { ...DATA.practices.irrigation[0], name: "Pressurized · 17 western states", color: "#0dc3a8" },
-          { ...DATA.practices.irrigation[1], name: "Gravity · 17 western states", color: "#0d4459" }
+          { ...DATA.practices.irrigation[0], name: "Pressurized", color: "#0dc3a8" },
+          { ...DATA.practices.irrigation[1], name: "Gravity", color: "#0d4459" }
         ],
         summaryMode: "latest", decimals: 1, fullWidth: true,
-        caption: "Pressurized adoption rose from 37% of western irrigated acres in 1984 to 75% in 2023. These states held about 71% of U.S. irrigated cropland in 2013. Method acres may overlap. The 2023 values are rounded (≈); higher efficiency need not mean lower total water use.",
+        caption: "Coverage: 17 Western states. Pressurized adoption rose from 37% of irrigated acres in 1984 to 75% in 2023. These states held about 71% of U.S. irrigated cropland in 2013. Method acres may overlap. The 2023 values are rounded (≈); higher efficiency need not mean lower total water use.",
         source: sourceLinks.irrigationMethods
       },
       {
@@ -533,13 +535,25 @@ const TOPICS = {
         },
         {
           title: "Funding for university agricultural R&D",
-          subtitle: "Federal and state/local support for agricultural sciences, 2019–24",
-          yLabel: "Billion current dollars",
-          tooltipUnit: "billion current dollars",
+          subtitle: "Federal and state/local support for agricultural sciences, 2010–24",
+          yLabel: "Billion 2022 dollars",
+          tooltipUnit: "billion 2022 dollars",
           series: DATA.rd.fundingSources || [],
-          fullWidth: true,
-          caption: "University agricultural sciences R&D only. Other funding sources and USDA in-house research are excluded. Dollar values are not adjusted for inflation; the series is separate from the broader public-spending chart above.",
-          source: sourceLinks.herd,
+          latestYearLabel: true,
+          summaryMode: "latest", fullWidth: true,
+          caption: "Inflation-adjusted using the research price index ERS uses (NIH BRDPI). Dashed lines use the pre-2016 field definition; forestry, fisheries and veterinary research moved out in 2016. University agricultural sciences only; other funders and USDA in-house research are excluded. The 2024 price index is preliminary.",
+          source: `${sourceLinks.herd}; ${sourceLinks.brdpi}`,
+          decimals: 2
+        },
+        {
+          title: "Federal agricultural R&D budget",
+          subtitle: "Agriculture objective: research and development plus research facilities, 2000–26",
+          yLabel: "Billion 2022 dollars",
+          tooltipUnit: "billion 2022 dollars",
+          series: DATA.rd.federalBudget || [],
+          summaryMode: "latest", fullWidth: true,
+          caption: "Federal budget authority, not expenditures or university funding alone. The 2025 point is preliminary; 2026 is the President's proposed budget, not enacted funding. Adjusted using NIH BRDPI: the 2024 index is preliminary and 2025–26 indices are projected.",
+          source: `${sourceLinks.gbard}; ${sourceLinks.brdpi}`,
           decimals: 2
         }
       ]
@@ -732,7 +746,10 @@ function drawLineChart(container, chart) {
       if (dasharray) path.setAttribute("stroke-dasharray", dasharray);
       svg.append(path);
     };
-    if (!series.pointsOnly && series.sourceBoundary) {
+    if (!series.pointsOnly && series.definitionBreak) {
+      appendPath(sorted.filter(point => point.year <= series.definitionBreak.earlierEnd), "5 4");
+      appendPath(sorted.filter(point => point.year >= series.definitionBreak.laterStart));
+    } else if (!series.pointsOnly && series.sourceBoundary) {
       const earlier = sorted.filter(point => point.year <= series.sourceBoundary.earlierEnd);
       const later = sorted.filter(point => point.year >= series.sourceBoundary.laterStart);
       appendPath(earlier, "5 4");
@@ -818,7 +835,7 @@ function renderSeriesSummary(summary, chart) {
       ? `<span class="single-change"><strong>${delta}</strong> <small>${chart.summaryMode === "latest" ? series.values.at(-1).year : range}</small></span>`
       : chart.type === "stacked"
         ? `<span><i style="background:${COLORS[index % COLORS.length]}"></i><b>${series.name} ${delta}</b></span>`
-        : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="2" fill="${series.color || COLORS[index % COLORS.length]}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}</b></span>`;
+        : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="2" fill="${series.color || COLORS[index % COLORS.length]}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}${chart.latestYearLabel ? ` <small>${series.values.at(-1).year}</small>` : ""}</b></span>`;
   }).join("");
   const overlayKey = chart.rollingSeries ? `<div class="overlay-key"><span><i class="key-bar"></i> Annual survey</span><span><i class="key-average"></i> Five-survey mean</span><span><i class="key-goal"></i> Task Force goal</span></div>` : "";
   summary.innerHTML = note + overlayKey + total + rows;
