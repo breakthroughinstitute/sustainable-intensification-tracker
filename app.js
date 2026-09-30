@@ -509,7 +509,7 @@ const TOPICS = {
   rd: () => {
     return {
       title: "Public agricultural R&D remains below its peak",
-      intro: "The first two charts show ERS public agricultural and food research spending in dollars and relative to the farm economy. The university chart covers selected funders of a narrower research field; the federal chart shows budget allocations. Their scopes overlap, so the amounts should not be added together.",
+      intro: "The first two charts show ERS public agricultural and food research spending in dollars and relative to the farm economy. The federal budget chart shows allocations for the agriculture research objective, including research facilities. Their scopes overlap, so the amounts should not be added together.",
       why: "Public and private research drives improvements in yields, resource efficiency, resilience, animal health, and environmental performance. Because its benefits compound over decades, sustained investment matters.",
       happened: "Inflation-adjusted public spending on agricultural and food research peaked in 2002. By 2021 it was 29 percent lower, while spending as a share of gross farm value added fell by about half.",
       charts: [
@@ -532,17 +532,6 @@ const TOPICS = {
           series: single("R&D intensity", DATA.rd.intensity || []),
           source: `${sourceLinks.rd}; ${sourceLinks.bea}`,
           decimals: 1
-        },
-        {
-          title: "Funding for university agricultural R&D",
-          subtitle: "University agricultural sciences only: federal and state/local funding, 2010–24",
-          yLabel: "Billion 2022 dollars",
-          tooltipUnit: "billion 2022 dollars",
-          series: DATA.rd.fundingSources || [],
-          showChangeYears: true, fullWidth: true,
-          caption: "Inflation-adjusted using the research price index ERS uses (NIH BRDPI). Dashed lines use the pre-2016 field definition; forestry, fisheries and veterinary research moved out in 2016. University agricultural sciences only; other funders and USDA in-house research are excluded. Legend changes span the 2016 classification change, so they include changes in coverage. The 2024 price index is preliminary.",
-          source: `${sourceLinks.herd}; ${sourceLinks.brdpi}`,
-          decimals: 2
         },
         {
           title: "Federal agricultural R&D budget",
