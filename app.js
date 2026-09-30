@@ -534,16 +534,16 @@ const TOPICS = {
         },
         {
           title: "Federal agricultural R&D budget",
-          subtitle: "Agency breakdown, 2015–2024; dashed line: broader GBARD agriculture budget, 2000–2024",
+          subtitle: "Agency breakdown, 2000–2024; solid line: agency total; dashed line: broader GBARD agriculture budget",
           yLabel: "Billion 2022 dollars",
           tooltipUnit: "billion 2022 dollars",
           type: "stacked",
           series: DATA.rd.agencyBudget || [],
-          overlaySeries: (DATA.rd.federalBudget || []).map((series, index) => ({ ...series, name: index === 0 ? "GBARD agriculture" : `GBARD · ${series.name}`, color: "#252a2b", dasharray: "7 5" })),
+          overlaySeries: [...(DATA.rd.federalBudget || []).map((series, index) => ({ ...series, name: index === 0 ? "GBARD agriculture" : `GBARD · ${series.name}`, color: "#252a2b", dasharray: "7 5" })), { name: "Agency budget total", color: "#56a9d5", dasharray: "", hideInLegend: true, values: (DATA.rd.agencyBudget?.[0]?.values || []).map(point => ({ year: point.year, value: DATA.rd.agencyBudget.reduce((sum, series) => sum + series.values.find(d => d.year === point.year).value, 0) })) }],
           totalLabel: "Agency budget total",
           showChangeYears: true, labelPointSeriesOnly: true, fullWidth: true,
-          caption: "Areas show actual R&D and facilities budget authority under U.S. agriculture budget function 350; the dashed GBARD line uses a broader international agriculture objective, so its level and trend differ. Agency detail is available here for 2015–2024 and cannot explain the full GBARD decline since 2000. ARS conducts research; NIFA funds research elsewhere. Other agencies include ERS, APHIS and NASS. Facilities are reported separately, largely at ARS. Legend changes end in 2024. Isolated GBARD points: 2025 preliminary; 2026 President’s proposal, not enacted funding. All values use NIH BRDPI in 2022 dollars; 2024’s index is preliminary and 2025–26 indices are projected.",
-          source: `<a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agency budgets (Table 12, annual editions)</a>; ${sourceLinks.gbard}; ${sourceLinks.brdpi}`,
+          caption: "Areas show actual research and facilities budgets under U.S. agriculture budget function 350. NIFA includes predecessor agencies; other research includes ERS, APHIS and NASS. The blue line is their net total. Facilities fall below zero in 2011 because Congress rescinded prior-year funding. GBARD uses a broader definition that includes forestry and fisheries, so it is not the sum of these areas. Forest Service research is outside this stack: in 2024 it was $303 million nominal, close to the $311 million nominal gap. Other classification differences and historical revisions may also contribute. Both datasets use the same March 2025 NIH BRDPI in 2022 dollars. Legend changes end in 2024. Isolated GBARD points: 2025 preliminary; 2026 President’s proposal. The 2024 price index is preliminary; 2025–26 indices are projected.",
+          source: `<a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agency budgets (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; ${sourceLinks.gbard}; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (Table 11)</a>; ${sourceLinks.brdpi}`,
           decimals: 2
         }
       ]
@@ -553,6 +553,7 @@ const TOPICS = {
 
 function renderTopic(id) {
   closeMatrixPopover();
+  hideTooltip();
   document.querySelectorAll(".topic-nav button").forEach(button => button.setAttribute("aria-selected", String(button.dataset.topic === id)));
   document.querySelector("#topic-select").value = id;
   if (id === "products") {
@@ -603,6 +604,8 @@ function formatValue(chart, value) {
 }
 
 function drawChart(container, chart) {
+  hideTooltip();
+  container.parentElement.querySelector(".chart-compare")?.remove();
   container.replaceChildren();
   const card = container.closest(".chart-card");
   chart = { ...chart, title: chart.title || card.querySelector("h3")?.textContent || chart.yLabel || "Chart" };
@@ -618,6 +621,7 @@ function drawChart(container, chart) {
   if (chart.type === "stacked") drawStackedAreaChart(container, chart);
   else if (chart.type === "bar") drawBarChart(container, chart);
   else drawLineChart(container, chart);
+  attachChartInteractions(container, chart);
 }
 
 function drawBarChart(container, chart) {
@@ -669,6 +673,7 @@ function drawBarChart(container, chart) {
     bar.setAttribute("class", "bar-mark");
     bar.setAttribute("tabindex", index === sorted.length - 1 ? "0" : "-1");
     bar.setAttribute("aria-label", `${point.year}: ${formatValue(chart, point.value)}`);
+    bar.chartDatum = { series: chart.series[0], point };
     const show = event => showTooltip(event, `<strong>${point.year}</strong><br>${formatValue(chart, point.value)}`);
     bar.addEventListener("pointerenter", show);
     bar.addEventListener("pointermove", show);
@@ -695,6 +700,7 @@ function drawBarChart(container, chart) {
       hit.setAttribute("cx", x(point.year)); hit.setAttribute("cy", y(point.value)); hit.setAttribute("r", 7);
       hit.setAttribute("class", "rolling-hit"); hit.setAttribute("tabindex", "0");
       hit.setAttribute("aria-label", `${point.year} five-survey average: ${formatValue(chart, point.value)}`);
+      hit.chartDatum = { series: chart.rollingSeries, point };
       const show = event => showTooltip(event, `<strong>${point.year} five-survey mean</strong><br>${formatValue(chart, point.value)}`);
       hit.addEventListener("pointerenter", show); hit.addEventListener("pointermove", show); hit.addEventListener("focus", show);
       hit.addEventListener("pointerleave", hideTooltip); hit.addEventListener("blur", hideTooltip);
@@ -752,6 +758,7 @@ function drawLineChart(container, chart) {
     sorted.forEach((d, pointIndex) => {
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(d.year)); circle.setAttribute("cy", y(d.value)); circle.setAttribute("r", series.pointsOnly ? 5 : (chart.pointRadius ?? 4.2)); circle.setAttribute("fill", color); circle.setAttribute("class", `data-point line-point${series.pointsOnly || series.breakOnMissingYear ? " always-visible" : ""}`); circle.setAttribute("tabindex", pointIndex === sorted.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${d.year}: ${formatValue(chart, d.value)}`);
       const qualifier = d.approximate ? "≈" : "";
+      circle.chartDatum = { series, point: d };
       const source = d.source ? `<br>${escapeHTML(d.source)}` : "";
       circle.setAttribute("aria-label", `${series.name}, ${d.year}: ${d.approximate ? "approximately " : ""}${formatValue(chart, d.value)}${d.source ? `, ${d.source}` : ""}`);
       const show = event => showTooltip(event, `<strong>${series.name}</strong><br>${d.year}: ${qualifier}${formatValue(chart, d.value)}${source}`); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
@@ -772,10 +779,14 @@ function drawStackedAreaChart(container, chart) {
   const totals = years.map(year => maps.reduce((sum, map) => sum + map.get(year), 0));
   const overlays = chart.overlaySeries || [];
   const overlayPoints = overlays.flatMap(series => series.values);
-  const xMin = Math.min(years[0], ...overlayPoints.map(d => d.year)), xMax = Math.max(years.at(-1), ...overlayPoints.map(d => d.year)), yScale = niceScale(Math.max(...totals, ...overlayPoints.map(d => d.value), 1)), yMax = yScale.max;
+  const positiveTotals = years.map(year => maps.reduce((sum, map) => sum + Math.max(0, map.get(year)), 0));
+  const negativeTotals = years.map(year => maps.reduce((sum, map) => sum + Math.min(0, map.get(year)), 0));
+  const xMin = Math.min(years[0], ...overlayPoints.map(d => d.year)), xMax = Math.max(years.at(-1), ...overlayPoints.map(d => d.year)), yScale = niceScale(Math.max(...positiveTotals, ...overlayPoints.map(d => d.value), 1)), yMax = yScale.max;
+  const step = yScale.ticks[1] - yScale.ticks[0];
+  const yMin = Math.min(...negativeTotals) < 0 ? -Math.ceil(Math.abs(Math.min(...negativeTotals)) / (step / 2)) * (step / 2) : 0;
   const x = year => margin.left + (year - xMin) / (xMax - xMin || 1) * (width - margin.left - margin.right);
-  const y = value => height - margin.bottom - value / yMax * (height - margin.top - margin.bottom);
-  const yTicks = yScale.ticks;
+  const y = value => height - margin.bottom - (value - yMin) / (yMax - yMin) * (height - margin.top - margin.bottom);
+  const yTicks = yMin < 0 ? [yMin, ...yScale.ticks] : yScale.ticks;
   const xIntervals = width < 380 ? 3 : 5;
   const xTicks = Array.from({ length: xIntervals + 1 }, (_, i) => Math.round(xMin + (xMax - xMin) * i / xIntervals)).filter((v, i, a) => i === 0 || v !== a[i - 1]);
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -785,22 +796,43 @@ function drawStackedAreaChart(container, chart) {
   xTicks.forEach(tick => { svg.append(line(x(tick), height - margin.bottom, x(tick), height - margin.bottom + 5, "axis-line")); svg.append(text(x(tick), height - margin.bottom + 19, tick, "tick-label", "middle")); });
   svg.append(line(margin.left, margin.top, margin.left, height - margin.bottom, "axis-line")); svg.append(line(margin.left, height - margin.bottom, width - margin.right, height - margin.bottom, "axis-line"));
   const axisLabel = text(15, (height - margin.bottom + margin.top) / 2, chart.yLabel, "axis-label", "middle"); axisLabel.setAttribute("transform", `rotate(-90 15 ${(height - margin.bottom + margin.top) / 2})`); svg.append(axisLabel);
-  let lower = years.map(() => 0);
+  // Insert zero crossings so signed areas never overlap between observations.
+  const knots = [...years];
+  maps.forEach(map => years.slice(1).forEach((year, i) => {
+    const a = map.get(years[i]), b = map.get(year);
+    if (a * b < 0) knots.push(years[i] + (year - years[i]) * Math.abs(a) / (Math.abs(a) + Math.abs(b)));
+  }));
+  const areaYears = [...new Set(knots)].sort((a, b) => a - b);
+  const interpolate = (map, year) => {
+    if (map.has(year)) return map.get(year);
+    const right = years.findIndex(value => value > year), left = right - 1;
+    return map.get(years[left]) + (map.get(years[right]) - map.get(years[left])) * (year - years[left]) / (years[right] - years[left]);
+  };
+  let positiveBase = areaYears.map(() => 0), negativeBase = areaYears.map(() => 0);
   chart.series.forEach((series, index) => {
     const values = years.map(year => maps[index].get(year));
-    const upper = values.map((value, i) => lower[i] + value);
-    const topPath = years.map((year, i) => `${i ? "L" : "M"}${x(year).toFixed(2)},${y(upper[i]).toFixed(2)}`).join(" ");
-    const bottomPath = [...years].reverse().map((year, reverseIndex) => { const i = years.length - 1 - reverseIndex; return `L${x(year).toFixed(2)},${y(lower[i]).toFixed(2)}`; }).join(" ");
-    const area = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    area.setAttribute("d", `${topPath} ${bottomPath} Z`); area.setAttribute("class", "area-path"); area.setAttribute("fill", COLORS[index % COLORS.length]); svg.append(area);
+    const areaValues = areaYears.map(year => interpolate(maps[index], year));
+    const positions = new Map();
+    [1, -1].forEach(sign => {
+      const lower = sign > 0 ? positiveBase : negativeBase;
+      const upper = areaValues.map((value, i) => lower[i] + (sign > 0 ? Math.max(0, value) : Math.min(0, value)));
+      areaYears.forEach((year, i) => { if ((sign > 0 && areaValues[i] >= 0) || (sign < 0 && areaValues[i] < 0)) positions.set(year, upper[i]); });
+      if (areaValues.some(value => value * sign > 0)) {
+        const topPath = areaYears.map((year, i) => `${i ? "L" : "M"}${x(year).toFixed(2)},${y(upper[i]).toFixed(2)}`).join(" ");
+        const bottomPath = [...areaYears].reverse().map((year, reverseIndex) => { const i = areaYears.length - 1 - reverseIndex; return `L${x(year).toFixed(2)},${y(lower[i]).toFixed(2)}`; }).join(" ");
+        const area = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        area.setAttribute("d", `${topPath} ${bottomPath} Z`); area.setAttribute("class", "area-path"); area.setAttribute("fill", COLORS[index % COLORS.length]); svg.append(area);
+      }
+      if (sign > 0) positiveBase = upper; else negativeBase = upper;
+    });
     const circles = [];
     years.forEach((year, i) => {
-      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(year)); circle.setAttribute("cy", y(upper[i])); circle.setAttribute("r", 4); circle.setAttribute("fill", COLORS[index % COLORS.length]); circle.setAttribute("class", "data-point area-point"); circle.setAttribute("tabindex", i === years.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${year}: ${formatValue(chart, values[i])}`);
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(year)); circle.setAttribute("cy", y(positions.get(year))); circle.setAttribute("r", 4); circle.setAttribute("fill", COLORS[index % COLORS.length]); circle.setAttribute("class", "data-point area-point"); circle.setAttribute("tabindex", i === years.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${year}: ${formatValue(chart, values[i])}`);
+      circle.chartDatum = { series, point: { year, value: values[i] } };
       const show = event => showTooltip(event, `<strong>${series.name}</strong><br>${year}: ${formatValue(chart, values[i])}`); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
       circle.addEventListener("keydown", event => { if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return; event.preventDefault(); const next = Math.max(0, Math.min(circles.length - 1, i + (event.key === 'ArrowRight' ? 1 : -1))); circles[next]?.focus(); });
       circles.push(circle);
     });
-    lower = upper;
   });
   overlays.forEach(series => {
     const sorted = [...series.values].sort((a, b) => a.year - b.year);
@@ -808,11 +840,12 @@ function drawStackedAreaChart(container, chart) {
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path.setAttribute("d", sorted.map((d, i) => `${i ? "L" : "M"}${x(d.year)},${y(d.value)}`).join(" "));
       path.setAttribute("class", "series-path"); path.setAttribute("stroke", series.color);
-      path.setAttribute("stroke-dasharray", series.dasharray || "7 5"); svg.append(path);
+      path.setAttribute("stroke-dasharray", series.dasharray ?? "7 5"); svg.append(path);
     }
     const circles = [];
     sorted.forEach((d, i) => {
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.chartDatum = { series, point: d };
       Object.entries({ cx: x(d.year), cy: y(d.value), r: series.pointsOnly ? 5 : 4, fill: series.color, class: `data-point line-point${series.pointsOnly ? " always-visible" : ""}`, tabindex: i === sorted.length - 1 ? "0" : "-1", "aria-label": `${series.name}, ${d.year}: ${formatValue(chart, d.value)}` }).forEach(([key, value]) => circle.setAttribute(key, value));
       const show = event => showTooltip(event, `<strong>${series.name}</strong><br>${d.year}: ${formatValue(chart, d.value)}`);
       ["pointerenter", "pointermove", "focus"].forEach(event => circle.addEventListener(event, show));
@@ -822,6 +855,114 @@ function drawStackedAreaChart(container, chart) {
     });
   });
   container.append(svg); renderSeriesSummary(container.parentElement.querySelector(".series-summary"), chart);
+}
+
+function rangeChangeText(first, last) {
+  if (first.year === last.year) return "Choose two different years.";
+  if (first.value <= 0) return "Percent change is undefined from a zero or negative starting value.";
+  return `${pct((last.value / first.value - 1) * 100)} change`;
+}
+
+function attachChartInteractions(container, chart) {
+  const svg = container.querySelector("svg");
+  if (!svg) return;
+  const marks = [...svg.querySelectorAll(".data-point, .bar-mark, .rolling-hit")].filter(mark => mark.chartDatum);
+  const records = marks.map(mark => ({ mark, ...mark.chartDatum,
+    x: Number(mark.getAttribute(mark.tagName === "rect" ? "x" : "cx")) + (mark.tagName === "rect" ? Number(mark.getAttribute("width")) / 2 : 0),
+    y: Number(mark.getAttribute(mark.tagName === "rect" ? "y" : "cy")),
+    rect: mark.tagName === "rect" ? { x: Number(mark.getAttribute("x")), y: Number(mark.getAttribute("y")), width: Number(mark.getAttribute("width")), height: Number(mark.getAttribute("height")) } : null
+  }));
+  const candidates = [...new Set(records.map(record => record.series))].filter(series => series.values.length > 1);
+  const previous = container.parentElement.querySelector(".chart-compare");
+  previous?.remove();
+  if (!candidates.length) return;
+  const name = series => series.name || "Five-survey mean";
+  const comparison = document.createElement("div"); comparison.className = "chart-compare";
+  comparison.innerHTML = `<p class="compare-hint">Drag from a point to another year to compare dates.</p><details><summary>Compare dates</summary><div class="compare-controls"><label>Series<select class="compare-series" aria-label="Series to compare">${candidates.map((series, i) => `<option value="${i}">${escapeHTML(name(series))}</option>`).join("")}</select></label><label>From<select class="compare-from" aria-label="Start year"></select></label><label>To<select class="compare-to" aria-label="End year"></select></label><button type="button" class="compare-clear">Clear</button></div><p class="compare-result" role="status" aria-live="polite"></p></details>`;
+  container.after(comparison);
+  const details = comparison.querySelector("details"), select = comparison.querySelector(".compare-series"), from = comparison.querySelector(".compare-from"), to = comparison.querySelector(".compare-to"), result = comparison.querySelector(".compare-result");
+  const selection = document.createElementNS("http://www.w3.org/2000/svg", "g"); selection.setAttribute("class", "range-selection"); selection.setAttribute("aria-hidden", "true"); svg.append(selection);
+  let activeSeries = candidates[0], drag = null, hovered = null;
+  const pointsFor = series => records.filter(record => record.series === series).sort((a, b) => a.point.year - b.point.year);
+  const fillYears = () => {
+    const points = pointsFor(activeSeries);
+    const options = points.map(record => `<option value="${record.point.year}">${record.point.year}</option>`).join("");
+    from.innerHTML = options; to.innerHTML = options;
+    from.value = String(points[0].point.year); to.value = String(points.at(-1).point.year);
+  };
+  const drawSelection = (a, b) => {
+    selection.replaceChildren();
+    if (a.point.year === b.point.year) return;
+    const height = svg.viewBox.baseVal.height;
+    const band = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    Object.entries({ x: Math.min(a.x, b.x), y: 18, width: Math.abs(a.x - b.x), height: height - 52, class: "range-band" }).forEach(([key, value]) => band.setAttribute(key, value)); selection.append(band);
+    [a, b].forEach(record => {
+      selection.append(line(record.x, 18, record.x, height - 34, "range-boundary"));
+      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      Object.entries({ cx: record.x, cy: record.y, r: 5, class: "range-endpoint" }).forEach(([key, value]) => dot.setAttribute(key, value)); selection.append(dot);
+    });
+  };
+  const updateResult = () => {
+    const points = pointsFor(activeSeries);
+    let a = points.find(record => record.point.year === Number(from.value)), b = points.find(record => record.point.year === Number(to.value));
+    if (!a || !b) return;
+    if (a.point.year > b.point.year) [a, b] = [b, a];
+    if (!drag) { from.value = String(a.point.year); to.value = String(b.point.year); }
+    const first = a.point, last = b.point;
+    const boundary = activeSeries.definitionBreak || activeSeries.sourceBoundary;
+    const caution = boundary && first.year <= boundary.earlierEnd && last.year >= boundary.laterStart ? " Definitions or sources change within this range." : "";
+    const approximate = first.approximate || last.approximate ? " Approximate endpoint values." : "";
+    const rescission = chart.type === "stacked" && name(activeSeries) === "Research facilities" && first.year <= 2011 && last.year >= 2011 ? " Includes the 2011 rescission of prior-year funding." : "";
+    const percentagePoints = chart.tooltipUnit === "%" && first.year !== last.year ? ` (${format(last.value - first.value, 1)} percentage points)` : "";
+    result.innerHTML = `<strong>${escapeHTML(name(activeSeries))} · ${first.year}–${last.year}: ${rangeChangeText(first, last)}${percentagePoints}</strong><br>${first.approximate ? "≈" : ""}${formatValue(chart, first.value)} → ${last.approximate ? "≈" : ""}${formatValue(chart, last.value)}${caution || approximate || rescission ? `<br><span>${escapeHTML(caution + approximate + rescission)}</span>` : ""}`;
+    drawSelection(a, b);
+  };
+  const local = event => {
+    const point = svg.createSVGPoint(); point.x = event.clientX; point.y = event.clientY;
+    return point.matrixTransform(svg.getScreenCTM().inverse());
+  };
+  const nearest = event => {
+    const point = local(event), matrix = svg.getScreenCTM(), radius = 18 / Math.hypot(matrix.a, matrix.b);
+    let winner = null, distance = Infinity;
+    records.forEach(record => {
+      const dx = record.rect ? Math.max(record.rect.x - point.x, 0, point.x - record.rect.x - record.rect.width) : record.x - point.x;
+      const dy = record.rect ? Math.max(record.rect.y - point.y, 0, point.y - record.rect.y - record.rect.height) : record.y - point.y;
+      const candidate = Math.hypot(dx, dy);
+      if (candidate < distance) { distance = candidate; winner = record; }
+    });
+    return distance <= radius ? winner : null;
+  };
+  const hover = (event, record) => {
+    hovered?.mark.classList.remove("is-hovered"); hovered = record;
+    if (!record) { hideTooltip(); return; }
+    record.mark.classList.add("is-hovered");
+    showTooltip(event, `<strong>${escapeHTML(name(record.series))}</strong><br>${record.point.year}: ${record.point.approximate ? "≈" : ""}${formatValue(chart, record.point.value)}${record.point.source ? `<br>${escapeHTML(record.point.source)}` : ""}`);
+  };
+  const stopDrag = () => { if (drag && svg.hasPointerCapture(drag.pointerId)) svg.releasePointerCapture(drag.pointerId); drag = null; svg.classList.remove("is-dragging"); hideTooltip(); };
+  select.addEventListener("change", () => { activeSeries = candidates[Number(select.value)]; fillYears(); updateResult(); });
+  [from, to].forEach(control => control.addEventListener("change", updateResult));
+  details.addEventListener("toggle", () => { if (details.open) updateResult(); sendHeight(); });
+  comparison.querySelector(".compare-clear").addEventListener("click", () => { selection.replaceChildren(); details.open = false; result.replaceChildren(); fillYears(); });
+  fillYears();
+  svg.addEventListener("pointermove", event => {
+    if (!drag) { if (event.pointerType !== "touch") hover(event, nearest(event)); return; }
+    const point = local(event), points = pointsFor(activeSeries);
+    const end = points.reduce((best, record) => Math.abs(record.x - point.x) < Math.abs(best.x - point.x) ? record : best);
+    to.value = String(end.point.year);
+    if (from.value !== to.value) { details.open = true; updateResult(); hideTooltip(); }
+  });
+  svg.addEventListener("pointerdown", event => {
+    if (event.button !== 0) return;
+    const start = nearest(event);
+    if (!start || !candidates.includes(start.series)) return;
+    event.preventDefault(); activeSeries = start.series; select.value = String(candidates.indexOf(activeSeries)); fillYears();
+    from.value = to.value = String(start.point.year); selection.replaceChildren();
+    drag = { pointerId: event.pointerId }; svg.setPointerCapture(event.pointerId); svg.classList.add("is-dragging");
+  });
+  svg.addEventListener("pointerup", () => { if (drag) { stopDrag(); if (details.open) updateResult(); } });
+  svg.addEventListener("pointercancel", () => { stopDrag(); selection.replaceChildren(); details.open = false; });
+  svg.addEventListener("keydown", event => { if (event.key === "Escape") { stopDrag(); selection.replaceChildren(); details.open = false; } });
+  svg.addEventListener("pointerleave", () => { if (!drag) { hovered?.mark.classList.remove("is-hovered"); hovered = null; hideTooltip(); } });
 }
 
 function renderSeriesSummary(summary, chart) {
@@ -836,7 +977,7 @@ function renderSeriesSummary(summary, chart) {
     const last = chart.series.reduce((sum, series) => sum + series.values.find(point => point.year === lastYear).value, 0);
     total = `<strong class="total-change">${chart.totalLabel}: ${pct((last / first - 1) * 100)} <small>${firstYear}–${lastYear}</small></strong>`;
   }
-  const rows = [...chart.series, ...(chart.overlaySeries || []).map(series => ({ ...series, isOverlay: true }))].map((series, index) => {
+  const rows = [...chart.series, ...(chart.overlaySeries || []).filter(series => !series.hideInLegend).map(series => ({ ...series, isOverlay: true }))].map((series, index) => {
     const delta = chart.labelPointSeriesOnly && series.pointsOnly ? "" : chart.summaryMode === "latest" ? formatValue(chart, series.values.at(-1).value) : pct(change(series.values));
     const range = `${series.values[0].year}–${series.values.at(-1).year}`;
     if (series.sourceBoundary) {

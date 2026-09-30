@@ -8622,12 +8622,81 @@
       "deflator": "NIH/BEA BRDPI, March 2025 vintage; same index used by ERS",
       "university_scope": "NCSES HERD agricultural sciences; definition break in 2016; latest public-use revisions",
       "federal_budget_scope": "NCSES NSF 26-309 Table 26 agriculture GBARD objective; R&D plus capital R&D budget authority",
-      "deflator_status": "2024 preliminary; 2025–2026 projected"
+      "deflator_status": "2024 preliminary; 2025–2026 projected",
+      "sharedBudgetDeflator": {
+        "index": "NIH/BEA BRDPI",
+        "vintage": "March 2025",
+        "baseYear": 2022,
+        "baseIndex": 1858.2,
+        "formula": "nominal million × 1858.2 / fiscal-year BRDPI / 1000",
+        "agencyYears": "2000–2024",
+        "gbardYears": "2000–2026"
+      }
     },
     "agencyBudget": [
       {
         "name": "ARS research",
         "values": [
+          {
+            "year": 2000,
+            "value": 1.469151
+          },
+          {
+            "year": 2001,
+            "value": 1.719874
+          },
+          {
+            "year": 2002,
+            "value": 1.718083
+          },
+          {
+            "year": 2003,
+            "value": 1.664881
+          },
+          {
+            "year": 2004,
+            "value": 1.66651
+          },
+          {
+            "year": 2005,
+            "value": 1.653578
+          },
+          {
+            "year": 2006,
+            "value": 1.638377
+          },
+          {
+            "year": 2007,
+            "value": 1.557808
+          },
+          {
+            "year": 2008,
+            "value": 1.498073
+          },
+          {
+            "year": 2009,
+            "value": 1.467682
+          },
+          {
+            "year": 2010,
+            "value": 1.460137
+          },
+          {
+            "year": 2011,
+            "value": 1.39246
+          },
+          {
+            "year": 2012,
+            "value": 1.321477
+          },
+          {
+            "year": 2013,
+            "value": 1.227325
+          },
+          {
+            "year": 2014,
+            "value": 1.267454
+          },
           {
             "year": 2015,
             "value": 1.254198
@@ -8671,8 +8740,68 @@
         ]
       },
       {
-        "name": "NIFA research",
+        "name": "NIFA and predecessor research",
         "values": [
+          {
+            "year": 2000,
+            "value": 1.033917
+          },
+          {
+            "year": 2001,
+            "value": 1.122057
+          },
+          {
+            "year": 2002,
+            "value": 0.959634
+          },
+          {
+            "year": 2003,
+            "value": 1.05087
+          },
+          {
+            "year": 2004,
+            "value": 1.021463
+          },
+          {
+            "year": 2005,
+            "value": 1.043861
+          },
+          {
+            "year": 2006,
+            "value": 1.017502
+          },
+          {
+            "year": 2007,
+            "value": 0.978773
+          },
+          {
+            "year": 2008,
+            "value": 0.946299
+          },
+          {
+            "year": 2009,
+            "value": 0.99846
+          },
+          {
+            "year": 2010,
+            "value": 1.074915
+          },
+          {
+            "year": 2011,
+            "value": 0.911147
+          },
+          {
+            "year": 2012,
+            "value": 0.952988
+          },
+          {
+            "year": 2013,
+            "value": 0.813228
+          },
+          {
+            "year": 2014,
+            "value": 0.97318
+          },
           {
             "year": 2015,
             "value": 0.964584
@@ -8719,6 +8848,66 @@
         "name": "Other agencies’ research",
         "values": [
           {
+            "year": 2000,
+            "value": 0.207164
+          },
+          {
+            "year": 2001,
+            "value": 0.206017
+          },
+          {
+            "year": 2002,
+            "value": 0.1816
+          },
+          {
+            "year": 2003,
+            "value": 0.221869
+          },
+          {
+            "year": 2004,
+            "value": 0.21391
+          },
+          {
+            "year": 2005,
+            "value": 0.207495
+          },
+          {
+            "year": 2006,
+            "value": 0.195263
+          },
+          {
+            "year": 2007,
+            "value": 0.192522
+          },
+          {
+            "year": 2008,
+            "value": 0.172693
+          },
+          {
+            "year": 2009,
+            "value": 0.17323
+          },
+          {
+            "year": 2010,
+            "value": 0.169445
+          },
+          {
+            "year": 2011,
+            "value": 0.162153
+          },
+          {
+            "year": 2012,
+            "value": 0.165185
+          },
+          {
+            "year": 2013,
+            "value": 0.145932
+          },
+          {
+            "year": 2014,
+            "value": 0.161179
+          },
+          {
             "year": 2015,
             "value": 0.161562
           },
@@ -8763,6 +8952,66 @@
       {
         "name": "Research facilities",
         "values": [
+          {
+            "year": 2000,
+            "value": 0.256579
+          },
+          {
+            "year": 2001,
+            "value": 0.310865
+          },
+          {
+            "year": 2002,
+            "value": 0.53946
+          },
+          {
+            "year": 2003,
+            "value": 0.574453
+          },
+          {
+            "year": 2004,
+            "value": 0.265315
+          },
+          {
+            "year": 2005,
+            "value": 0.437336
+          },
+          {
+            "year": 2006,
+            "value": 0.379847
+          },
+          {
+            "year": 2007,
+            "value": 0.136676
+          },
+          {
+            "year": 2008,
+            "value": 0.186733
+          },
+          {
+            "year": 2009,
+            "value": 0.428301
+          },
+          {
+            "year": 2010,
+            "value": 0.215777
+          },
+          {
+            "year": 2011,
+            "value": -0.190466
+          },
+          {
+            "year": 2012,
+            "value": 0.108005
+          },
+          {
+            "year": 2013,
+            "value": 0.081073
+          },
+          {
+            "year": 2014,
+            "value": 0.134316
+          },
           {
             "year": 2015,
             "value": 0.191481
