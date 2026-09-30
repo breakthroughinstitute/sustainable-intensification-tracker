@@ -205,18 +205,19 @@ function studyBars(metric) {
 // legend labels; names in DATA come from data.json.
 const DEFAULT_CHART_CAPTION = "Percent change from first to latest available year";
 function federalAgencyBudgetView(adjusted) {
-  const series = adjusted ? DATA.rd.agencyBudgetAdjusted : DATA.rd.agencyBudget;
+  const sourceSeries = adjusted ? DATA.rd.agencyBudgetAdjusted : DATA.rd.agencyBudget;
+  const series = [...sourceSeries].sort((a, b) => Number(b.name.startsWith("Research facilities")) - Number(a.name.startsWith("Research facilities")));
   return {
           title: "Federal agricultural R&D budget",
-          subtitle: adjusted ? "Agency breakdown with estimated facilities adjustment, 2000–2024; dashed line: official GBARD" : "Official annual agency budgets, 2000–2024; dashed line: broader GBARD agriculture budget",
+          subtitle: adjusted ? "Agency breakdown with estimated facilities adjustment, 2000–2024; dashed line: official GBARD" : "USDA agency budgets, 2000–2024, with GBARD for comparison",
           yLabel: "Billion 2022 dollars",
           tooltipUnit: "billion 2022 dollars",
           type: "stacked",
           series: series,
-          overlaySeries: [...(DATA.rd.federalBudget || []).map((series, index) => ({ ...series, name: index === 0 ? "GBARD agriculture" : `GBARD · ${series.name}`, color: "#252a2b", dasharray: "7 5" })), { name: adjusted ? "Adjusted agency total" : "Agency budget total", color: "#56a9d5", dasharray: "", hideInLegend: true, values: (series?.[0]?.values || []).map(point => ({ year: point.year, value: series.reduce((sum, series) => sum + series.values.find(d => d.year === point.year).value, 0), approximate: adjusted && (point.year <= 2011), source: adjusted && point.year <= 2011 ? "Includes an estimated retrospective facilities adjustment." : undefined })) }],
+          overlaySeries: [...(DATA.rd.federalBudget || []).map((series, index) => ({ ...series, name: index === 0 ? "GBARD agriculture" : index === 1 ? "GBARD 2025 · preliminary" : "GBARD 2026 · President’s proposal", marker: index === 2 ? "hollow" : "solid", color: "#252a2b", dasharray: "7 5" })), { name: adjusted ? "Adjusted agency total" : "Agency budget total", color: "#56a9d5", dasharray: "", hideInLegend: true, values: (series?.[0]?.values || []).map(point => ({ year: point.year, value: series.reduce((sum, series) => sum + series.values.find(d => d.year === point.year).value, 0), approximate: adjusted && (point.year <= 2011), source: adjusted && point.year <= 2011 ? "Includes an estimated retrospective facilities adjustment." : undefined })) }],
           totalLabel: adjusted ? "Adjusted agency total" : "Agency budget total",
           showChangeYears: true, labelPointSeriesOnly: true, fullWidth: true,
-          caption: (adjusted ? "Estimated adjustment: the $230 million cancellation in 2011 is deducted from earlier funding years, in proportion to each year’s contribution to the affected projects. USDA histories cover 96% of the enacted cancellation; their timing profile is used for the remainder. Most reductions fall in 2004–2010; $8.7 million is allocated before the chart begins. Facilities in 2011 show the $82 million before cancellation. This is an analytic estimate, not official annual budget authority. GBARD retains official timing; select Official annual budgets to compare unadjusted series. " : "Facilities fall below zero in 2011 because Congress canceled prior-year funding. ") + "Areas show research and facilities budgets under U.S. agriculture budget function 350. NIFA includes predecessor agencies; other research includes ERS, APHIS and NASS. The blue line is their total. GBARD uses a broader definition that includes forestry and fisheries, so it is not the sum of these areas. Forest Service research is outside this stack: in 2024 it was $303 million nominal, close to the $311 million nominal gap. Other classification differences and historical revisions may also contribute. Both datasets use the same March 2025 NIH BRDPI in 2022 dollars. Legend changes end in 2024. Isolated GBARD points: 2025 preliminary; 2026 President’s proposal. The 2024 price index is preliminary; 2025–26 indices are projected.",
+          caption: adjusted ? "Estimated retrospective facilities adjustment; GBARD retains official timing. Both use the same NIH research deflator." : "Areas show USDA research and facilities budgets; the blue line shows their net total. Negative facilities funding in 2011 reflects cancellation of earlier funding. The dashed GBARD line also includes forestry and fisheries, so its scope differs. Both use the same NIH research deflator. Legend changes cover 2000–2024; 2024’s deflator is preliminary and 2025–26 use projected deflators.",
           source: `<a href="https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf" target="_blank" rel="noopener">USDA, facility project histories (pp. 16-77–84)</a>; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agency budgets (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; ${sourceLinks.gbard}; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (Table 11)</a>; ${sourceLinks.brdpi}`,
           decimals: 2
         };
@@ -550,14 +551,7 @@ const TOPICS = {
           source: `${sourceLinks.rd}; ${sourceLinks.bea}`,
           decimals: 1
         },
-        {
-          title: "Federal agricultural R&D budget", fullWidth: true,
-          viewLabel: "Choose facilities accounting",
-          views: [
-            { ...federalAgencyBudgetView(true), id: "adjusted", label: "Adjusted facilities estimate" },
-            { ...federalAgencyBudgetView(false), id: "official", label: "Official annual budgets" }
-          ]
-        }
+        federalAgencyBudgetView(false)
       ]
     };
   }
@@ -860,7 +854,7 @@ function drawStackedAreaChart(container, chart) {
     sorted.forEach((d, i) => {
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       circle.chartDatum = { series, point: d };
-      Object.entries({ cx: x(d.year), cy: y(d.value), r: series.pointsOnly ? 5 : 4, fill: series.color, class: `data-point line-point${series.pointsOnly ? " always-visible" : ""}`, tabindex: i === sorted.length - 1 ? "0" : "-1", "aria-label": `${series.name}, ${d.year}: ${formatValue(chart, d.value)}` }).forEach(([key, value]) => circle.setAttribute(key, value));
+      Object.entries({ cx: x(d.year), cy: y(d.value), r: series.pointsOnly ? 5 : 4, fill: series.marker === "hollow" ? "#f8f9f9" : series.color, stroke: series.color, "stroke-width": series.marker === "hollow" ? 2 : 0, style: series.marker === "hollow" ? `stroke: ${series.color}; stroke-width: 2` : "", class: `data-point line-point${series.pointsOnly ? " always-visible" : ""}${series.marker === "hollow" ? " hollow-point" : ""}`, tabindex: i === sorted.length - 1 ? "0" : "-1", "aria-label": `${series.name}, ${d.year}: ${formatValue(chart, d.value)}` }).forEach(([key, value]) => circle.setAttribute(key, value));
       const show = event => showTooltip(event, `<strong>${series.name}</strong><br>${d.year}: ${formatValue(chart, d.value)}`);
       ["pointerenter", "pointermove", "focus"].forEach(event => circle.addEventListener(event, show));
       ["pointerleave", "blur"].forEach(event => circle.addEventListener(event, hideTooltip));
@@ -1003,7 +997,7 @@ function renderSeriesSummary(summary, chart) {
       ? `<span class="single-change"><strong>${delta}</strong> <small>${chart.summaryMode === "latest" ? series.values.at(-1).year : range}</small></span>`
       : chart.type === "stacked" && !series.isOverlay
         ? `<span><i style="background:${COLORS[index % COLORS.length]}"></i><b>${series.name} ${delta}${chart.showChangeYears ? ` <small>${range}</small>` : ""}</b></span>`
-        : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="2" fill="${series.color || COLORS[index % COLORS.length]}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}${chart.showChangeYears && !(chart.labelPointSeriesOnly && series.pointsOnly) ? ` <small>${range}</small>` : chart.latestYearLabel ? ` <small>${series.values.at(-1).year}</small>` : ""}</b></span>`;
+        : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="1.5" fill="${series.marker === "hollow" ? "none" : series.color || COLORS[index % COLORS.length]}" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="${series.marker === "hollow" ? 1 : 0}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}${chart.showChangeYears && !(chart.labelPointSeriesOnly && series.pointsOnly) ? ` <small>${range}</small>` : chart.latestYearLabel ? ` <small>${series.values.at(-1).year}</small>` : ""}</b></span>`;
   }).join("");
   const overlayKey = chart.rollingSeries ? `<div class="overlay-key"><span><i class="key-bar"></i> Annual survey</span><span><i class="key-average"></i> Five-survey mean</span><span><i class="key-goal"></i> Task Force goal</span></div>` : "";
   summary.innerHTML = note + overlayKey + total + rows;
