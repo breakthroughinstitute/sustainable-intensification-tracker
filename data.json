@@ -8631,6 +8631,17 @@
         "formula": "nominal million × 1858.2 / fiscal-year BRDPI / 1000",
         "agencyYears": "2000–2024",
         "gbardYears": "2000–2026"
+      },
+      "facilitiesRetrospectiveAdjustment": {
+        "method": "Within each of 34 documented projects, allocate its 2011 rescission proportionally to earlier nominal contributions; exclude ARRA funding committed to construction and the 1994 BARC rental-account appropriation. Scale the combined year profile to the NSF rounded 230 million rescission to represent unlisted projects. Deflate each adjusted year using the same BRDPI as GBARD.",
+        "source": "https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf",
+        "sourcePages": "16-77 through 16-84",
+        "projectCount": 34,
+        "documentedRescissionDollars": 221379201,
+        "statutoryRescissionDollars": 229582000,
+        "nsfRoundedRescissionMillion": 230,
+        "allocatedBefore2000Million": 8.738077952832692,
+        "status": "Analytic estimate, not official annual budget authority; GBARD retains official timing."
       }
     },
     "agencyBudget": [
@@ -8999,6 +9010,450 @@
           {
             "year": 2011,
             "value": -0.190466
+          },
+          {
+            "year": 2012,
+            "value": 0.108005
+          },
+          {
+            "year": 2013,
+            "value": 0.081073
+          },
+          {
+            "year": 2014,
+            "value": 0.134316
+          },
+          {
+            "year": 2015,
+            "value": 0.191481
+          },
+          {
+            "year": 2016,
+            "value": 0.374802
+          },
+          {
+            "year": 2017,
+            "value": 0.242022
+          },
+          {
+            "year": 2018,
+            "value": 0.302961
+          },
+          {
+            "year": 2019,
+            "value": 0.560645
+          },
+          {
+            "year": 2020,
+            "value": 0.366623
+          },
+          {
+            "year": 2021,
+            "value": 0.255193
+          },
+          {
+            "year": 2022,
+            "value": 0.295
+          },
+          {
+            "year": 2023,
+            "value": 0.306249
+          },
+          {
+            "year": 2024,
+            "value": 0.214837
+          }
+        ]
+      }
+    ],
+    "agencyBudgetAdjusted": [
+      {
+        "name": "ARS research",
+        "values": [
+          {
+            "year": 2000,
+            "value": 1.469151
+          },
+          {
+            "year": 2001,
+            "value": 1.719874
+          },
+          {
+            "year": 2002,
+            "value": 1.718083
+          },
+          {
+            "year": 2003,
+            "value": 1.664881
+          },
+          {
+            "year": 2004,
+            "value": 1.66651
+          },
+          {
+            "year": 2005,
+            "value": 1.653578
+          },
+          {
+            "year": 2006,
+            "value": 1.638377
+          },
+          {
+            "year": 2007,
+            "value": 1.557808
+          },
+          {
+            "year": 2008,
+            "value": 1.498073
+          },
+          {
+            "year": 2009,
+            "value": 1.467682
+          },
+          {
+            "year": 2010,
+            "value": 1.460137
+          },
+          {
+            "year": 2011,
+            "value": 1.39246
+          },
+          {
+            "year": 2012,
+            "value": 1.321477
+          },
+          {
+            "year": 2013,
+            "value": 1.227325
+          },
+          {
+            "year": 2014,
+            "value": 1.267454
+          },
+          {
+            "year": 2015,
+            "value": 1.254198
+          },
+          {
+            "year": 2016,
+            "value": 1.241533
+          },
+          {
+            "year": 2017,
+            "value": 1.238648
+          },
+          {
+            "year": 2018,
+            "value": 1.241919
+          },
+          {
+            "year": 2019,
+            "value": 1.29581
+          },
+          {
+            "year": 2020,
+            "value": 1.376444
+          },
+          {
+            "year": 2021,
+            "value": 1.450624
+          },
+          {
+            "year": 2022,
+            "value": 1.503
+          },
+          {
+            "year": 2023,
+            "value": 1.518726
+          },
+          {
+            "year": 2024,
+            "value": 1.520599
+          }
+        ]
+      },
+      {
+        "name": "NIFA and predecessor research",
+        "values": [
+          {
+            "year": 2000,
+            "value": 1.033917
+          },
+          {
+            "year": 2001,
+            "value": 1.122057
+          },
+          {
+            "year": 2002,
+            "value": 0.959634
+          },
+          {
+            "year": 2003,
+            "value": 1.05087
+          },
+          {
+            "year": 2004,
+            "value": 1.021463
+          },
+          {
+            "year": 2005,
+            "value": 1.043861
+          },
+          {
+            "year": 2006,
+            "value": 1.017502
+          },
+          {
+            "year": 2007,
+            "value": 0.978773
+          },
+          {
+            "year": 2008,
+            "value": 0.946299
+          },
+          {
+            "year": 2009,
+            "value": 0.99846
+          },
+          {
+            "year": 2010,
+            "value": 1.074915
+          },
+          {
+            "year": 2011,
+            "value": 0.911147
+          },
+          {
+            "year": 2012,
+            "value": 0.952988
+          },
+          {
+            "year": 2013,
+            "value": 0.813228
+          },
+          {
+            "year": 2014,
+            "value": 0.97318
+          },
+          {
+            "year": 2015,
+            "value": 0.964584
+          },
+          {
+            "year": 2016,
+            "value": 0.979171
+          },
+          {
+            "year": 2017,
+            "value": 0.99206
+          },
+          {
+            "year": 2018,
+            "value": 0.917795
+          },
+          {
+            "year": 2019,
+            "value": 0.962041
+          },
+          {
+            "year": 2020,
+            "value": 0.979805
+          },
+          {
+            "year": 2021,
+            "value": 1.078294
+          },
+          {
+            "year": 2022,
+            "value": 1.353
+          },
+          {
+            "year": 2023,
+            "value": 0.890819
+          },
+          {
+            "year": 2024,
+            "value": 0.832377
+          }
+        ]
+      },
+      {
+        "name": "Other agencies’ research",
+        "values": [
+          {
+            "year": 2000,
+            "value": 0.207164
+          },
+          {
+            "year": 2001,
+            "value": 0.206017
+          },
+          {
+            "year": 2002,
+            "value": 0.1816
+          },
+          {
+            "year": 2003,
+            "value": 0.221869
+          },
+          {
+            "year": 2004,
+            "value": 0.21391
+          },
+          {
+            "year": 2005,
+            "value": 0.207495
+          },
+          {
+            "year": 2006,
+            "value": 0.195263
+          },
+          {
+            "year": 2007,
+            "value": 0.192522
+          },
+          {
+            "year": 2008,
+            "value": 0.172693
+          },
+          {
+            "year": 2009,
+            "value": 0.17323
+          },
+          {
+            "year": 2010,
+            "value": 0.169445
+          },
+          {
+            "year": 2011,
+            "value": 0.162153
+          },
+          {
+            "year": 2012,
+            "value": 0.165185
+          },
+          {
+            "year": 2013,
+            "value": 0.145932
+          },
+          {
+            "year": 2014,
+            "value": 0.161179
+          },
+          {
+            "year": 2015,
+            "value": 0.161562
+          },
+          {
+            "year": 2016,
+            "value": 0.156949
+          },
+          {
+            "year": 2017,
+            "value": 0.155259
+          },
+          {
+            "year": 2018,
+            "value": 0.150367
+          },
+          {
+            "year": 2019,
+            "value": 0.147251
+          },
+          {
+            "year": 2020,
+            "value": 0.143648
+          },
+          {
+            "year": 2021,
+            "value": 0.14433
+          },
+          {
+            "year": 2022,
+            "value": 0.144
+          },
+          {
+            "year": 2023,
+            "value": 0.146383
+          },
+          {
+            "year": 2024,
+            "value": 0.138574
+          }
+        ]
+      },
+      {
+        "name": "Research facilities (adjusted estimate)",
+        "values": [
+          {
+            "year": 2000,
+            "value": 0.25282,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2001,
+            "value": 0.305514,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2002,
+            "value": 0.535781,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2003,
+            "value": 0.570409,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2004,
+            "value": 0.229622,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2005,
+            "value": 0.386066,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2006,
+            "value": 0.321056,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2007,
+            "value": 0.136676
+          },
+          {
+            "year": 2008,
+            "value": 0.136841,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2009,
+            "value": 0.380396,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2010,
+            "value": 0.150758,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
+          },
+          {
+            "year": 2011,
+            "value": 0.105528,
+            "approximate": true,
+            "source": "Estimated retrospective allocation of the 2011 rescission using USDA project histories."
           },
           {
             "year": 2012,

@@ -204,6 +204,24 @@ function studyBars(metric) {
 // subtitle, caption, and source inside its view. Inline series.name values are
 // legend labels; names in DATA come from data.json.
 const DEFAULT_CHART_CAPTION = "Percent change from first to latest available year";
+function federalAgencyBudgetView(adjusted) {
+  const series = adjusted ? DATA.rd.agencyBudgetAdjusted : DATA.rd.agencyBudget;
+  return {
+          title: "Federal agricultural R&D budget",
+          subtitle: adjusted ? "Agency breakdown with estimated facilities adjustment, 2000–2024; dashed line: official GBARD" : "Official annual agency budgets, 2000–2024; dashed line: broader GBARD agriculture budget",
+          yLabel: "Billion 2022 dollars",
+          tooltipUnit: "billion 2022 dollars",
+          type: "stacked",
+          series: series,
+          overlaySeries: [...(DATA.rd.federalBudget || []).map((series, index) => ({ ...series, name: index === 0 ? "GBARD agriculture" : `GBARD · ${series.name}`, color: "#252a2b", dasharray: "7 5" })), { name: adjusted ? "Adjusted agency total" : "Agency budget total", color: "#56a9d5", dasharray: "", hideInLegend: true, values: (series?.[0]?.values || []).map(point => ({ year: point.year, value: series.reduce((sum, series) => sum + series.values.find(d => d.year === point.year).value, 0), approximate: adjusted && (point.year <= 2011), source: adjusted && point.year <= 2011 ? "Includes an estimated retrospective facilities adjustment." : undefined })) }],
+          totalLabel: adjusted ? "Adjusted agency total" : "Agency budget total",
+          showChangeYears: true, labelPointSeriesOnly: true, fullWidth: true,
+          caption: (adjusted ? "Estimated adjustment: the $230 million cancellation in 2011 is deducted from earlier funding years, in proportion to each year’s contribution to the affected projects. USDA histories cover 96% of the enacted cancellation; their timing profile is used for the remainder. Most reductions fall in 2004–2010; $8.7 million is allocated before the chart begins. Facilities in 2011 show the $82 million before cancellation. This is an analytic estimate, not official annual budget authority. GBARD retains official timing; select Official annual budgets to compare unadjusted series. " : "Facilities fall below zero in 2011 because Congress canceled prior-year funding. ") + "Areas show research and facilities budgets under U.S. agriculture budget function 350. NIFA includes predecessor agencies; other research includes ERS, APHIS and NASS. The blue line is their total. GBARD uses a broader definition that includes forestry and fisheries, so it is not the sum of these areas. Forest Service research is outside this stack: in 2024 it was $303 million nominal, close to the $311 million nominal gap. Other classification differences and historical revisions may also contribute. Both datasets use the same March 2025 NIH BRDPI in 2022 dollars. Legend changes end in 2024. Isolated GBARD points: 2025 preliminary; 2026 President’s proposal. The 2024 price index is preliminary; 2025–26 indices are projected.",
+          source: `<a href="https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf" target="_blank" rel="noopener">USDA, facility project histories (pp. 16-77–84)</a>; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agency budgets (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; ${sourceLinks.gbard}; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (Table 11)</a>; ${sourceLinks.brdpi}`,
+          decimals: 2
+        };
+}
+
 const TOPICS = {
   overview: () => ({
     title: "Output is decoupling from resource use and impacts",
@@ -533,18 +551,12 @@ const TOPICS = {
           decimals: 1
         },
         {
-          title: "Federal agricultural R&D budget",
-          subtitle: "Agency breakdown, 2000–2024; solid line: agency total; dashed line: broader GBARD agriculture budget",
-          yLabel: "Billion 2022 dollars",
-          tooltipUnit: "billion 2022 dollars",
-          type: "stacked",
-          series: DATA.rd.agencyBudget || [],
-          overlaySeries: [...(DATA.rd.federalBudget || []).map((series, index) => ({ ...series, name: index === 0 ? "GBARD agriculture" : `GBARD · ${series.name}`, color: "#252a2b", dasharray: "7 5" })), { name: "Agency budget total", color: "#56a9d5", dasharray: "", hideInLegend: true, values: (DATA.rd.agencyBudget?.[0]?.values || []).map(point => ({ year: point.year, value: DATA.rd.agencyBudget.reduce((sum, series) => sum + series.values.find(d => d.year === point.year).value, 0) })) }],
-          totalLabel: "Agency budget total",
-          showChangeYears: true, labelPointSeriesOnly: true, fullWidth: true,
-          caption: "Areas show actual research and facilities budgets under U.S. agriculture budget function 350. NIFA includes predecessor agencies; other research includes ERS, APHIS and NASS. The blue line is their net total. Facilities fall below zero in 2011 because Congress rescinded prior-year funding. GBARD uses a broader definition that includes forestry and fisheries, so it is not the sum of these areas. Forest Service research is outside this stack: in 2024 it was $303 million nominal, close to the $311 million nominal gap. Other classification differences and historical revisions may also contribute. Both datasets use the same March 2025 NIH BRDPI in 2022 dollars. Legend changes end in 2024. Isolated GBARD points: 2025 preliminary; 2026 President’s proposal. The 2024 price index is preliminary; 2025–26 indices are projected.",
-          source: `<a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agency budgets (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; ${sourceLinks.gbard}; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (Table 11)</a>; ${sourceLinks.brdpi}`,
-          decimals: 2
+          title: "Federal agricultural R&D budget", fullWidth: true,
+          viewLabel: "Choose facilities accounting",
+          views: [
+            { ...federalAgencyBudgetView(true), id: "adjusted", label: "Adjusted facilities estimate" },
+            { ...federalAgencyBudgetView(false), id: "official", label: "Official annual budgets" }
+          ]
         }
       ]
     };
@@ -827,9 +839,11 @@ function drawStackedAreaChart(container, chart) {
     });
     const circles = [];
     years.forEach((year, i) => {
-      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(year)); circle.setAttribute("cy", y(positions.get(year))); circle.setAttribute("r", 4); circle.setAttribute("fill", COLORS[index % COLORS.length]); circle.setAttribute("class", "data-point area-point"); circle.setAttribute("tabindex", i === years.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${year}: ${formatValue(chart, values[i])}`);
-      circle.chartDatum = { series, point: { year, value: values[i] } };
-      const show = event => showTooltip(event, `<strong>${series.name}</strong><br>${year}: ${formatValue(chart, values[i])}`); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
+      const point = series.values.find(point => point.year === year);
+      const qualifier = point.approximate ? "≈" : "";
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(year)); circle.setAttribute("cy", y(positions.get(year))); circle.setAttribute("r", 4); circle.setAttribute("fill", COLORS[index % COLORS.length]); circle.setAttribute("class", "data-point area-point"); circle.setAttribute("tabindex", i === years.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${year}: ${qualifier}${formatValue(chart, values[i])}`);
+      circle.chartDatum = { series, point };
+      const show = event => showTooltip(event, `<strong>${series.name}</strong><br>${year}: ${qualifier}${formatValue(chart, values[i])}`); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
       circle.addEventListener("keydown", event => { if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return; event.preventDefault(); const next = Math.max(0, Math.min(circles.length - 1, i + (event.key === 'ArrowRight' ? 1 : -1))); circles[next]?.focus(); });
       circles.push(circle);
     });
