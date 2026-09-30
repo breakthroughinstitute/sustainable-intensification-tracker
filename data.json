@@ -8622,8 +8622,190 @@
       "deflator": "NIH/BEA BRDPI, March 2025 vintage; same index used by ERS",
       "university_scope": "NCSES HERD agricultural sciences; definition break in 2016; latest public-use revisions",
       "federal_budget_scope": "NCSES NSF 26-309 Table 26 agriculture GBARD objective; R&D plus capital R&D budget authority",
-      "deflator_status": "2024 preliminary; 2025\u20132026 projected"
-    }
+      "deflator_status": "2024 preliminary; 2025–2026 projected"
+    },
+    "agencyBudget": [
+      {
+        "name": "ARS research",
+        "values": [
+          {
+            "year": 2015,
+            "value": 1.254198
+          },
+          {
+            "year": 2016,
+            "value": 1.241533
+          },
+          {
+            "year": 2017,
+            "value": 1.238648
+          },
+          {
+            "year": 2018,
+            "value": 1.241919
+          },
+          {
+            "year": 2019,
+            "value": 1.29581
+          },
+          {
+            "year": 2020,
+            "value": 1.376444
+          },
+          {
+            "year": 2021,
+            "value": 1.450624
+          },
+          {
+            "year": 2022,
+            "value": 1.503
+          },
+          {
+            "year": 2023,
+            "value": 1.518726
+          },
+          {
+            "year": 2024,
+            "value": 1.520599
+          }
+        ]
+      },
+      {
+        "name": "NIFA research",
+        "values": [
+          {
+            "year": 2015,
+            "value": 0.964584
+          },
+          {
+            "year": 2016,
+            "value": 0.979171
+          },
+          {
+            "year": 2017,
+            "value": 0.99206
+          },
+          {
+            "year": 2018,
+            "value": 0.917795
+          },
+          {
+            "year": 2019,
+            "value": 0.962041
+          },
+          {
+            "year": 2020,
+            "value": 0.979805
+          },
+          {
+            "year": 2021,
+            "value": 1.078294
+          },
+          {
+            "year": 2022,
+            "value": 1.353
+          },
+          {
+            "year": 2023,
+            "value": 0.890819
+          },
+          {
+            "year": 2024,
+            "value": 0.832377
+          }
+        ]
+      },
+      {
+        "name": "Other agencies’ research",
+        "values": [
+          {
+            "year": 2015,
+            "value": 0.161562
+          },
+          {
+            "year": 2016,
+            "value": 0.156949
+          },
+          {
+            "year": 2017,
+            "value": 0.155259
+          },
+          {
+            "year": 2018,
+            "value": 0.150367
+          },
+          {
+            "year": 2019,
+            "value": 0.147251
+          },
+          {
+            "year": 2020,
+            "value": 0.143648
+          },
+          {
+            "year": 2021,
+            "value": 0.14433
+          },
+          {
+            "year": 2022,
+            "value": 0.144
+          },
+          {
+            "year": 2023,
+            "value": 0.146383
+          },
+          {
+            "year": 2024,
+            "value": 0.138574
+          }
+        ]
+      },
+      {
+        "name": "Research facilities",
+        "values": [
+          {
+            "year": 2015,
+            "value": 0.191481
+          },
+          {
+            "year": 2016,
+            "value": 0.374802
+          },
+          {
+            "year": 2017,
+            "value": 0.242022
+          },
+          {
+            "year": 2018,
+            "value": 0.302961
+          },
+          {
+            "year": 2019,
+            "value": 0.560645
+          },
+          {
+            "year": 2020,
+            "value": 0.366623
+          },
+          {
+            "year": 2021,
+            "value": 0.255193
+          },
+          {
+            "year": 2022,
+            "value": 0.295
+          },
+          {
+            "year": 2023,
+            "value": 0.306249
+          },
+          {
+            "year": 2024,
+            "value": 0.214837
+          }
+        ]
+      }
+    ]
   },
   "practices": {
     "ge": [
@@ -9038,7 +9220,7 @@
     ],
     "historic_tillage": [
       {
-        "name": "No-till \u00b7 CTIC/USGS",
+        "name": "No-till · CTIC/USGS",
         "values": [
           {
             "year": 1989,
@@ -9081,7 +9263,7 @@
     ],
     "precision": [
       {
-        "name": "Yield maps \u00b7 Corn",
+        "name": "Yield maps · Corn",
         "values": [
           {
             "year": 1997,
@@ -9132,7 +9314,7 @@
         ]
       },
       {
-        "name": "Yield maps \u00b7 Soybeans",
+        "name": "Yield maps · Soybeans",
         "values": [
           {
             "year": 1996,
@@ -9188,7 +9370,7 @@
         ]
       },
       {
-        "name": "Guidance/auto-steer \u00b7 Corn",
+        "name": "Guidance/auto-steer · Corn",
         "values": [
           {
             "year": 2001,
@@ -9219,7 +9401,7 @@
         ]
       },
       {
-        "name": "Guidance/auto-steer \u00b7 Soybeans",
+        "name": "Guidance/auto-steer · Soybeans",
         "values": [
           {
             "year": 2002,
@@ -9354,7 +9536,7 @@
     ],
     "soil_moisture_sensing": [
       {
-        "name": "Soil-moisture sensing \u00b7 irrigating farms",
+        "name": "Soil-moisture sensing · irrigating farms",
         "values": [
           {
             "year": 2013,

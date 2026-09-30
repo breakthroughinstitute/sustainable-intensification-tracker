@@ -535,13 +535,16 @@ const TOPICS = {
         },
         {
           title: "Federal agricultural R&D budget",
-          subtitle: "Federal allocations across recipients, including research facilities; not actual expenditures",
+          subtitle: "Agency breakdown, 2015–2024; dashed line: broader GBARD agriculture budget, 2000–2024",
           yLabel: "Billion 2022 dollars",
           tooltipUnit: "billion 2022 dollars",
-          series: DATA.rd.federalBudget || [],
+          type: "stacked",
+          series: DATA.rd.agencyBudget || [],
+          overlaySeries: (DATA.rd.federalBudget || []).map((series, index) => ({ ...series, name: index === 0 ? "GBARD agriculture" : `GBARD · ${series.name}`, color: "#252a2b", dasharray: "7 5" })),
+          totalLabel: "Agency budget total",
           showChangeYears: true, labelPointSeriesOnly: true, fullWidth: true,
-          caption: "Federal budget authority, not expenditures or university funding alone. Legend change covers 2000–2024 only. The 2025 point is preliminary; 2026 is the President's proposed budget, not enacted funding. Adjusted using NIH BRDPI: the 2024 index is preliminary and 2025–26 indices are projected.",
-          source: `${sourceLinks.gbard}; ${sourceLinks.brdpi}`,
+          caption: "Areas show actual R&D and facilities budget authority under U.S. agriculture budget function 350; the dashed GBARD line uses a broader international agriculture objective, so its level and trend differ. Agency detail is available here for 2015–2024 and cannot explain the full GBARD decline since 2000. ARS conducts research; NIFA funds research elsewhere. Other agencies include ERS, APHIS and NASS. Facilities are reported separately, largely at ARS. Legend changes end in 2024. Isolated GBARD points: 2025 preliminary; 2026 President’s proposal, not enacted funding. All values use NIH BRDPI in 2022 dollars; 2024’s index is preliminary and 2025–26 indices are projected.",
+          source: `<a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agency budgets (Table 12, annual editions)</a>; ${sourceLinks.gbard}; ${sourceLinks.brdpi}`,
           decimals: 2
         }
       ]
@@ -768,7 +771,9 @@ function drawStackedAreaChart(container, chart) {
   const years = chart.series[0].values.map(d => d.year).filter(year => maps.every(map => map.has(year))).sort((a, b) => a - b);
   if (!years.length) { container.innerHTML = '<p class="chart-empty">The component series do not share a common time period.</p>'; return; }
   const totals = years.map(year => maps.reduce((sum, map) => sum + map.get(year), 0));
-  const xMin = years[0], xMax = years.at(-1), yScale = niceScale(Math.max(...totals, 1)), yMax = yScale.max;
+  const overlays = chart.overlaySeries || [];
+  const overlayPoints = overlays.flatMap(series => series.values);
+  const xMin = Math.min(years[0], ...overlayPoints.map(d => d.year)), xMax = Math.max(years.at(-1), ...overlayPoints.map(d => d.year)), yScale = niceScale(Math.max(...totals, ...overlayPoints.map(d => d.value), 1)), yMax = yScale.max;
   const x = year => margin.left + (year - xMin) / (xMax - xMin || 1) * (width - margin.left - margin.right);
   const y = value => height - margin.bottom - value / yMax * (height - margin.top - margin.bottom);
   const yTicks = yScale.ticks;
@@ -798,6 +803,25 @@ function drawStackedAreaChart(container, chart) {
     });
     lower = upper;
   });
+  overlays.forEach(series => {
+    const sorted = [...series.values].sort((a, b) => a.year - b.year);
+    if (!series.pointsOnly) {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", sorted.map((d, i) => `${i ? "L" : "M"}${x(d.year)},${y(d.value)}`).join(" "));
+      path.setAttribute("class", "series-path"); path.setAttribute("stroke", series.color);
+      path.setAttribute("stroke-dasharray", series.dasharray || "7 5"); svg.append(path);
+    }
+    const circles = [];
+    sorted.forEach((d, i) => {
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      Object.entries({ cx: x(d.year), cy: y(d.value), r: series.pointsOnly ? 5 : 4, fill: series.color, class: `data-point line-point${series.pointsOnly ? " always-visible" : ""}`, tabindex: i === sorted.length - 1 ? "0" : "-1", "aria-label": `${series.name}, ${d.year}: ${formatValue(chart, d.value)}` }).forEach(([key, value]) => circle.setAttribute(key, value));
+      const show = event => showTooltip(event, `<strong>${series.name}</strong><br>${d.year}: ${formatValue(chart, d.value)}`);
+      ["pointerenter", "pointermove", "focus"].forEach(event => circle.addEventListener(event, show));
+      ["pointerleave", "blur"].forEach(event => circle.addEventListener(event, hideTooltip));
+      circle.addEventListener("keydown", event => { if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return; event.preventDefault(); circles[Math.max(0, Math.min(circles.length - 1, i + (event.key === "ArrowRight" ? 1 : -1)))]?.focus(); });
+      circles.push(circle); svg.append(circle);
+    });
+  });
   container.append(svg); renderSeriesSummary(container.parentElement.querySelector(".series-summary"), chart);
 }
 
@@ -813,7 +837,7 @@ function renderSeriesSummary(summary, chart) {
     const last = chart.series.reduce((sum, series) => sum + series.values.find(point => point.year === lastYear).value, 0);
     total = `<strong class="total-change">${chart.totalLabel}: ${pct((last / first - 1) * 100)} <small>${firstYear}–${lastYear}</small></strong>`;
   }
-  const rows = chart.series.map((series, index) => {
+  const rows = [...chart.series, ...(chart.overlaySeries || []).map(series => ({ ...series, isOverlay: true }))].map((series, index) => {
     const delta = chart.labelPointSeriesOnly && series.pointsOnly ? "" : chart.summaryMode === "latest" ? formatValue(chart, series.values.at(-1).value) : pct(change(series.values));
     const range = `${series.values[0].year}–${series.values.at(-1).year}`;
     if (series.sourceBoundary) {
@@ -823,8 +847,8 @@ function renderSeriesSummary(summary, chart) {
     }
     return chart.series.length === 1
       ? `<span class="single-change"><strong>${delta}</strong> <small>${chart.summaryMode === "latest" ? series.values.at(-1).year : range}</small></span>`
-      : chart.type === "stacked"
-        ? `<span><i style="background:${COLORS[index % COLORS.length]}"></i><b>${series.name} ${delta}</b></span>`
+      : chart.type === "stacked" && !series.isOverlay
+        ? `<span><i style="background:${COLORS[index % COLORS.length]}"></i><b>${series.name} ${delta}${chart.showChangeYears ? ` <small>${range}</small>` : ""}</b></span>`
         : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="2" fill="${series.color || COLORS[index % COLORS.length]}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}${chart.showChangeYears && !(chart.labelPointSeriesOnly && series.pointsOnly) ? ` <small>${range}</small>` : chart.latestYearLabel ? ` <small>${series.values.at(-1).year}</small>` : ""}</b></span>`;
   }).join("");
   const overlayKey = chart.rollingSeries ? `<div class="overlay-key"><span><i class="key-bar"></i> Annual survey</span><span><i class="key-average"></i> Five-survey mean</span><span><i class="key-goal"></i> Task Force goal</span></div>` : "";
