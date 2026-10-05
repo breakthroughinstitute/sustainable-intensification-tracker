@@ -15,13 +15,21 @@
   <a class="skip-link" href="#tracker-panel">Skip to visualization</a>
   <main class="tracker-shell">
     <header class="tracker-header">
-      <div>
-        <h1>Sustainable Intensification Tracker</h1>
-        <p class="standfirst">As agricultural productivity has grown, output has risen faster than environmental impacts and resource use.</p>
+      <div class="tracker-header-copy">
+        <h1 data-editable-key="header:title">Sustainable Intensification Tracker</h1>
+        <p class="standfirst" data-editable-key="header:standfirst">As agricultural productivity has grown, output has risen faster than environmental impacts and resource use.</p>
+      </div>
+      <div class="text-edit-tools">
+        <button type="button" id="edit-text-toggle" aria-pressed="false">Edit text</button>
+        <button type="button" id="save-text-edits" hidden>Save to project</button>
+        <button type="button" id="reset-text-edits" hidden>Discard unsaved edits</button>
+        <p id="text-edit-status" aria-live="polite" hidden>Click highlighted text to edit, then save your changes to the tracker project.</p>
       </div>
     </header>
 
-    <nav class="topic-nav" aria-label="Choose a topic">
+    <div class="explorer-toolbar">
+    <div class="explorer-actions"><button type="button" id="fullscreen-toggle" aria-pressed="false"><span aria-hidden="true">⛶</span> <span class="fullscreen-label">Full screen</span></button><a id="open-tracker" target="_blank" rel="noopener" href="./">Open in new tab <span aria-hidden="true">↗</span></a><span id="display-status" class="sr-only" role="status"></span></div>
+    <nav class="topic-nav" role="tablist" aria-label="Choose a topic">
       <button type="button" data-topic="overview" aria-selected="true">Overview</button>
       <button type="button" data-topic="land">Land</button>
       <button type="button" data-topic="nitrogen">Nitrogen</button>
@@ -52,7 +60,10 @@
       </div>
     </div>
 
-    <section id="tracker-panel" class="topic-panel" aria-live="polite"></section>
+    </div>
+
+    <section id="tracker-panel" class="topic-panel" role="tabpanel" tabindex="-1"></section>
+    <span id="chart-position" class="sr-only" role="status"></span>
   </main>
   <div id="tooltip" class="tooltip" role="status" aria-hidden="true"></div>
   <script src="app.js" defer></script>

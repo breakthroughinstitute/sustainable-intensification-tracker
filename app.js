@@ -2,8 +2,94 @@ const COLORS = ["#0dc3a8", "#0d4459", "#ee5c36", "#f8b944", "#56a9d5", "#e82269"
 const panel = document.querySelector("#tracker-panel");
 const tooltip = document.querySelector("#tooltip");
 let DATA;
+let BIOTECH;
 let STUDIES;
-let CHANGE_MODE = "total";
+let CHANGE_MODE = "annual";
+let STUDY_SORT_DIRECTION = "desc";
+const mobileLayout = window.matchMedia("(max-width: 900px)");
+let ACTIVE_TOPIC = null;
+let MOBILE_CHART = 0;
+const CHART_CHOICES = new Map();
+const CHART_STATES = new Map();
+const CARD_STATES = new Map();
+let selectedMatrixMetric = "greenhouse_gas";
+const IS_EMBEDDED = window.parent !== window;
+document.body.classList.toggle("is-embedded", IS_EMBEDDED);
+document.body.classList.toggle("local-preview", ["127.0.0.1", "localhost"].includes(location.hostname));
+const TEXT_EDITS_STORAGE_KEY = "bti-si-tracker-text-edits-v1";
+let PROJECT_TEXT_EDITS = {};
+let TEXT_EDIT_MODE = false;
+const LOCAL_EDIT_SERVER = ["127.0.0.1", "localhost"].includes(location.hostname);
+
+function readTextEdits() {
+  try { return { ...PROJECT_TEXT_EDITS, ...JSON.parse(localStorage.getItem(TEXT_EDITS_STORAGE_KEY) || "{}") }; }
+  catch { return { ...PROJECT_TEXT_EDITS }; }
+}
+function applySavedTextEdits(root = document) {
+  const edits = readTextEdits();
+  root.querySelectorAll("[data-editable-key]").forEach(element => {
+    if (Object.hasOwn(edits, element.dataset.editableKey)) {
+      element.textContent = edits[element.dataset.editableKey];
+      element.classList.toggle("text-edited", edits[element.dataset.editableKey].includes("\n"));
+    } else element.classList.remove("text-edited");
+    element.contentEditable = String(TEXT_EDIT_MODE);
+    element.classList.toggle("text-editable", TEXT_EDIT_MODE);
+  });
+}
+function setTextEditMode(enabled) {
+  TEXT_EDIT_MODE = enabled;
+  const button = document.querySelector("#edit-text-toggle");
+  const save = document.querySelector("#save-text-edits");
+  const reset = document.querySelector("#reset-text-edits");
+  const status = document.querySelector("#text-edit-status");
+  button.textContent = enabled ? "Done editing" : "Edit text";
+  button.setAttribute("aria-pressed", String(enabled));
+  save.hidden = !enabled || !LOCAL_EDIT_SERVER;
+  reset.hidden = !enabled;
+  status.hidden = !enabled;
+  if (enabled && !LOCAL_EDIT_SERVER) status.textContent = "This hosted page saves text only in your browser. Use the local preview to save edits into the project source.";
+  else if (enabled) status.textContent = "Click highlighted text to edit, then save your changes to the tracker project.";
+  document.body.classList.toggle("text-edit-mode", enabled);
+  applySavedTextEdits();
+}
+
+document.querySelector("#edit-text-toggle").addEventListener("click", () => setTextEditMode(!TEXT_EDIT_MODE));
+document.querySelector("#save-text-edits").addEventListener("click", async () => {
+  const status = document.querySelector("#text-edit-status");
+  const edits = readTextEdits();
+  status.textContent = "Saving to the tracker project…";
+  try {
+    const response = await fetch("/__save_text_edits", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(edits)
+    });
+    if (!response.ok) throw new Error(`Save failed (${response.status})`);
+    PROJECT_TEXT_EDITS = edits;
+    try { localStorage.removeItem(TEXT_EDITS_STORAGE_KEY); } catch {}
+    status.textContent = "Saved to text-edits.json in the tracker project. Commit and publish the project to update the shared site.";
+  } catch {
+    status.textContent = "Could not save to the project. Open this tracker with preview.command, then try again.";
+  }
+});
+document.querySelector("#reset-text-edits").addEventListener("click", () => {
+  try { localStorage.removeItem(TEXT_EDITS_STORAGE_KEY); } catch {}
+  location.reload();
+});
+document.addEventListener("input", event => {
+  const element = event.target.closest("[data-editable-key]");
+  if (!TEXT_EDIT_MODE || !element) return;
+  const edits = readTextEdits();
+  edits[element.dataset.editableKey] = element.innerText.replace(/\r/g, "");
+  try { localStorage.setItem(TEXT_EDITS_STORAGE_KEY, JSON.stringify(edits)); }
+  catch { document.querySelector("#text-edit-status").textContent = "Browser storage is unavailable; edits may not persist after refresh."; }
+});
+document.addEventListener("click", event => {
+  if (TEXT_EDIT_MODE && event.target.closest("summary [data-editable-key]")) event.preventDefault();
+}, true);
+document.addEventListener("keydown", event => {
+  if (TEXT_EDIT_MODE && event.target.closest("summary [data-editable-key]") && ["Enter", " "].includes(event.key)) event.preventDefault();
+});
 
 const sourceLinks = {
   productivity: '<a href="https://ers.usda.gov/data-products/agricultural-productivity-in-the-united-states" target="_blank" rel="noopener">USDA ERS, Agricultural Productivity in the United States</a>',
@@ -48,14 +134,80 @@ const indexToBase = (values, baseYear = 1990) => {
   const base = values.find(d => d.year === baseYear)?.value;
   return base ? values.filter(d => d.year >= baseYear).map(d => ({ year: d.year, value: 100 * d.value / base })) : [];
 };
-const niceScale = (maxValue, intervals = 4) => {
-  const roughStep = Math.max(maxValue * 1.03 / intervals, Number.EPSILON);
+const niceScale = (maxValue, intervals = 5) => {
+  const paddedMax = Math.max(maxValue * 1.03, Number.EPSILON);
+  const roughStep = paddedMax / intervals;
   const magnitude = 10 ** Math.floor(Math.log10(roughStep));
   const fraction = roughStep / magnitude;
-  const niceFraction = [1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find(value => value >= fraction) || 10;
+  const niceFraction = [1, 2, 2.5, 5, 10].find(value => value >= fraction) || 10;
   const step = niceFraction * magnitude;
-  return { max: step * intervals, ticks: Array.from({ length: intervals + 1 }, (_, index) => step * index) };
+  const count = Math.ceil(paddedMax / step);
+  return { max: step * count, ticks: Array.from({ length: count + 1 }, (_, index) => step * index) };
 };
+
+function axisNumber(value, ticks) {
+  const distinct = [...new Set(ticks)].sort((a, b) => a - b);
+  const step = Math.min(...distinct.slice(1).map((tick, i) => tick - distinct[i]));
+  let decimals = 0;
+  while (decimals < 6 && Math.abs(step * 10 ** decimals - Math.round(step * 10 ** decimals)) > 1e-6) decimals++;
+  return format(value, decimals);
+}
+function yearTicks(first, last, plotWidth) {
+  if (first === last) return [first];
+  const gap = (last - first) * 42 / Math.max(plotWidth, 1);
+  const targetStep = (last - first) / Math.min(5, Math.max(2, Math.floor(plotWidth / 50)));
+  const step = [1, 2, 5, 10, 20, 25, 50, 100].reduce((best, step) => Math.abs(step - targetStep) < Math.abs(best - targetStep) ? step : best);
+  const ticks = [first];
+  for (let year = Math.ceil(first / step) * step; year < last; year += step) {
+    if (year - ticks.at(-1) >= gap && last - year >= gap) ticks.push(year);
+  }
+  ticks.push(last);
+  return ticks;
+}
+const USDA_PATHWAYS = { petitions: "Petition determinations", rsr: "Regulatory status reviews", confirmations: "Exemption confirmations", air: "Am I Regulated responses" };
+let selectedUSDAPathways = new Set(Object.keys(USDA_PATHWAYS));
+function filteredUSDAChart(chart) {
+  const records = BIOTECH.usdaRecords.filter(([, , pathway]) => selectedUSDAPathways.has(pathway));
+  const majorCrops = new Set(BIOTECH.usdaByCrop.map(series => series.name).filter(name => name !== "Other crops"));
+  const aggregate = (templates, group) => {
+    const annual = new Map();
+    records.forEach(([year, crop]) => {
+      const key = `${group(crop)}:${year}`;
+      annual.set(key, (annual.get(key) || 0) + 1);
+    });
+    return templates.map((series, index) => {
+      let count = 0;
+      return { ...series, color: series.color || COLORS[index % COLORS.length], values: series.values.map(point => ({ year: point.year, value: count += annual.get(`${series.name}:${point.year}`) || 0 })) };
+    });
+  };
+  return { ...chart, series: aggregate(chart.series, crop => majorCrops.has(crop) ? crop : "Other crops").filter(series => series.values.at(-1).value > 0), otherCrops: aggregate(BIOTECH.usdaOtherCrops, crop => crop), filteredRecordCount: records.length };
+}
+function renderUSDAFilter(container, chart) {
+  const content = container.parentElement;
+  let filter = content.querySelector(".usda-filter");
+  if (!chart.usdaFilter) { filter?.remove(); return; }
+  if (!filter) {
+    filter = document.createElement("details"); filter.className = "usda-filter";
+    filter.innerHTML = `<summary>Filter USDA records <small class="usda-filter-count"></small></summary><div class="pathway-presets" role="group" aria-label="Pathway groups"><button type="button" data-pathway-preset="all">All pathways</button><button type="button" data-pathway-preset="reviews">Petitions + reviews</button><button type="button" data-pathway-preset="inquiries">Exemptions + AIR</button></div><fieldset><legend>Include review pathways</legend>${Object.entries(USDA_PATHWAYS).map(([key, name]) => `<label><input type="checkbox" value="${key}" checked> ${name}</label>`).join("")}</fieldset><p class="pathway-filter-note">These groups identify review routes, not whether a crop is transgenic or gene-edited. “Am I Regulated” includes both. Counts are regulatory records, not unique varieties.</p>`;
+    container.before(filter);
+    const redraw = () => { drawChart(container, container.chartConfig); document.querySelector("#open-tracker").href = standaloneURL(); sendHeight(); };
+    filter.addEventListener("change", () => { selectedUSDAPathways = new Set([...filter.querySelectorAll("input:checked")].map(input => input.value)); redraw(); });
+    filter.addEventListener("click", event => {
+      const preset = event.target.closest("[data-pathway-preset]")?.dataset.pathwayPreset;
+      if (!preset) return;
+      selectedUSDAPathways = new Set(preset === "all" ? Object.keys(USDA_PATHWAYS) : preset === "reviews" ? ["petitions", "rsr"] : ["confirmations", "air"]);
+      redraw();
+    });
+    filter.addEventListener("toggle", sendHeight);
+  }
+  filter.querySelectorAll("input").forEach(input => { input.checked = selectedUSDAPathways.has(input.value); });
+  const all = selectedUSDAPathways.size === Object.keys(USDA_PATHWAYS).length;
+  filter.querySelector(".usda-filter-count").textContent = `${all ? "All pathways" : "Filtered"} · ${chart.filteredRecordCount} records`;
+  filter.querySelectorAll("[data-pathway-preset]").forEach(button => {
+    const keys = button.dataset.pathwayPreset === "all" ? Object.keys(USDA_PATHWAYS) : button.dataset.pathwayPreset === "reviews" ? ["petitions", "rsr"] : ["confirmations", "air"];
+    button.setAttribute("aria-pressed", String(keys.length === selectedUSDAPathways.size && keys.every(key => selectedUSDAPathways.has(key))));
+  });
+}
 
 const PRODUCT_ORDER = ["beef", "dairy", "pork", "chicken", "eggs", "corn", "cotton", "soy", "wheat"];
 const PRODUCT_NAMES = { beef: "Beef", dairy: "Milk", pork: "Pork", chicken: "Chicken", eggs: "Eggs", corn: "Corn", cotton: "Cotton", soy: "Soybeans", wheat: "Wheat" };
@@ -73,24 +225,34 @@ const MATRIX_METRICS = ["greenhouse_gas", "land", "water", "energy", "soil_erosi
 const MATRIX_METRIC_NAMES = { greenhouse_gas: "GHGs/output", land: "Land/output", water: "Water/output", energy: "Energy/output", soil_erosion: "Soil loss/output" };
 const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const studyNumber = value => Number(value).toLocaleString("en-US", { maximumFractionDigits: 4 });
-const studyRows = metric => PRODUCT_ORDER.map(product => STUDIES.find(row => row.product === product && row.comparison_role !== "historical" && STUDY_METRICS[metric].includes(row.metric))).filter(Boolean);
+const studyRows = metric => {
+  const rows = PRODUCT_ORDER.map(product => STUDIES.find(row => row.product === product && row.comparison_role !== "historical" && STUDY_METRICS[metric].includes(row.metric))).filter(Boolean);
+  rows.sort((a, b) => {
+    const difference = Math.abs(studyChange(a)) - Math.abs(studyChange(b));
+    return (STUDY_SORT_DIRECTION === "desc" ? -difference : difference) || PRODUCT_ORDER.indexOf(a.product) - PRODUCT_ORDER.indexOf(b.product);
+  });
+  return rows;
+};
 const studyPeriod = row => `${row.base_year}–${row.latest_year}`;
-const studyChange = row => CHANGE_MODE === "annual" ? (Math.pow(1 + row.change_pct / 100, 1 / (row.latest_year - row.base_year)) - 1) * 100 : row.change_pct;
+// Annualize each source's reported total change, preserving unrounded-source estimates
+// when the displayed endpoints are rounded. All product views share this function.
+const annualizedChange = row => Math.expm1(Math.log1p(row.change_pct / 100) / (row.latest_year - row.base_year)) * 100;
+const studyChange = row => CHANGE_MODE === "annual" ? annualizedChange(row) : row.change_pct;
 const studyDelta = row => {
   const value = studyChange(row);
   return `${value > 0 ? "+" : "−"}${Math.abs(value).toFixed(CHANGE_MODE === "annual" ? 2 : 1)}%${CHANGE_MODE === "annual" ? "/yr" : ""}`;
 };
 const changeToggle = () => `<div class="change-mode-control"><span class="change-mode-label">Percentage change</span><div class="change-mode-toggle" role="group" aria-label="Percentage change period"><button type="button" data-change-mode="total" aria-pressed="${CHANGE_MODE === "total"}">Total</button><button type="button" data-change-mode="annual" aria-pressed="${CHANGE_MODE === "annual"}">Per year</button></div></div>`;
+const studySortHeader = () => `<button type="button" class="product-bar-sort" data-study-sort aria-label="Sort by absolute change, ${STUDY_SORT_DIRECTION === "desc" ? "descending" : "ascending"}" title="Sort by absolute change, ${STUDY_SORT_DIRECTION === "desc" ? "descending" : "ascending"}">Change ${STUDY_SORT_DIRECTION === "desc" ? "↓" : "↑"}</button>`;
 function studyDetails(row) {
   const name = PRODUCT_NAMES[row.product];
   const measurement = matrixMeasurement(row);
   const source = /^https:\/\//.test(row.source_url) ? `<a href="${escapeHTML(row.source_url)}" target="_blank" rel="noopener">Open study ↗</a>` : "";
   const measure = row.product === "dairy" && row.metric === "water" ? "Modeled total water use" : { blue_water: "Blue water use", water_consumption: "Water consumption", direct_water: "Direct farm water", irrigation_water: "Irrigation water", cropland: "Feed cropland", fertilizer_n: "Fertilizer nitrogen applied per unit of crop output", reactive_n_loss: "Life-cycle reactive nitrogen lost to air and water", n_leached: "Modeled farm nitrogen leaching below the root zone", marine_eutrophication: "Life-cycle marine eutrophication potential", soil_erosion_output: "Derived soil loss per unit of crop output" }[row.metric];
   const period = CHANGE_MODE === "annual" ? "Compound annual change between study endpoints." : "Total change between study endpoints.";
-  return `<div class="study-info"><button type="button" class="study-info-trigger" aria-label="Details for ${name}" aria-expanded="false" title="Study details">i</button><div class="study-popover"><strong>${escapeHTML(STUDY_NAMES[row.study_id] || row.study_id)}</strong>${measure ? `<span>${measure}</span>` : ""}<span>${row.base_year}: ${studyNumber(row.base_value)} → ${row.latest_year}: ${studyNumber(row.latest_value)} ${escapeHTML(measurement.unit)}</span><span>${period}</span>${measurement.basis ? `<span>${escapeHTML(measurement.basis)}</span>` : ""}${row.comparison_note ? `<span>${escapeHTML(row.comparison_note)}</span>` : ""}<span>Periods and methodologies differ across some studies.</span><span>${escapeHTML(row.source_table)}</span>${source}</div></div>`;
+  return `<div class="study-info"><button type="button" class="study-info-trigger" aria-label="Details for ${name}" aria-expanded="false" title="Study details">i</button><div class="study-popover" role="dialog" aria-label="${name} study details"><button type="button" class="study-popover-close" aria-label="Close study details">×</button><strong>${escapeHTML(STUDY_NAMES[row.study_id] || row.study_id)}</strong>${measure ? `<span>${measure}</span>` : ""}<span>${row.base_year}: ${studyNumber(row.base_value)} → ${row.latest_year}: ${studyNumber(row.latest_value)} ${escapeHTML(measurement.unit)}</span><span>${period}</span>${measurement.basis ? `<span>${escapeHTML(measurement.basis)}</span>` : ""}${row.comparison_note ? `<span>${escapeHTML(row.comparison_note)}</span>` : ""}<span>Periods and methodologies differ across some studies.</span><span>${escapeHTML(row.source_table)}</span>${source}</div></div>`;
 }
 const matrixRow = (product, metric) => STUDIES.find(row => row.product === product && row.comparison_role !== "historical" && STUDY_METRICS[metric].includes(row.metric));
-const annualizedChange = row => (Math.pow(1 + row.change_pct / 100, 1 / (row.latest_year - row.base_year)) - 1) * 100;
 const matrixRate = row => `${annualizedChange(row) > 0 ? "+" : "−"}${Math.abs(annualizedChange(row)).toFixed(2)}%`;
 function matrixBand(row) {
   if (!row) return "missing";
@@ -102,7 +264,7 @@ function matrixCell(product, metric) {
   const row = matrixRow(product, metric);
   const rate = row ? matrixRate(row) : "—";
   const label = `${PRODUCT_NAMES[product]}, ${STUDY_METRIC_NAMES[metric]}: ${row ? `${rate} annualized change; show study details` : "no selected comparison"}`;
-  return `<td><button type="button" class="matrix-cell band-${matrixBand(row)}" data-matrix-cell="${metric}" data-product="${product}" aria-label="${escapeHTML(label)}" aria-expanded="false">${rate}</button></td>`;
+  return `<td data-metric="${metric}"><button type="button" class="matrix-cell band-${matrixBand(row)}" data-matrix-cell="${metric}" data-product="${product}" aria-label="${escapeHTML(label)}" aria-expanded="false">${rate}</button></td>`;
 }
 function matrixMeasurement(row) {
   let unit = row.unit.replaceAll("CO2e", "CO₂e").replaceAll("m2a", "m²·yr").replaceAll("m2", "m²").replaceAll("m3", "m³");
@@ -136,12 +298,19 @@ function matrixPopoverContent(product, metric) {
 let matrixAnchor = null;
 let matrixPinned = false;
 let matrixHideTimer;
-function closeMatrixPopover() {
+let restoringMatrixFocus = false;
+function closeMatrixPopover(restoreFocus = false) {
+  const previousAnchor = matrixAnchor;
   clearTimeout(matrixHideTimer);
   matrixAnchor?.setAttribute("aria-expanded", "false");
   matrixAnchor = null;
   matrixPinned = false;
   panel.querySelector(".matrix-popover")?.remove();
+  if (restoreFocus && previousAnchor?.isConnected) {
+    restoringMatrixFocus = true;
+    previousAnchor.focus({ preventScroll: true });
+    restoringMatrixFocus = false;
+  }
 }
 function positionMatrixPopover(anchor, popover) {
   const rect = anchor.getBoundingClientRect();
@@ -149,6 +318,7 @@ function positionMatrixPopover(anchor, popover) {
   const height = popover.getBoundingClientRect().height;
   popover.style.left = `${Math.max(10, Math.min(window.innerWidth - width - 10, rect.left))}px`;
   const below = window.innerHeight - rect.bottom;
+  if (mobileLayout.matches) { popover.style.left = ""; popover.style.top = ""; return; }
   popover.style.top = `${below >= Math.min(height, 250) || below >= rect.top ? Math.min(window.innerHeight - height - 10, rect.bottom + 7) : Math.max(10, rect.top - height - 7)}px`;
 }
 function openMatrixPopover(anchor, pinned = false) {
@@ -163,22 +333,49 @@ function openMatrixPopover(anchor, pinned = false) {
     popover = document.createElement("div");
     popover.className = "matrix-popover";
     popover.id = "matrix-details";
+    popover.setAttribute("role", "dialog");
+    popover.setAttribute("aria-label", "Product study details");
     popover.addEventListener("pointerenter", () => clearTimeout(matrixHideTimer));
     popover.addEventListener("pointerleave", () => { if (!matrixPinned) matrixHideTimer = setTimeout(closeMatrixPopover, 140); });
+    popover.addEventListener("toggle", () => { if (matrixAnchor) positionMatrixPopover(matrixAnchor, popover); }, true);
     panel.append(popover);
   }
   popover.innerHTML = matrixPopoverContent(anchor.dataset.product, anchor.dataset.matrixCell);
+  anchor.setAttribute("aria-controls", "matrix-details");
   positionMatrixPopover(anchor, popover);
+  if (pinned) popover.querySelector("button").focus({ preventScroll: true });
 }
 function renderProducts() {
   closeMatrixPopover();
-  panel.innerHTML = `<div class="panel-lead"><h2>Explore changes in product footprints</h2><p>Annualized change in resource use or impact per unit of product.</p></div><div class="matrix-wrap"><table class="product-matrix"><caption>Annualized change in per-unit product footprints, not total sector impacts</caption><thead><tr><th scope="col">Product</th>${MATRIX_METRICS.map(metric => `<th scope="col">${MATRIX_METRIC_NAMES[metric]}</th>`).join("")}</tr></thead><tbody>${PRODUCT_ORDER.map(product => `<tr class="${product === "corn" ? "matrix-crops-start" : ""}"><th scope="row">${PRODUCT_NAMES[product]}</th>${MATRIX_METRICS.map(metric => matrixCell(product, metric)).join("")}</tr>`).join("")}</tbody></table></div><p class="product-boundary">Rates are compound annual changes between study endpoints. Crop soil loss per unit of output is derived from Field to Market's soil loss per acre and planted acres per unit of output. Its 2020 soil-loss figure is the report’s published smoothed trend estimate, using USDA erosion-model inputs through 2017. Select a cell for values, methods and sources.</p>`;
+  panel.innerHTML = `<div class="panel-lead"><h2 data-editable-key="products:title">Explore changes in product footprints</h2><p data-editable-key="products:subtitle">Annualized change in resource use and environmental impacts per unit of product in the United States.</p></div><div class="matrix-controls"><label for="matrix-metric">Measure</label><select id="matrix-metric">${MATRIX_METRICS.map(metric => `<option value="${metric}">${MATRIX_METRIC_NAMES[metric]}</option>`).join("")}</select></div><div class="matrix-legend" aria-label="Color scale"><span>← Faster annual declines</span><i aria-hidden="true"></i><span>Slower declines →</span></div><div class="matrix-wrap"><table class="product-matrix"><caption data-editable-key="products:matrix-caption">Annualized change in per-unit product footprints, not total sector impacts</caption><thead><tr><th scope="col">Product</th>${MATRIX_METRICS.map(metric => `<th scope="col" data-metric="${metric}">${MATRIX_METRIC_NAMES[metric]}</th>`).join("")}</tr></thead><tbody>${PRODUCT_ORDER.map(product => `<tr class="${product === "corn" ? "matrix-crops-start" : ""}"><th scope="row">${PRODUCT_NAMES[product]}</th>${MATRIX_METRICS.map(metric => matrixCell(product, metric)).join("")}</tr>`).join("")}</tbody></table></div><p class="product-boundary" data-editable-key="products:boundary">Rates are compound annual changes between study endpoints. Crop soil loss per unit of output is derived from Field to Market's soil loss per acre and planted acres per unit of output. Its 2020 soil-loss figure is the report’s published smoothed trend estimate, using USDA erosion-model inputs through 2017. Select a cell for values, methods and sources.</p>`;
+  applySavedTextEdits(panel);
+  const metricSelect = panel.querySelector("#matrix-metric");
+  metricSelect.value = selectedMatrixMetric;
+  const updateMetric = () => {
+    selectedMatrixMetric = metricSelect.value;
+    panel.querySelectorAll("[data-metric]").forEach(cell => cell.classList.toggle("mobile-metric-hidden", cell.dataset.metric !== selectedMatrixMetric));
+    closeMatrixPopover(); document.querySelector("#open-tracker").href = standaloneURL(); sendHeight();
+  };
+  metricSelect.addEventListener("change", updateMetric);
+  updateMetric();
 }
 function studyBarRows(metric) {
   const rows = studyRows(metric);
-  const maxChange = Math.max(...rows.map(row => Math.abs(studyChange(row))), 0.01);
+  const values = rows.map(studyChange);
+  const minChange = Math.min(0, ...values), maxChange = Math.max(0, ...values);
+  const extent = Math.max(maxChange - minChange, 0.01);
+  const zero = -minChange / extent * 100;
+  const bars = panel.querySelector(".product-bars");
+  if (bars) bars.style.setProperty("--product-zero", String(zero / 100));
+  const axis = panel.querySelector(".product-bar-axis");
+  if (axis) axis.innerHTML = `<span class="bar-direction">${minChange < 0 ? "← Decrease" : ""}</span><span class="bar-zero" style="left:${zero}%">0%</span>${maxChange > 0 ? '<span class="bar-increase">Increase →</span>' : ""}`;
   const nitrogenLabels = { fertilizer_n: "Fertilizer N applied", reactive_n_loss: "Reactive N loss", n_leached: "N leached", marine_eutrophication: "Marine eutrophication" };
-  const bar = row => `<div class="product-bar-row ${metric === "fertilizer_n" ? "nitrogen-product-bar" : ""}"><div class="product-bar-name"><strong>${PRODUCT_NAMES[row.product]}</strong><small>${studyPeriod(row)}</small></div><div class="product-bar-track" role="img" aria-label="${PRODUCT_NAMES[row.product]}, ${nitrogenLabels[row.metric] || STUDY_METRIC_NAMES[metric]}, ${studyPeriod(row)}: ${studyDelta(row)}"><span class="${studyChange(row) > 0 ? "increase" : ""}" style="width:${Math.max(2, Math.abs(studyChange(row)) / maxChange * 100)}%"></span></div><strong class="product-bar-value">${studyDelta(row)}</strong>${studyDetails(row)}</div>`;
+  const bar = row => {
+    const value = studyChange(row);
+    const width = Math.abs(value) / extent * 100;
+    const left = value > 0 ? zero : zero - width;
+    return `<div class="product-bar-row ${metric === "fertilizer_n" ? "nitrogen-product-bar" : ""}"><div class="product-bar-name"><strong>${PRODUCT_NAMES[row.product]}</strong><small>${studyPeriod(row)}</small></div><div class="product-bar-track" role="img" aria-label="${PRODUCT_NAMES[row.product]}, ${nitrogenLabels[row.metric] || STUDY_METRIC_NAMES[metric]}, ${studyPeriod(row)}: ${studyDelta(row)}"><span class="${value > 0 ? "increase" : "decrease"}" style="left:${left}%;width:${width}%"></span></div><strong class="product-bar-value">${studyDelta(row)}</strong>${studyDetails(row)}</div>`;
+  };
   return rows.map(bar).join("");
 }
 function studyBars(metric) {
@@ -189,7 +386,13 @@ function studyBars(metric) {
     greenhouse_gas: "Life-cycle emissions intensity by product",
     fertilizer_n: "Nitrogen-related measures per unit of product"
   };
-  return `<details class="product-evidence" ${metric === "greenhouse_gas" ? "" : "open"}><summary>${titles[metric]}</summary><div class="product-evidence-controls">${changeToggle()}<button type="button" class="product-explore-link">Explore all measures →</button></div><div class="product-bars">${studyBarRows(metric)}</div></details>`;
+  const descriptions = {
+    land: "Land or feed-cropland use per unit of product.",
+    water: "Water use per unit of product; the specific measure varies by study.",
+    greenhouse_gas: "Life-cycle greenhouse-gas emissions per unit of product.",
+    fertilizer_n: "Nitrogen applied, lost, leached, or linked to eutrophication per unit of product, depending on the study."
+  };
+  return `<details class="product-evidence" ${metric === "greenhouse_gas" ? "" : "open"}><summary><span data-editable-key="study:${metric}:title">${titles[metric]}</span></summary><div class="product-evidence-body"><p class="product-evidence-subtitle" data-editable-key="study:${metric}:description">${descriptions[metric]}</p><div class="product-evidence-controls">${changeToggle()}<button type="button" class="product-explore-link">Explore all measures →</button></div><div class="product-bar-sort-row"><span></span><div class="product-bar-axis" aria-label="Change from zero"></div>${studySortHeader()}<span></span></div><div class="product-bars">${studyBarRows(metric)}</div></div></details>`;
 }
 
 // EDIT TAB AND CHART COPY HERE.
@@ -204,12 +407,49 @@ function studyBars(metric) {
 // subtitle, caption, and source inside its view. Inline series.name values are
 // legend labels; names in DATA come from data.json.
 const DEFAULT_CHART_CAPTION = "Percent change from first to latest available year";
+function biotechDecisionChart() {
+  const common = {
+    type: "stacked", summaryMode: "latest", comparisonMode: "absolute", decimals: 0, hideLegendValues: true, legendReverse: true,
+    caption: "Regulatory decisions are a step toward bringing a crop to market. These records can cover several plant lines or revisit a product, so they do not count unique varieties or confirm commercial sales. 2026 runs through October 2.",
+    yLabel: "Cumulative records", tooltipUnit: "", totalLabel: "Total records"
+  };
+  const usdaSources = '<a href="https://www.aphis.usda.gov/biotechnology/legacy-petition-process/petitions" target="_blank" rel="noopener">USDA petition determinations</a>; <a href="https://www.aphis.usda.gov/regulatory-status-review-table" target="_blank" rel="noopener">regulatory status reviews</a>; <a href="https://www.aphis.usda.gov/confirmation-letters" target="_blank" rel="noopener">exemption confirmations</a>; <a href="https://www.aphis.usda.gov/biotechnology/regulated-article-inquiry" target="_blank" rel="noopener">Am I Regulated letters</a>';
+  const download = '<a href="biotech-records.csv" download>Download underlying records (CSV)</a>';
+  const eventDownload = '<a href="biotech-epa-events.csv" download>Download identified EPA crop events (CSV)</a>';
+  const cropSeries = BIOTECH.usdaByCrop.map(series => ({ ...series, color: series.name === "Canola" ? "#8b6bb1" : series.name === "Other crops" ? "#738184" : undefined }));
+  const epa = {
+    ...common, yLabel: "Cumulative crop events", totalLabel: "Identified crop events", comparisonLabel: "additional crop events",
+    caption: "A crop event is a plant line with a particular genetic modification. Each identified event is counted once, even when EPA lists several pest-control ingredients for it. An event can be bred into many seed varieties. Registration does not confirm commercial sales. 2026 runs through October 2.",
+    explanations: [
+      { title: "What does this count cover?", body: "This is a minimum count of individually identified crop events in EPA’s registration list. Two older potato listings cover groups of plants without identifying all their individual lines and are excluded. USDA and EPA may review the same crop, so their totals should not be added." },
+      { title: "What about PIPs exempt from registration?", body: "Some engineered pest protections similar to those achievable through conventional breeding can qualify for an exemption from EPA registration. These include certain changes to genes from plants that can be crossed, or reducing an existing gene’s activity to create pest resistance. This chart covers registered protections and does not estimate the number of exempt products." }
+    ],
+    source: `<a href="https://www.epa.gov/ingredients-used-pesticide-products/current-and-previously-registered-section-3-plant-incorporated" target="_blank" rel="noopener">EPA current and previously registered PIPs</a>; <a href="https://downloads.regulations.gov/EPA-HQ-OPP-2016-0036-0013/content.pdf" target="_blank" rel="noopener">EPA’s 2017 potato decision</a>; <a href="https://www.epa.gov/newsreleases/new-citrus-tool-help-prevent-widespread-loss-citrus-crops-and-support-americas-food" target="_blank" rel="noopener">EPA’s 2026 citrus decision</a>; <a href="https://www.epa.gov/pesticides/epa-posts-resources-rule-accelerate-use-plant-incorporated-biotechnologies-protect" target="_blank" rel="noopener">EPA registration exemptions</a>.<p>Ingredients linked to the same named crop event are combined and dated to their first registration in the source table. The potato decision identifies three lines—W8, X17, and Y9—under one ingredient listing. The citrus decision identifies one product with three gene edits. The two unresolved older listings concern New Leaf potatoes and potatoes protected against leaf roll virus. ${eventDownload}; ${download}.</p>`
+  };
+  return {
+    title: "Genetically engineered and gene-edited crop decisions", fullWidth: true,
+    views: [
+      { ...common, id: "usda-crop", label: "USDA · by crop", usdaFilter: true, subtitle: "USDA decisions on biotech crops, by crop, 1992–2026", series: cropSeries, otherCrops: BIOTECH.usdaOtherCrops,
+        source: `${usdaSources}.<p>One record per completed crop petition, regulatory status review, exemption confirmation, or favorable Am I Regulated response. Uses the effective or response date; pending requests and non-crop organisms are excluded. Scope includes food, feed, fiber, tobacco, and biofuel crops. Other crops combines the smaller crop categories. These USDA decisions do not establish FDA or EPA approval or commercial adoption. ${download}.</p>` },
+      { ...common, id: "usda-pathway", label: "USDA · by review pathway", explanationTitle: "About review pathways", subtitle: "USDA approvals by regulatory pathway", series: BIOTECH.usdaByPathway,
+        explanations: [
+          { title: "Petition determinations", body: "Used from 1992 through the 2021 transition; new petitions resumed March 3, 2025. USDA assesses plant-pest risk and grants nonregulated status to crops previously subject to its rules. The route covers many older transgenic crops." },
+          { title: "Regulatory status reviews", body: "April 5, 2021–December 2, 2024. Created by the 2020 SECURE rule, this short-lived replacement for petitions expanded to all plants in October 2021. USDA assessed increased plant-pest risk." },
+          { title: "Exemption confirmations", body: "August 17, 2020–December 2, 2024. Created by the 2020 SECURE rule, this process confirmed exemptions for certain changes achievable through conventional breeding, including targeted changes within a plant’s gene pool." },
+          { title: "Am I Regulated responses", body: "New inquiries stopped in June 2020 and resumed January 8, 2025. USDA determines whether a plant falls outside its biotechnology regulations and therefore does not need a petition for nonregulated status. Only responses finding plants nonregulated are counted here. This route includes gene-edited and some transgenic crops." }
+        ],
+        source: `${usdaSources}.<p>Pathways have different criteria and are not equivalent to transgenic versus gene-edited categories. Exemption confirmations and Am I Regulated letters are findings of regulatory status, not product approvals. The 2020 rules were vacated in December 2024; earlier responses remain valid. Public records do not cover every developer self-determination. <a href="https://www.aphis.usda.gov/vacatur-2020-regulations" target="_blank" rel="noopener">USDA’s account of the December 2024 ruling and restarted processes</a>; <a href="https://www.aphis.usda.gov/sites/default/files/brs_2020518.pdf" target="_blank" rel="noopener">2020 rule and phased implementation dates (p. 29815)</a>; <a href="https://www.aphis.usda.gov/news/program-update/aphis-resumes-receipt-petitions-nonregulated-status" target="_blank" rel="noopener">USDA guidance on gene-edited and transgenic plants</a>. ${download}.</p>` },
+      { ...epa, id: "epa-crop", label: "EPA · all registrations", subtitle: "Crop events with EPA-registered plant-incorporated protectants (PIPs): pest protection built into the plant itself, such as Bt corn’s insect-killing proteins.", series: BIOTECH.epaEventsByCrop }
+
+    ]
+  };
+}
 function federalAgencyBudgetView(adjusted) {
   const sourceSeries = adjusted ? DATA.rd.agencyBudgetAdjusted : DATA.rd.agencyBudget;
   const series = [...sourceSeries].sort((a, b) => Number(b.name.startsWith("Research facilities")) - Number(a.name.startsWith("Research facilities")));
   return {
           title: "Federal agricultural R&D budget",
-          subtitle: adjusted ? "Agency breakdown with estimated facilities adjustment, 2000–2024; dashed line: official GBARD" : "USDA agency budgets, 2000–2024, with GBARD for comparison",
+          subtitle: adjusted ? "Agency budgets with an estimated facilities adjustment, 2000–2024; dashed line: Government Budget Allocations for R&D (GBARD), classified by purpose." : "USDA agency budgets, 2000–2024; dashed line: federal R&D budget authority classified by purpose (Government Budget Allocations for R&D, or GBARD).",
           yLabel: "Billion 2022 dollars",
           tooltipUnit: "billion 2022 dollars",
           type: "stacked",
@@ -217,8 +457,8 @@ function federalAgencyBudgetView(adjusted) {
           overlaySeries: [...(DATA.rd.federalBudget || []).map((series, index) => ({ ...series, name: index === 0 ? "GBARD agriculture" : index === 1 ? "GBARD 2025 · preliminary" : "GBARD 2026 · President’s proposal", marker: index === 2 ? "hollow" : "solid", color: "#252a2b", dasharray: "7 5" })), { name: adjusted ? "Adjusted agency total" : "Agency budget total", color: "#56a9d5", dasharray: "", hideInLegend: true, values: (series?.[0]?.values || []).map(point => ({ year: point.year, value: series.reduce((sum, series) => sum + series.values.find(d => d.year === point.year).value, 0), approximate: adjusted && (point.year <= 2011), source: adjusted && point.year <= 2011 ? "Includes an estimated retrospective facilities adjustment." : undefined })) }],
           totalLabel: adjusted ? "Adjusted agency total" : "Agency budget total",
           showChangeYears: true, labelPointSeriesOnly: true, fullWidth: true,
-          caption: adjusted ? "Estimated retrospective facilities adjustment; GBARD retains official timing. Both use the same NIH research deflator." : "Areas show USDA research and facilities budgets; the blue line shows their net total. Negative facilities funding in 2011 reflects cancellation of earlier funding. The dashed GBARD line also includes forestry and fisheries, so its scope differs. Both use the same NIH research deflator. Legend changes cover 2000–2024; 2024’s deflator is preliminary and 2025–26 use projected deflators.",
-          source: `<a href="https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf" target="_blank" rel="noopener">USDA, facility project histories (pp. 16-77–84)</a>; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agency budgets (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; ${sourceLinks.gbard}; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (Table 11)</a>; ${sourceLinks.brdpi}`,
+          caption: adjusted ? "Estimated retrospective facilities adjustment; GBARD retains official timing. Both use the same NIH research deflator." : "Areas show USDA research and facilities budgets; the blue line shows their net total. Negative facilities funding in 2011 reflects cancellation of earlier funding. The dashed GBARD line also includes forestry and fisheries. The 2025 estimate is preliminary; 2026 is the President’s proposal.",
+          source: `<a href="https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf" target="_blank" rel="noopener">USDA, facility project histories (pp. 16-77–84)</a>; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agency budgets (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; ${sourceLinks.gbard}; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (Table 11)</a>; ${sourceLinks.brdpi}.<p>Both series use the NIH research deflator. The 2024 deflator is preliminary; 2025–26 use projected deflators. Agency-budget changes cover 2000–2024.</p>`,
           decimals: 2
         };
 }
@@ -226,7 +466,9 @@ function federalAgencyBudgetView(adjusted) {
 const TOPICS = {
   overview: () => ({
     title: "Output is decoupling from resource use and impacts",
-    intro: "The environmental impacts of the U.S. food system are enormous. Agriculture covers 40% of U.S. land and accounts for approximately 80% of consumptive water use. However these impacts are large due to the scale of agricultural production. U.S. farmers produce more than any other country besides India and China and twice as much as they did in 1970.<br><br>Taking into account production levels, U.S. agriculture's environmental performance has improved by most measures, following the trajectory of sustainable intensification. The environmental intensity of agriculture—the resource use or environmental impacts per unit of production—has fallen nearly across the board. In some cases total impacts have declined; in others rising impacts have been far outpaced by increasing production.",
+    intro: "",
+    why: "U.S. agriculture covers about 40 percent of the country's land and accounts for approximately 80 percent of its consumptive water use. At this scale, changes in resource use and emissions have broad consequences. Comparing output with these pressures shows whether more production also brings proportionate increases in environmental impact.",
+    happened: "From 1990 to each series' latest year (2023, except water withdrawals, which end in 2015), farm output rose 53.9 percent and total factor productivity rose 42.7 percent. Direct agricultural greenhouse-gas emissions rose 8.0 percent, while land use fell 8.3 percent and water withdrawals fell 11.9 percent. Output therefore grew faster than direct emissions, while the land and water measures declined as production grew. These selected indicators show decoupling on these measures; they do not show that every environmental pressure fell.",
     charts: [
       {
         title: "Agricultural output, inputs, and impacts",
@@ -257,7 +499,7 @@ const TOPICS = {
     charts: [
       {
         title: "Land-use intensity",
-        subtitle: "Harvested area per ton of crop; cotton refers to lint",
+        subtitle: "",
         yLabel: "Hectares per metric ton",
         tooltipUnit: "hectares per metric ton",
         series: DATA.land.intensity.filter(d => d.name !== "Rice"),
@@ -310,7 +552,8 @@ const TOPICS = {
         goalValue: 5000 / 2.589988110336,
         summaryMode: "latest",
         fullWidth: true,
-        caption: "Bars are annual surveys; the line averages the latest five surveyed summers (skipping missing 1989 and 2016). Dashed goal: below about 1,930 square miles for a five-survey average. The latest mean, 2022–26, is 3,754 square miles.",
+        caption: "",
+        goalLabel: "EPA 2035 Goal",
         source: `${sourceLinks.hypoxia}; ${sourceLinks.hypoxiaGoal}`,
         decimals: 0
       }
@@ -324,11 +567,11 @@ const TOPICS = {
     charts: [
       {
         title: "Agricultural water withdrawals",
-        subtitle: "Irrigation plus livestock",
+        subtitle: "U.S. irrigation and livestock withdrawals, including nonfarm irrigation.",
         yLabel: "Billion gallons per day",
         tooltipUnit: "billion gallons per day",
         series: single("Withdrawals", DATA.water.total),
-        source: sourceLinks.water,
+        source: `${sourceLinks.water}; <a href="https://pubs.usgs.gov/publication/cir1441" target="_blank" rel="noopener">USGS 2015 report, Table 14</a>.<p>Surface-water and groundwater withdrawals, not consumptive use. USGS irrigation includes farms, golf courses, and other irrigated landscapes; aquaculture is excluded from this sum.</p>`,
         decimals: 0
       },
       {
@@ -345,13 +588,14 @@ const TOPICS = {
       },
       {
         title: "High Plains groundwater decline",
-        subtitle: "Area-weighted average water level below predevelopment (~1950)",
+        subtitle: "Average aquifer water level across eight states below predevelopment (~1950).",
         yLabel: "Feet below predevelopment",
         tooltipUnit: "feet below predevelopment",
         series: single("High Plains aquifer", DATA.water.high_plains_decline),
         summaryMode: "latest",
         fullWidth: true,
-        caption: "USGS regional estimates, 1980–2019. The aquifer spans eight states; its average masks much larger local declines. Water-level change is not a national storage estimate.",
+        caption: "",
+        hideSingleSeriesSummary: true,
         source: sourceLinks.aquifer,
         decimals: 1
       }
@@ -397,18 +641,18 @@ const TOPICS = {
         series: DATA.soil.rate,
         source: sourceLinks.soil,
         decimals: 2,
-        fullWidth: true
+        fullWidth: false
       },
       {
         title: "Soil erosion by crop",
-        subtitle: "Field to Market national reference years, 1980–2020",
-        yLabel: "Tons of soil loss per acre per year",
+        subtitle: "",
+        yLabel: "Tons per acre per year",
         tooltipUnit: "tons per acre per year",
         series: DATA.soil.by_crop,
         source: sourceLinks.fieldToMarketSoil,
-        caption: "Points are Field to Market's published smoothed trend estimates for the labeled years. Its 2020 estimate uses USDA erosion-model inputs through 2017; it is not simply the 2017 survey value.",
+        caption: "Field to Market’s smoothed estimates of wind and water erosion, based on USDA National Resources Inventory surveys and erosion models through 2017.",
         decimals: 1,
-        fullWidth: true
+        fullWidth: false
       }
     ]
   }),
@@ -419,13 +663,13 @@ const TOPICS = {
       {
         title: "Genetically engineered seed",
         subtitle: "Pest and weed traits help protect yields and can support reduced tillage.",
-        yLabel: "Percent of planted acres",
+        yLabel: "Percent of planted acres nationally",
         tooltipUnit: "%",
         tickSuffix: "%",
         yMin: 0, yMax: 100, yTicks: [0, 25, 50, 75, 100],
         series: DATA.practices.ge,
-        summaryMode: "latest",
-        caption: "National planted-acre shares for crops in USDA's annual GE survey. Environmental effects depend on the trait and how it is used.",
+        summaryMode: "latest", latestYearLabel: true,
+        caption: "",
         source: sourceLinks.ge,
         decimals: 0,
         fullWidth: true
@@ -443,8 +687,8 @@ const TOPICS = {
           { ...DATA.practices.census[1], name: "Reduced tillage · Census", color: "#ee5c36" },
           { ...DATA.practices.census[2], name: "Cover crops · Census", color: "#0dc3a8" }
         ],
-        summaryMode: "latest", decimals: 1, fullWidth: true,
-        caption: "No-till joins complete-coverage CTIC/USGS years (dashed, 1989–2004) to Census years (solid, 2012–22); the dotted bridge crosses a source and denominator change. Intermediate years are not observations. Reduced tillage is the Census category excluding no-till; cover crops use all cropland.",
+        summaryMode: "latest", latestYearLabel: true, decimals: 1, fullWidth: true,
+        caption: "Tillage shares use cultivated cropland; cover-crop shares use harvested cropland. The dashed no-till segment uses CTIC/USGS; the solid segment uses the Census of Agriculture.",
         source: `${sourceLinks.historicTillage}; ${sourceLinks.censusPractices}; ${sourceLinks.censusLand}`
       },
       {
@@ -456,8 +700,9 @@ const TOPICS = {
           { ...DATA.practices.irrigation[0], name: "Pressurized", color: "#0dc3a8" },
           { ...DATA.practices.irrigation[1], name: "Gravity", color: "#0d4459" }
         ],
-        summaryMode: "latest", decimals: 1, fullWidth: true,
-        caption: "Coverage: 17 Western states. Pressurized adoption rose from 37% of irrigated acres in 1984 to 75% in 2023. These states held about 71% of U.S. irrigated cropland in 2013. Method acres may overlap. The 2023 values are rounded (≈); higher efficiency need not mean lower total water use.",
+        summaryMode: "latest", latestYearLabel: true, decimals: 1, fullWidth: true,
+        legendShare: true,
+        caption: "Data cover 17 Western states.",
         source: sourceLinks.irrigationMethods
       },
       {
@@ -472,17 +717,18 @@ const TOPICS = {
           { ...DATA.practices.ceap[1], name: "Variable-rate technology · cultivated acres", color: "#f8b944" },
           { ...DATA.practices.soil_moisture_sensing[0], name: "Soil-moisture sensing · irrigating farms", color: "#56a9d5", dasharray: "5 4" }
         ],
-        summaryMode: "latest", decimals: 1, fullWidth: true,
-        caption: "Corn ARMS lines now extend through 2021; chart-read and rounded points are approximate (≈ in tooltips). The 2023 soybean results use a different crop base, so are not joined. NRCS lines are cultivated-acre shares from 2003–06 and 2013–16 survey periods. The dashed soil-sensing line is a share of irrigating farms; other lines measure acreage. Yield-map definitions changed in 2015.",
+        summaryMode: "latest", latestYearLabel: true, decimals: 1, fullWidth: true,
+        caption: "Series use different denominators: corn acres, cultivated cropland, or irrigating farms, as labeled. CEAP estimates represent survey periods, not annual observations.",
         source: `${sourceLinks.precision}; ${sourceLinks.precisionUpdate}; ${sourceLinks.ceap}; ${sourceLinks.irrigationSensing}`
-      }
+      },
+      biotechDecisionChart()
     ]
   }),
   climate: () => ({
-    title: "Emissions intensity fell, while greater production increased total emissions",
+    title: "U.S. agricultural emissions remain above 1990 levels",
     intro: "",
-    why: "Agriculture emits methane, nitrous oxide, and carbon dioxide from soils, livestock, manure, and energy use. Emissions per unit of food show production efficiency, while total emissions show the sector's overall contribution to warming. Lower intensity can slow growth in the total footprint, but total emissions must ultimately fall to limit warming.",
-    happened: "Direct U.S. agricultural emissions were 595 million metric tons CO₂e in 2023, 8 percent above 1990. EPA's estimates by economic sector are higher, including on-farm fuel combustion. However, product-level emissions intensity fell for major agricultural products.",
+    why: "Agriculture emits methane, nitrous oxide, and carbon dioxide from soils, livestock, manure, and energy use. Total emissions show the sector's contribution to warming; limiting climate change requires these emissions to fall.",
+    happened: "Direct U.S. agricultural emissions were 595 million metric tons CO₂e in 2023, 8 percent above 1990. EPA's estimates by economic sector are higher, including on-farm fuel combustion. The product studies below compare life-cycle emissions per unit for specific products over their study periods; their boundaries differ from the EPA sector totals.",
     charts: [
       {
         title: "U.S. agricultural emissions",
@@ -491,7 +737,7 @@ const TOPICS = {
             id: "inventory",
             label: "By IPCC category", // View button
             totalLabel: "Inventory total", // Summed change in the legend
-            subtitle: "IPCC categories",
+            subtitle: "",
             yLabel: "Million metric tons CO₂e",
             tooltipUnit: "million metric tons CO₂e",
             type: "stacked",
@@ -503,7 +749,7 @@ const TOPICS = {
             id: "economic",
             label: "By economic category", // View button
             totalLabel: "Economic-sector total", // Summed change in the legend
-            subtitle: "EPA economic categories, including on-farm energy",
+            subtitle: "",
             yLabel: "Million metric tons CO₂e",
             tooltipUnit: "million metric tons CO₂e",
             type: "stacked",
@@ -512,15 +758,6 @@ const TOPICS = {
             decimals: 0
           }
         ]
-      },
-      {
-        title: "Emissions intensity by product",
-        subtitle: "Direct production emissions, omitting land-use change",
-        yLabel: "Kilograms CO₂e per kg product",
-        tooltipUnit: "kilograms CO₂e per kg product",
-        series: DATA.climate.intensity,
-        source: sourceLinks.faostatEmissions,
-        decimals: 1
       }
     ]
   }),
@@ -528,8 +765,8 @@ const TOPICS = {
   rd: () => {
     return {
       title: "Public agricultural R&D remains below its peak",
-      why: "Public and private research drives improvements in yields, resource efficiency, resilience, animal health, and environmental performance. Because its benefits compound over decades, sustained investment matters.",
-      happened: "Inflation-adjusted public spending on agricultural and food research peaked in 2002. By 2021 it was 29 percent lower, while spending as a share of gross farm value added fell by about half.",
+      why: "In the United States, public agricultural research supports yields, resource efficiency, animal health, and environmental performance. Because its benefits can take decades to emerge, sustained investment matters.",
+      happened: "After peaking in 2002, inflation-adjusted public agricultural and food R&D spending was 29 percent lower by 2021. Agricultural productivity continued to rise, but more slowly after 2000. These parallel trends do not show that lower research spending caused the slowdown.",
       charts: [
         {
           title: "Total public agricultural R&D spending",
@@ -558,50 +795,143 @@ const TOPICS = {
 };
 
 function renderTopic(id) {
+  if (!TOPICS[id] || id === ACTIVE_TOPIC) return;
+  const navigating = ACTIVE_TOPIC !== null;
+  const previousScroll = window.scrollY;
+  if (ACTIVE_TOPIC && ACTIVE_TOPIC !== "products") rememberChartState();
+  ACTIVE_TOPIC = id;
   closeMatrixPopover();
   hideTooltip();
-  document.querySelectorAll(".topic-nav button").forEach(button => button.setAttribute("aria-selected", String(button.dataset.topic === id)));
+  document.querySelectorAll(".topic-nav button").forEach(button => {
+    button.setAttribute("aria-selected", String(button.dataset.topic === id));
+    button.tabIndex = button.dataset.topic === id ? 0 : -1;
+  });
+  panel.setAttribute("aria-labelledby", `topic-tab-${id}`);
   document.querySelector("#topic-select").value = id;
   if (id === "products") {
     renderProducts();
-    history.replaceState(null, "", `#${id}`);
-    sendHeight();
+    finishTopicNavigation(id, navigating, previousScroll);
     return;
   }
   const topic = TOPICS[id]();
-  const intro = topic.intro?.trim() ? `<p>${topic.intro}</p>` : "";
+  const intro = topic.intro?.trim() ? `<p data-editable-key="topic:${id}:intro">${topic.intro}</p>` : "";
   const commentary = [
-    ["Why does it matter?", topic.why],
-    ["What happened?", topic.happened]
-  ].filter(([, text]) => text?.trim());
+    ["why", "Why does it matter?", topic.why],
+    ["happened", "What happened?", topic.happened]
+  ].filter(([, , text]) => text?.trim());
   const commentaryMarkup = commentary.length
-    ? `<div class="commentary-grid ${commentary.length === 1 ? "single" : ""}">${commentary.map(([title, text]) => `<section><h3>${title}</h3><p>${text}</p></section>`).join("")}</div>`
+    ? `<details class="topic-context" ${mobileLayout.matches ? "" : "open"}><summary>Context</summary><div class="commentary-grid ${commentary.length === 1 ? "single" : ""}">${commentary.map(([key, title, text]) => `<section><h3 data-editable-key="topic:${id}:${key}:title">${title}</h3><p data-editable-key="topic:${id}:${key}:body">${text}</p></section>`).join("")}</div></details>`
     : "";
-  panel.innerHTML = `<div class="panel-lead"><div><h2>${topic.title}</h2>${intro}</div></div>
+  panel.innerHTML = `<div class="panel-lead"><div><h2 data-editable-key="topic:${id}:title">${topic.title}</h2>${intro}</div></div>
     ${commentaryMarkup}
-    <div class="charts ${topic.charts.length === 1 ? "single" : ""}">${topic.charts.map((chart, index) => chartCard(chart, index)).join("")}</div>
+    <div class="charts ${topic.charts.length === 1 ? "single" : ""}">${topic.charts.map((chart, index) => chartCard(chart, index, id)).join("")}</div>
     ${({ land: "land", water: "water", climate: "greenhouse_gas", nitrogen: "fertilizer_n" })[id] ? studyBars(({ land: "land", water: "water", climate: "greenhouse_gas", nitrogen: "fertilizer_n" })[id]) : ""}`;
+  applySavedTextEdits(panel);
   topic.charts.forEach((chart, index) => {
-    drawChart(panel.querySelector(`[data-chart="${index}"]`), chart.views?.[0] || chart);
+    const savedView = CHART_STATES.get(`${id}:${index}`)?.view;
+    const active = chart.views?.find(view => view.id === (savedView === "epa-active" ? "epa-crop" : savedView)) || chart.views?.[0] || chart;
+    panel.querySelectorAll(`[data-chart-view="${index}"]`).forEach(button => button.setAttribute("aria-pressed", String(button.dataset.view === active.id)));
+    drawChart(panel.querySelector(`[data-chart="${index}"]`), active);
     panel.querySelectorAll(`[data-chart-view="${index}"]`).forEach(button => button.addEventListener("click", () => {
       const view = chart.views.find(item => item.id === button.dataset.view);
       panel.querySelectorAll(`[data-chart-view="${index}"]`).forEach(item => item.setAttribute("aria-pressed", String(item === button)));
-      drawChart(panel.querySelector(`[data-chart="${index}"]`), view);
-      sendHeight();
+      switchChartView(panel.querySelector(`[data-chart="${index}"]`), view);
     }));
   });
+  applySavedTextEdits(panel);
+  panel.querySelectorAll(".chart-card").forEach(card => card.addEventListener("toggle", sendHeight));
   panel.querySelector(".product-explore-link")?.addEventListener("click", () => renderTopic("products"));
   panel.querySelector(".product-evidence")?.addEventListener("toggle", sendHeight);
   panel.querySelectorAll(".source-disclosure").forEach(details => details.addEventListener("toggle", sendHeight));
+  panel.querySelectorAll(".chart-card, .product-evidence").forEach((card, index) => {
+    if (CARD_STATES.has(`${id}:${index}`)) card.open = CARD_STATES.get(`${id}:${index}`);
+  });
+  const metric = ({ land: "land", water: "water", climate: "greenhouse_gas", nitrogen: "fertilizer_n" })[id];
+  if (metric) panel.querySelector(".product-bars").innerHTML = studyBarRows(metric);
+  panel.querySelector(".topic-context")?.addEventListener("toggle", sendHeight);
+  finishTopicNavigation(id, navigating, previousScroll);
+}
+
+function rememberChartState() {
+  panel.querySelectorAll("[data-chart]").forEach(container => {
+    const card = container.closest(".chart-card");
+    CHART_STATES.set(`${ACTIVE_TOPIC}:${container.dataset.chart}`, { view: card.querySelector('[data-chart-view][aria-pressed="true"]')?.dataset.view });
+  });
+  panel.querySelectorAll(".chart-card, .product-evidence").forEach((card, index) => CARD_STATES.set(`${ACTIVE_TOPIC}:${index}`, card.open));
+}
+function finishTopicNavigation(id, navigating, previousScroll) {
   history.replaceState(null, "", `#${id}`);
+  document.querySelector("#open-tracker").href = standaloneURL();
+  const cards = [...panel.querySelectorAll(".chart-card, .product-evidence")];
+  installMobileChartNavigation(cards);
+  MOBILE_CHART = Math.min(CHART_CHOICES.get(id) || 0, Math.max(0, cards.length - 1));
+  selectMobileChart(MOBILE_CHART, false);
+  updateToolbarSize();
+  if (navigating && previousScroll > document.querySelector(".explorer-toolbar").offsetTop) scrollToPanel();
+  sendHeight();
+}
+function scrollToPanel() {
+  requestAnimationFrame(() => {
+    panel.scrollIntoView({ block: "start", behavior: "instant" });
+    if (IS_EMBEDDED && !document.fullscreenElement) window.parent.postMessage({ type: "bti-intensification-navigate" }, parentOrigin());
+  });
+}
+function installMobileChartNavigation(cards) {
+  if (cards.length < 2) return;
+  cards.forEach(card => {
+    card.classList.add("has-chart-navigation");
+    const frame = document.createElement("div");
+    frame.className = "mobile-chart-frame";
+    card.before(frame); frame.append(card);
+    const summary = card.querySelector("summary");
+    const count = document.createElement("span");
+    count.className = "mobile-chart-count";
+    summary.append(count);
+    [-1, 1].forEach(step => {
+      const button = document.createElement("button");
+      button.type = "button"; button.className = "mobile-chart-arrow";
+      button.dataset.chartStep = String(step);
+      button.textContent = step < 0 ? "←" : "→";
+      // Keep navigation outside the disclosure so it remains available when collapsed.
+      frame.append(button);
+    });
+  });
+}
+function selectMobileChart(index, scroll = true) {
+  const cards = [...panel.querySelectorAll(".chart-card, .product-evidence")];
+  if (!cards.length) return;
+  MOBILE_CHART = Math.max(0, Math.min(index, cards.length - 1));
+  CHART_CHOICES.set(ACTIVE_TOPIC, MOBILE_CHART);
+  cards.forEach((card, i) => {
+    card.classList.toggle("mobile-selected", i === MOBILE_CHART);
+    card.closest(".mobile-chart-frame")?.classList.toggle("mobile-selected-frame", i === MOBILE_CHART);
+  });
+  if (mobileLayout.matches) {
+    cards[MOBILE_CHART].open = true;
+    const container = cards[MOBILE_CHART].querySelector("[data-chart]");
+    if (container?.chartConfig) drawChart(container, container.chartConfig);
+  }
+  cards.forEach((card, i) => {
+    const previous = card.parentElement.querySelector('[data-chart-step="-1"]');
+    const next = card.parentElement.querySelector('[data-chart-step="1"]');
+    if (!previous || !next) return;
+    previous.disabled = i === 0; next.disabled = i === cards.length - 1;
+    const name = item => item.querySelector('h3, summary [data-editable-key]')?.textContent || "Chart";
+    previous.setAttribute("aria-label", i ? `Previous chart: ${name(cards[i - 1])}` : "Previous chart");
+    next.setAttribute("aria-label", i < cards.length - 1 ? `Next chart: ${name(cards[i + 1])}` : "Next chart");
+    card.querySelector('.mobile-chart-count').textContent = `Chart ${i + 1} of ${cards.length}`;
+  });
+  document.querySelector("#chart-position").textContent = `${cards[MOBILE_CHART].querySelector("h3, summary [data-editable-key]")?.textContent || "Chart"}. Chart ${MOBILE_CHART + 1} of ${cards.length}`;
+  document.querySelector("#open-tracker").href = standaloneURL();
+  if (scroll && mobileLayout.matches) scrollToPanel();
   sendHeight();
 }
 
-function chartCard(chart, index) {
+function chartCard(chart, index, topicId) {
   const active = chart.views?.[0] || chart;
   const controls = chart.views ? `<div class="view-toggle" role="group" aria-label="${chart.viewLabel || "Choose chart view"}">${chart.views.map((view, viewIndex) => `<button type="button" data-chart-view="${index}" data-view="${view.id}" aria-pressed="${viewIndex === 0}">${view.label}</button>`).join("")}</div>` : "";
-  const heading = chart.title ? `<h3>${chart.title}</h3>` : "";
-  return `<article class="chart-card ${chart.fullWidth ? "full-width" : ""}">${heading}<p class="chart-subtitle" data-subtitle="${index}">${active.subtitle || ""}</p>${controls}<div class="chart-wrap" data-chart="${index}"></div><div class="series-summary" data-summary="${index}"></div><details class="source-disclosure"><summary>Sources</summary><div class="source-line"></div></details></article>`;
+  const heading = chart.title ? `<h3 data-editable-key="topic:${topicId}:chart:${index}:title">${chart.title}</h3>` : "";
+  return `<details class="chart-card ${chart.fullWidth ? "full-width" : ""}" open><summary class="chart-card-heading">${heading}</summary><div class="chart-card-content"><p class="chart-subtitle" data-editable-key="topic:${topicId}:chart:${index}:subtitle" data-subtitle="${index}">${active.subtitle || ""}</p>${controls}<div class="chart-wrap" data-chart="${index}"></div><div class="series-summary" data-summary="${index}"></div><details class="source-disclosure"><summary>Sources</summary><div class="source-line"></div></details></div></details>`;
 }
 
 function formatValue(chart, value) {
@@ -609,8 +939,30 @@ function formatValue(chart, value) {
   return chart.tooltipUnit === "%" ? `${number}%` : `${number} ${chart.tooltipUnit || ""}`.trim();
 }
 
+function switchChartView(container, chart) {
+  const content = container.parentElement, controls = content.querySelector(".view-toggle");
+  const before = controls.getBoundingClientRect().top, scrollBefore = window.scrollY;
+  const expandedHeight = [...content.querySelectorAll("details[open]")].reduce((sum, details) => sum + details.getBoundingClientRect().height - details.querySelector("summary").getBoundingClientRect().height, 0);
+  content.viewHeight = Math.max(content.viewHeight || 0, content.getBoundingClientRect().height - expandedHeight);
+  // Keep the document from briefly shrinking while the old SVG is replaced.
+  content.style.minHeight = `${content.getBoundingClientRect().height}px`;
+  drawChart(container, chart);
+  applySavedTextEdits(content);
+  content.style.minHeight = `${content.viewHeight}px`;
+  const restore = () => {
+    if (content.isConnected) window.scrollTo({ top: scrollBefore + controls.getBoundingClientRect().top - before, behavior: "instant" });
+  };
+  restore();
+  cancelAnimationFrame(content.viewFrame);
+  content.viewFrame = requestAnimationFrame(() => { restore(); sendHeight(); });
+  document.querySelector("#open-tracker").href = standaloneURL();
+}
+
 function drawChart(container, chart) {
   hideTooltip();
+  container.chartConfig = chart;
+  if (chart.usdaFilter) chart = filteredUSDAChart(chart);
+  renderUSDAFilter(container, chart);
   container.parentElement.querySelector(".chart-compare")?.remove();
   container.replaceChildren();
   const card = container.closest(".chart-card");
@@ -620,20 +972,74 @@ function drawChart(container, chart) {
   card.querySelector(".source-line").innerHTML = chart.source || "";
   const summary = card.querySelector(".series-summary");
   summary.replaceChildren();
+  card.querySelector(".chart-methods")?.remove();
+  card.querySelector(".chart-explainer")?.remove();
+  card.querySelector(".crop-breakdown")?.remove();
   if (!chart.series?.length || chart.series.some(series => !series.values?.length)) {
-    container.innerHTML = '<p class="chart-empty">Detailed data are unavailable.</p>';
+    container.innerHTML = chart.usdaFilter ? '<p class="chart-empty">Select at least one review pathway to see records.</p>' : '<p class="chart-empty">Detailed data are unavailable.</p>';
     return;
   }
+  const axisUnit = document.createElement("p"); axisUnit.className = "chart-axis-unit"; axisUnit.textContent = chart.yLabel; container.append(axisUnit);
   if (chart.type === "stacked") drawStackedAreaChart(container, chart);
   else if (chart.type === "bar") drawBarChart(container, chart);
   else drawLineChart(container, chart);
+  renderChartContext(container, chart);
   attachChartInteractions(container, chart);
+  applySavedTextEdits(card);
+}
+
+function otherCropCounts(chart, year) {
+  return (chart.otherCrops || []).map(series => ({ name: series.name, value: series.values.find(point => point.year === year)?.value || 0 }))
+    .filter(crop => crop.value > 0).sort((a, b) => b.value - a.value || a.name.localeCompare(b.name));
+}
+
+function chartPointTooltip(chart, series, point) {
+  let html = `<strong>${escapeHTML(series.name || "Five-survey mean")}</strong><br>${point.year}: ${point.approximate ? "≈" : ""}${formatValue(chart, point.value)}${point.source ? `<br>${escapeHTML(point.source)}` : ""}`;
+  if (chart.otherCrops && series.name === "Other crops") {
+    const crops = otherCropCounts(chart, point.year), leading = crops.slice(0, 5);
+    html += `<div class="tooltip-crops">${leading.map(crop => `${escapeHTML(crop.name)}: ${crop.value}`).join("<br>")}${crops.length > 5 ? `<br>Remaining crops: ${crops.slice(5).reduce((sum, crop) => sum + crop.value, 0)}` : ""}</div><small>Select this area or “Explore other crops” for the full breakdown.</small>`;
+  }
+  return html;
+}
+
+function openOtherCropBreakdown(container, year) {
+  const details = container.parentElement.querySelector(".crop-breakdown");
+  if (!details) return;
+  details.updateYear(year);
+  details.open = true;
+  sendHeight();
+}
+
+function renderChartContext(container, chart) {
+  const summary = container.parentElement.querySelector(".series-summary");
+  if (chart.explanations) {
+    const explanation = document.createElement("details"); explanation.className = "chart-methods";
+    explanation.innerHTML = `<summary>${escapeHTML(chart.explanationTitle || "About these records")}</summary><div class="chart-explainer">${chart.explanations.map(item => `<section><h4>${escapeHTML(item.title)}</h4><p>${escapeHTML(item.body)}</p></section>`).join("")}</div>`;
+    explanation.addEventListener("toggle", sendHeight);
+    summary.after(explanation);
+  }
+  if (!chart.otherCrops) return;
+  const years = chart.series[0].values.map(point => point.year);
+  const details = document.createElement("details"); details.className = "crop-breakdown";
+  details.innerHTML = `<summary>Explore other crops</summary><label>Cumulative decisions through <select aria-label="Year for other crops">${years.map(year => `<option value="${year}">${year}</option>`).join("")}</select></label><p class="crop-breakdown-note"></p><ul class="crop-counts"></ul>`;
+  const select = details.querySelector("select");
+  details.updateYear = year => {
+    select.value = String(year);
+    const crops = otherCropCounts(chart, year), total = crops.reduce((sum, crop) => sum + crop.value, 0);
+    details.querySelector(".crop-breakdown-note").textContent = `${total} records across ${crops.length} crops${year === 2026 ? "; 2026 through October 2" : ""}. Each crop is shown separately below.`;
+    details.querySelector("ul").innerHTML = crops.map(crop => `<li><span>${escapeHTML(crop.name)}</span><strong>${crop.value}</strong></li>`).join("");
+  };
+  select.addEventListener("change", () => { details.updateYear(Number(select.value)); sendHeight(); });
+  details.addEventListener("toggle", sendHeight);
+  details.updateYear(years.at(-1));
+  summary.after(details);
+  summary.querySelector(".other-crops-button")?.addEventListener("click", () => openOtherCropBreakdown(container, years.at(-1)));
 }
 
 function drawBarChart(container, chart) {
-  const width = Math.max(300, Math.round(container.getBoundingClientRect().width || 720));
+  const width = Math.max(240, Math.round(container.getBoundingClientRect().width || 720));
   const height = width < 380 ? 280 : 320;
-  const margin = { top: 18, right: 16, bottom: 34, left: width < 380 ? 56 : 64 };
+  const margin = { top: 18, right: 16, bottom: 34, left: width < 380 ? 52 : 64 };
   const sorted = [...chart.series[0].values].sort((a, b) => a.year - b.year);
   const xMin = sorted[0].year, xMax = sorted.at(-1).year;
   const slot = (width - margin.left - margin.right) / (xMax - xMin + 1);
@@ -646,14 +1052,13 @@ function drawBarChart(container, chart) {
   svg.setAttribute("role", "img");
   svg.setAttribute("aria-label", `${chart.title}. ${chart.subtitle || ""}`);
   const description = document.createElementNS("http://www.w3.org/2000/svg", "desc");
-  description.textContent = chart.rollingSeries ? "Bars show completed annual surveys, the overlaid line averages the last five measured summers, and the dashed line shows the Task Force goal. Missing survey years have no bar. Focus a bar and use the arrow keys to explore measured years." : "One bar per completed annual survey. Missing survey years have no bar. Focus a bar and use the arrow keys to explore measured years.";
+  description.textContent = chart.rollingSeries ? `Bars show completed annual surveys, the overlaid line averages the last five measured summers, and the dashed line shows the ${chart.goalLabel || "goal"}. Missing survey years have no bar. Focus a bar and use the arrow keys to explore measured years.` : "One bar per completed annual survey. Missing survey years have no bar. Focus a bar and use the arrow keys to explore measured years.";
   svg.append(description);
   (chart.yTicks || yScale.ticks).forEach(tick => {
     svg.append(line(margin.left, y(tick), width - margin.right, y(tick), "grid-line"));
-    svg.append(text(margin.left - 9, y(tick) + 4, format(tick, chart.decimals ?? 1), "tick-label", "end"));
+    svg.append(text(margin.left - 9, y(tick) + 4, axisNumber(tick, chart.yTicks || yScale.ticks), "tick-label", "end"));
   });
-  const intervals = width < 380 ? 3 : 5;
-  const xTicks = Array.from({ length: intervals + 1 }, (_, i) => Math.round(xMin + (xMax - xMin) * i / intervals)).filter((year, i, years) => i === 0 || year !== years[i - 1]);
+  const xTicks = yearTicks(xMin, xMax, width - margin.left - margin.right);
   xTicks.forEach(year => {
     svg.append(line(x(year), height - margin.bottom, x(year), height - margin.bottom + 5, "axis-line"));
     svg.append(text(x(year), height - margin.bottom + 19, year, "tick-label", "middle"));
@@ -665,7 +1070,7 @@ function drawBarChart(container, chart) {
   svg.append(axisLabel);
   if (chart.goalValue) {
     const goal = line(margin.left, y(chart.goalValue), width - margin.right, y(chart.goalValue), "goal-line");
-    goal.setAttribute("aria-label", `Task Force goal: below ${formatValue(chart, chart.goalValue)} five-survey average`);
+    goal.setAttribute("aria-label", `${chart.goalLabel || "Goal"}: below ${formatValue(chart, chart.goalValue)} five-survey average`);
     svg.append(goal);
   }
   const bars = [];
@@ -718,9 +1123,9 @@ function drawBarChart(container, chart) {
 }
 
 function drawLineChart(container, chart) {
-  const width = Math.max(300, Math.round(container.getBoundingClientRect().width || 720));
+  const width = Math.max(240, Math.round(container.getBoundingClientRect().width || 720));
   const height = width < 380 ? 280 : 320;
-  const margin = { top: 18, right: chart.series.length > 1 ? 24 : 16, bottom: 34, left: width < 380 ? 56 : 64 };
+  const margin = { top: 18, right: chart.series.length > 1 ? 24 : 16, bottom: 34, left: width < 380 ? 52 : 64 };
   const all = chart.series.flatMap(s => s.values);
   const allYears = all.map(d => d.year), values = all.map(d => d.value);
   const xMin = Math.min(...allYears), xMax = Math.max(...allYears);
@@ -730,12 +1135,11 @@ function drawLineChart(container, chart) {
   const x = year => margin.left + (year - xMin) / (xMax - xMin || 1) * (width - margin.left - margin.right);
   const y = value => height - margin.bottom - (value - yMin) / (yMax - yMin) * (height - margin.top - margin.bottom);
   const yTicks = chart.yTicks || yScale.ticks;
-  const xIntervals = width < 380 ? 3 : 5;
-  const xTicks = Array.from({ length: xIntervals + 1 }, (_, i) => Math.round(xMin + (xMax - xMin) * i / xIntervals)).filter((v, i, a) => i === 0 || v !== a[i - 1]);
+  const xTicks = yearTicks(xMin, xMax, width - margin.left - margin.right);
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", `${chart.title}. ${chart.subtitle || ""}`); svg.innerHTML = `<title>${chart.title}</title>`;
   const description = document.createElementNS("http://www.w3.org/2000/svg", "desc"); description.textContent = "Focus a series at its latest point, then use the left and right arrow keys to explore plotted values."; svg.append(description);
-  yTicks.forEach(tick => { svg.append(line(margin.left, y(tick), width - margin.right, y(tick), "grid-line")); svg.append(text(margin.left - 9, y(tick) + 4, `${format(tick, chart.decimals ?? 1)}${chart.tickSuffix || ""}`, "tick-label", "end")); });
+  yTicks.forEach(tick => { svg.append(line(margin.left, y(tick), width - margin.right, y(tick), tick === 0 ? "grid-line zero-line" : "grid-line")); svg.append(text(margin.left - 9, y(tick) + 4, `${axisNumber(tick, chart.yTicks || yScale.ticks)}${chart.tickSuffix || ""}`, "tick-label", "end")); });
   xTicks.forEach(tick => { svg.append(line(x(tick), height - margin.bottom, x(tick), height - margin.bottom + 5, "axis-line")); svg.append(text(x(tick), height - margin.bottom + 19, tick, "tick-label", "middle")); });
   svg.append(line(margin.left, margin.top, margin.left, height - margin.bottom, "axis-line")); svg.append(line(margin.left, height - margin.bottom, width - margin.right, height - margin.bottom, "axis-line"));
   const axisLabel = text(15, (height - margin.bottom + margin.top) / 2, chart.yLabel, "axis-label", "middle"); axisLabel.setAttribute("transform", `rotate(-90 15 ${(height - margin.bottom + margin.top) / 2})`); svg.append(axisLabel);
@@ -776,9 +1180,9 @@ function drawLineChart(container, chart) {
 }
 
 function drawStackedAreaChart(container, chart) {
-  const width = Math.max(300, Math.round(container.getBoundingClientRect().width || 720));
+  const width = Math.max(240, Math.round(container.getBoundingClientRect().width || 720));
   const height = width < 380 ? 280 : 320;
-  const margin = { top: 18, right: 16, bottom: 34, left: width < 380 ? 56 : 64 };
+  const margin = { top: 18, right: 16, bottom: 34, left: width < 380 ? 52 : 64 };
   const maps = chart.series.map(series => new Map(series.values.map(d => [d.year, d.value])));
   const years = chart.series[0].values.map(d => d.year).filter(year => maps.every(map => map.has(year))).sort((a, b) => a - b);
   if (!years.length) { container.innerHTML = '<p class="chart-empty">The component series do not share a common time period.</p>'; return; }
@@ -793,12 +1197,11 @@ function drawStackedAreaChart(container, chart) {
   const x = year => margin.left + (year - xMin) / (xMax - xMin || 1) * (width - margin.left - margin.right);
   const y = value => height - margin.bottom - (value - yMin) / (yMax - yMin) * (height - margin.top - margin.bottom);
   const yTicks = yMin < 0 ? [yMin, ...yScale.ticks] : yScale.ticks;
-  const xIntervals = width < 380 ? 3 : 5;
-  const xTicks = Array.from({ length: xIntervals + 1 }, (_, i) => Math.round(xMin + (xMax - xMin) * i / xIntervals)).filter((v, i, a) => i === 0 || v !== a[i - 1]);
+  const xTicks = yearTicks(xMin, xMax, width - margin.left - margin.right);
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", `${chart.title || "Stacked area chart"}. ${chart.subtitle || ""}`);
   const description = document.createElementNS("http://www.w3.org/2000/svg", "desc"); description.textContent = "Focus a category at its latest point, then use the left and right arrow keys to explore annual values."; svg.append(description);
-  yTicks.forEach(tick => { svg.append(line(margin.left, y(tick), width - margin.right, y(tick), "grid-line")); svg.append(text(margin.left - 9, y(tick) + 4, format(tick, chart.decimals ?? 1), "tick-label", "end")); });
+  yTicks.forEach(tick => { svg.append(line(margin.left, y(tick), width - margin.right, y(tick), tick === 0 ? "grid-line zero-line" : "grid-line")); svg.append(text(margin.left - 9, y(tick) + 4, axisNumber(tick, yTicks), "tick-label", "end")); });
   xTicks.forEach(tick => { svg.append(line(x(tick), height - margin.bottom, x(tick), height - margin.bottom + 5, "axis-line")); svg.append(text(x(tick), height - margin.bottom + 19, tick, "tick-label", "middle")); });
   svg.append(line(margin.left, margin.top, margin.left, height - margin.bottom, "axis-line")); svg.append(line(margin.left, height - margin.bottom, width - margin.right, height - margin.bottom, "axis-line"));
   const axisLabel = text(15, (height - margin.bottom + margin.top) / 2, chart.yLabel, "axis-label", "middle"); axisLabel.setAttribute("transform", `rotate(-90 15 ${(height - margin.bottom + margin.top) / 2})`); svg.append(axisLabel);
@@ -827,7 +1230,7 @@ function drawStackedAreaChart(container, chart) {
         const topPath = areaYears.map((year, i) => `${i ? "L" : "M"}${x(year).toFixed(2)},${y(upper[i]).toFixed(2)}`).join(" ");
         const bottomPath = [...areaYears].reverse().map((year, reverseIndex) => { const i = areaYears.length - 1 - reverseIndex; return `L${x(year).toFixed(2)},${y(lower[i]).toFixed(2)}`; }).join(" ");
         const area = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        area.setAttribute("d", `${topPath} ${bottomPath} Z`); area.setAttribute("class", "area-path"); area.setAttribute("fill", COLORS[index % COLORS.length]); svg.append(area);
+        area.setAttribute("d", `${topPath} ${bottomPath} Z`); area.setAttribute("class", "area-path"); area.setAttribute("fill", series.color || COLORS[index % COLORS.length]); area.chartSeries = series; svg.append(area);
       }
       if (sign > 0) positiveBase = upper; else negativeBase = upper;
     });
@@ -835,9 +1238,9 @@ function drawStackedAreaChart(container, chart) {
     years.forEach((year, i) => {
       const point = series.values.find(point => point.year === year);
       const qualifier = point.approximate ? "≈" : "";
-      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(year)); circle.setAttribute("cy", y(positions.get(year))); circle.setAttribute("r", 4); circle.setAttribute("fill", COLORS[index % COLORS.length]); circle.setAttribute("class", "data-point area-point"); circle.setAttribute("tabindex", i === years.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${year}: ${qualifier}${formatValue(chart, values[i])}`);
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(year)); circle.setAttribute("cy", y(positions.get(year))); circle.setAttribute("r", 4); circle.setAttribute("fill", series.color || COLORS[index % COLORS.length]); circle.setAttribute("class", "data-point area-point"); circle.setAttribute("tabindex", i === years.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${year}: ${qualifier}${formatValue(chart, values[i])}`);
       circle.chartDatum = { series, point };
-      const show = event => showTooltip(event, `<strong>${series.name}</strong><br>${year}: ${qualifier}${formatValue(chart, values[i])}`); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
+      const show = event => showTooltip(event, chartPointTooltip(chart, series, point)); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
       circle.addEventListener("keydown", event => { if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return; event.preventDefault(); const next = Math.max(0, Math.min(circles.length - 1, i + (event.key === 'ArrowRight' ? 1 : -1))); circles[next]?.focus(); });
       circles.push(circle);
     });
@@ -886,7 +1289,7 @@ function attachChartInteractions(container, chart) {
   if (!candidates.length) return;
   const name = series => series.name || "Five-survey mean";
   const comparison = document.createElement("div"); comparison.className = "chart-compare";
-  comparison.innerHTML = `<p class="compare-hint">Drag from a point to another year to compare dates.</p><details><summary>Compare dates</summary><div class="compare-controls"><label>Series<select class="compare-series" aria-label="Series to compare">${candidates.map((series, i) => `<option value="${i}">${escapeHTML(name(series))}</option>`).join("")}</select></label><label>From<select class="compare-from" aria-label="Start year"></select></label><label>To<select class="compare-to" aria-label="End year"></select></label><button type="button" class="compare-clear">Clear</button></div><p class="compare-result" role="status" aria-live="polite"></p></details>`;
+  comparison.innerHTML = `<details><summary>Compare dates</summary><div class="compare-controls"><label>Series<select class="compare-series" aria-label="Series to compare">${candidates.map((series, i) => `<option value="${i}">${escapeHTML(name(series))}</option>`).join("")}</select></label><label>From<select class="compare-from" aria-label="Start year"></select></label><label>To<select class="compare-to" aria-label="End year"></select></label><button type="button" class="compare-clear">Clear</button></div><p class="compare-result" role="status" aria-live="polite"></p></details>`;
   container.after(comparison);
   const details = comparison.querySelector("details"), select = comparison.querySelector(".compare-series"), from = comparison.querySelector(".compare-from"), to = comparison.querySelector(".compare-to"), result = comparison.querySelector(".compare-result");
   const selection = document.createElementNS("http://www.w3.org/2000/svg", "g"); selection.setAttribute("class", "range-selection"); selection.setAttribute("aria-hidden", "true"); svg.append(selection);
@@ -922,7 +1325,8 @@ function attachChartInteractions(container, chart) {
     const approximate = first.approximate || last.approximate ? " Approximate endpoint values." : "";
     const rescission = chart.type === "stacked" && name(activeSeries) === "Research facilities" && first.year <= 2011 && last.year >= 2011 ? " Includes the 2011 rescission of prior-year funding." : "";
     const percentagePoints = chart.tooltipUnit === "%" && first.year !== last.year ? ` (${format(last.value - first.value, 1)} percentage points)` : "";
-    result.innerHTML = `<strong>${escapeHTML(name(activeSeries))} · ${first.year}–${last.year}: ${rangeChangeText(first, last)}${percentagePoints}</strong><br>${first.approximate ? "≈" : ""}${formatValue(chart, first.value)} → ${last.approximate ? "≈" : ""}${formatValue(chart, last.value)}${caution || approximate || rescission ? `<br><span>${escapeHTML(caution + approximate + rescission)}</span>` : ""}`;
+    const rangeDescription = chart.comparisonMode === "absolute" && first.year !== last.year ? `${format(last.value - first.value, 0)} ${chart.comparisonLabel || "additional records"}` : rangeChangeText(first, last);
+    result.innerHTML = `<strong>${escapeHTML(name(activeSeries))} · ${first.year}–${last.year}: ${rangeDescription}${percentagePoints}</strong><br>${first.approximate ? "≈" : ""}${formatValue(chart, first.value)} → ${last.approximate ? "≈" : ""}${formatValue(chart, last.value)}${caution || approximate || rescission ? `<br><span>${escapeHTML(caution + approximate + rescission)}</span>` : ""}`;
     drawSelection(a, b);
   };
   const local = event => {
@@ -931,6 +1335,9 @@ function attachChartInteractions(container, chart) {
   };
   const nearest = event => {
     const point = local(event), matrix = svg.getScreenCTM(), radius = 18 / Math.hypot(matrix.a, matrix.b);
+    if (chart.otherCrops && event.target.chartSeries?.name === "Other crops") {
+      return records.filter(record => record.series === event.target.chartSeries).reduce((best, record) => !best || Math.abs(record.x - point.x) < Math.abs(best.x - point.x) ? record : best, null);
+    }
     let winner = null, distance = Infinity;
     records.forEach(record => {
       const dx = record.rect ? Math.max(record.rect.x - point.x, 0, point.x - record.rect.x - record.rect.width) : record.x - point.x;
@@ -944,7 +1351,7 @@ function attachChartInteractions(container, chart) {
     hovered?.mark.classList.remove("is-hovered"); hovered = record;
     if (!record) { hideTooltip(); return; }
     record.mark.classList.add("is-hovered");
-    showTooltip(event, `<strong>${escapeHTML(name(record.series))}</strong><br>${record.point.year}: ${record.point.approximate ? "≈" : ""}${formatValue(chart, record.point.value)}${record.point.source ? `<br>${escapeHTML(record.point.source)}` : ""}`);
+    showTooltip(event, chartPointTooltip(chart, record.series, record.point));
   };
   const stopDrag = () => { if (drag && svg.hasPointerCapture(drag.pointerId)) svg.releasePointerCapture(drag.pointerId); drag = null; svg.classList.remove("is-dragging"); hideTooltip(); };
   select.addEventListener("change", () => { activeSeries = candidates[Number(select.value)]; fillYears(); updateResult(); });
@@ -952,6 +1359,8 @@ function attachChartInteractions(container, chart) {
   details.addEventListener("toggle", () => { if (details.open) updateResult(); sendHeight(); });
   comparison.querySelector(".compare-clear").addEventListener("click", () => { selection.replaceChildren(); details.open = false; result.replaceChildren(); fillYears(); });
   fillYears();
+  let touchStart = null;
+  svg.addEventListener("pointerdown", event => { if (event.pointerType === "touch") touchStart = { x: event.clientX, y: event.clientY }; });
   svg.addEventListener("pointermove", event => {
     if (!drag) { if (event.pointerType !== "touch") hover(event, nearest(event)); return; }
     const point = local(event), points = pointsFor(activeSeries);
@@ -961,21 +1370,40 @@ function attachChartInteractions(container, chart) {
   });
   svg.addEventListener("pointerdown", event => {
     if (event.button !== 0) return;
+    if (event.pointerType === "touch") return;
     const start = nearest(event);
+    if (chart.otherCrops && start?.series.name === "Other crops") {
+      event.preventDefault(); openOtherCropBreakdown(container, start.point.year); hideTooltip(); return;
+    }
     if (!start || !candidates.includes(start.series)) return;
     event.preventDefault(); activeSeries = start.series; select.value = String(candidates.indexOf(activeSeries)); fillYears();
     from.value = to.value = String(start.point.year); selection.replaceChildren();
     drag = { pointerId: event.pointerId }; svg.setPointerCapture(event.pointerId); svg.classList.add("is-dragging");
   });
-  svg.addEventListener("pointerup", () => { if (drag) { stopDrag(); if (details.open) updateResult(); } });
-  svg.addEventListener("pointercancel", () => { stopDrag(); selection.replaceChildren(); details.open = false; });
-  svg.addEventListener("keydown", event => { if (event.key === "Escape") { stopDrag(); selection.replaceChildren(); details.open = false; } });
+  svg.addEventListener("pointerup", event => {
+    if (event.pointerType === "touch") {
+      const start = touchStart;
+      touchStart = null;
+      if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) < 10) {
+        const record = nearest(event);
+        if (record && chart.otherCrops && record.series.name === "Other crops") openOtherCropBreakdown(container, record.point.year);
+        else if (record) hover(event, record);
+      }
+    }
+    if (drag) { stopDrag(); if (details.open) updateResult(); } });
+  svg.addEventListener("pointercancel", () => { touchStart = null; stopDrag(); selection.replaceChildren(); details.open = false; });
+  svg.addEventListener("keydown", event => {
+    if (chart.otherCrops && event.key === "Enter" && event.target.chartDatum?.series.name === "Other crops") {
+      event.preventDefault(); openOtherCropBreakdown(container, event.target.chartDatum.point.year);
+    }
+    if (event.key === "Escape") { stopDrag(); selection.replaceChildren(); details.open = false; } });
   svg.addEventListener("pointerleave", () => { if (!drag) { hovered?.mark.classList.remove("is-hovered"); hovered = null; hideTooltip(); } });
 }
 
 function renderSeriesSummary(summary, chart) {
   summary.classList.toggle("multi", chart.series.length > 1);
-  const caption = chart.caption === undefined ? DEFAULT_CHART_CAPTION : chart.caption;
+  summary.classList.toggle("regulatory-legend", Boolean(chart.hideLegendValues));
+  const caption = chart.caption === undefined ? (chart.summaryMode === "latest" ? "Latest available values" : DEFAULT_CHART_CAPTION) : chart.caption;
   const note = caption ? `<p class="change-note">${escapeHTML(caption)}</p>` : "";
   let total = "";
   if (chart.totalLabel) {
@@ -983,10 +1411,16 @@ function renderSeriesSummary(summary, chart) {
     const lastYear = Math.min(...chart.series.map(series => series.values.at(-1).year));
     const first = chart.series.reduce((sum, series) => sum + series.values.find(point => point.year === firstYear).value, 0);
     const last = chart.series.reduce((sum, series) => sum + series.values.find(point => point.year === lastYear).value, 0);
-    total = `<strong class="total-change">${chart.totalLabel}: ${pct((last / first - 1) * 100)} <small>${firstYear}–${lastYear}</small></strong>`;
+    const totalValue = chart.summaryMode === "latest" ? formatValue(chart, last) : pct((last / first - 1) * 100);
+    total = `<strong class="total-change">${chart.totalLabel}: ${totalValue} <small>${chart.summaryMode === "latest" ? lastYear : `${firstYear}–${lastYear}`}</small></strong>`;
   }
-  const rows = [...chart.series, ...(chart.overlaySeries || []).filter(series => !series.hideInLegend).map(series => ({ ...series, isOverlay: true }))].map((series, index) => {
-    const delta = chart.labelPointSeriesOnly && series.pointsOnly ? "" : chart.summaryMode === "latest" ? formatValue(chart, series.values.at(-1).value) : pct(change(series.values));
+  const legendSeries = [...chart.series, ...(chart.overlaySeries || []).filter(series => !series.hideInLegend).map(series => ({ ...series, isOverlay: true }))].map((series, index) => ({ ...series, color: series.color || COLORS[index % COLORS.length] }));
+  if (chart.legendReverse) legendSeries.reverse();
+  const rows = legendSeries.map((series, index) => {
+    if (chart.hideSingleSeriesSummary && chart.series.length === 1) return "";
+    const latest = series.values.at(-1);
+    const latestTotal = chart.legendShare ? chart.series.reduce((sum, item) => sum + (item.values.find(point => point.year === latest.year)?.value || 0), 0) : 0;
+    const delta = chart.hideLegendValues || (chart.labelPointSeriesOnly && series.pointsOnly) ? "" : chart.legendShare ? `${format(100 * latest.value / latestTotal, chart.decimals ?? 1)}%` : chart.summaryMode === "latest" ? formatValue(chart, latest.value) : pct(change(series.values));
     const range = `${series.values[0].year}–${series.values.at(-1).year}`;
     if (series.sourceBoundary) {
       const earlier = series.values.find(point => point.year === series.sourceBoundary.earlierEnd);
@@ -996,30 +1430,157 @@ function renderSeriesSummary(summary, chart) {
     return chart.series.length === 1
       ? `<span class="single-change"><strong>${delta}</strong> <small>${chart.summaryMode === "latest" ? series.values.at(-1).year : range}</small></span>`
       : chart.type === "stacked" && !series.isOverlay
-        ? `<span><i style="background:${COLORS[index % COLORS.length]}"></i><b>${series.name} ${delta}${chart.showChangeYears ? ` <small>${range}</small>` : ""}</b></span>`
+        ? `<span><i style="background:${series.color || COLORS[index % COLORS.length]}"></i>${chart.otherCrops && series.name === "Other crops" ? `<button type="button" class="other-crops-button" aria-label="Explore other crop records">${series.name} ${delta}</button>` : `<b>${series.name} ${delta}${chart.showChangeYears ? ` <small>${range}</small>` : ""}</b>`}</span>`
         : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="1.5" fill="${series.marker === "hollow" ? "none" : series.color || COLORS[index % COLORS.length]}" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="${series.marker === "hollow" ? 1 : 0}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}${chart.showChangeYears && !(chart.labelPointSeriesOnly && series.pointsOnly) ? ` <small>${range}</small>` : chart.latestYearLabel ? ` <small>${series.values.at(-1).year}</small>` : ""}</b></span>`;
   }).join("");
-  const overlayKey = chart.rollingSeries ? `<div class="overlay-key"><span><i class="key-bar"></i> Annual survey</span><span><i class="key-average"></i> Five-survey mean</span><span><i class="key-goal"></i> Task Force goal</span></div>` : "";
+  const overlayKey = chart.rollingSeries ? `<div class="overlay-key"><span><i class="key-bar"></i> Annual survey</span><span><i class="key-average"></i> Five-survey mean</span><span><i class="key-goal"></i> ${chart.goalLabel || "Goal"}</span></div>` : "";
   summary.innerHTML = note + overlayKey + total + rows;
+  summary.hidden = !summary.innerHTML;
 }
 
 function line(x1, y1, x2, y2, className) { const el = document.createElementNS("http://www.w3.org/2000/svg", "line"); Object.entries({ x1, y1, x2, y2, class: className }).forEach(([k, v]) => el.setAttribute(k, v)); return el; }
 function text(x, y, value, className, anchor = "start") { const el = document.createElementNS("http://www.w3.org/2000/svg", "text"); el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("class", className); el.setAttribute("text-anchor", anchor); el.textContent = value; return el; }
-function showTooltip(event, html) { tooltip.innerHTML = html; tooltip.classList.add("show"); tooltip.setAttribute("aria-hidden", "false"); const bounds = event.target.getBoundingClientRect(); const px = Number.isFinite(event.clientX) && event.clientX ? event.clientX : bounds.left + bounds.width / 2; const py = Number.isFinite(event.clientY) && event.clientY ? event.clientY : bounds.top; tooltip.style.left = `${Math.max(8, Math.min(window.innerWidth - 245, px + 12))}px`; tooltip.style.top = `${Math.max(8, py - 55)}px`; }
+function showTooltip(event, html) {
+  tooltip.innerHTML = html; tooltip.classList.add("show"); tooltip.setAttribute("aria-hidden", "false");
+  const bounds = event.target.getBoundingClientRect();
+  const px = event.clientX || bounds.left + bounds.width / 2, py = event.clientY || bounds.top;
+  tooltip.style.left = `${Math.max(8, Math.min(window.innerWidth - tooltip.offsetWidth - 8, px + 12))}px`;
+  tooltip.style.top = `${Math.max(8, Math.min(window.innerHeight - tooltip.offsetHeight - 8, py - 55))}px`;
+}
 function hideTooltip() { tooltip.classList.remove("show"); tooltip.setAttribute("aria-hidden", "true"); }
-function sendHeight() { requestAnimationFrame(() => window.parent?.postMessage({ type: "bti-intensification-height", height: document.documentElement.scrollHeight }, "*")); }
+function parentOrigin() {
+  try { return new URL(document.referrer).origin; } catch { return "*"; }
+}
+let heightFrame = 0, lastSentHeight = 0;
+function sendHeight() {
+  if (!IS_EMBEDDED || document.fullscreenElement || heightFrame) return;
+  heightFrame = requestAnimationFrame(() => {
+    heightFrame = 0;
+    // Measure content, not the iframe viewport, so a shorter topic can shrink it.
+    const height = Math.ceil(document.querySelector(".tracker-shell").getBoundingClientRect().height);
+    if (height !== lastSentHeight) {
+      lastSentHeight = height;
+      window.parent.postMessage({ type: "bti-intensification-height", height }, parentOrigin());
+    }
+  });
+}
+function standaloneURL() {
+  const url = new URL(location.href); url.searchParams.delete("embed");
+  ["chart", "view", "measure", "change", "pathways"].forEach(key => url.searchParams.delete(key));
+  if (ACTIVE_TOPIC === "products") url.searchParams.set("measure", selectedMatrixMetric);
+  else if (ACTIVE_TOPIC) {
+    url.searchParams.set("chart", String(MOBILE_CHART));
+    const card = [...panel.querySelectorAll(".chart-card, .product-evidence")][MOBILE_CHART];
+    const view = card?.querySelector('[data-chart-view][aria-pressed="true"]')?.dataset.view;
+    if (view) url.searchParams.set("view", view);
+    if (card?.querySelector("[data-chart]")?.chartConfig?.usdaFilter && selectedUSDAPathways.size !== Object.keys(USDA_PATHWAYS).length) url.searchParams.set("pathways", [...selectedUSDAPathways].join(",") || "none");
+  }
+  if (CHANGE_MODE === "total") url.searchParams.set("change", "total");
+  return url.href;
+}
+function updateToolbarSize() {
+  const height = Math.ceil(document.querySelector(".explorer-toolbar").getBoundingClientRect().height);
+  document.documentElement.style.setProperty("--toolbar-height", `${height}px`);
+}
+const fullscreenButton = document.querySelector("#fullscreen-toggle");
+fullscreenButton.addEventListener("click", async () => {
+  if (document.fullscreenElement) { await document.exitFullscreen(); return; }
+  if (!document.fullscreenEnabled || !document.documentElement.requestFullscreen) {
+    if (IS_EMBEDDED) window.open(standaloneURL(), "_blank", "noopener");
+    else { document.body.classList.toggle("focus-view"); updateFullscreenControls(); }
+    return;
+  }
+  try { await document.documentElement.requestFullscreen(); }
+  catch { document.querySelector("#display-status").textContent = "Full screen is unavailable in this browser. Use Open in new tab for the standalone tracker."; }
+});
+function updateFullscreenControls() {
+  const expanded = !!document.fullscreenElement || document.body.classList.contains("focus-view");
+  fullscreenButton.setAttribute("aria-pressed", String(expanded));
+  fullscreenButton.querySelector(".fullscreen-label").textContent = expanded ? "Exit full screen" : "Full screen";
+  document.body.classList.toggle("fullscreen-view", !!document.fullscreenElement);
+  lastSentHeight = 0; updateToolbarSize(); sendHeight();
+}
+document.addEventListener("fullscreenchange", updateFullscreenControls);
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && document.body.classList.contains("focus-view")) { document.body.classList.remove("focus-view"); updateFullscreenControls(); }
+});
+document.querySelector("#open-tracker").addEventListener("click", event => { event.currentTarget.href = standaloneURL(); });
+window.addEventListener("hashchange", () => { if (DATA && TOPICS[location.hash.slice(1)] && ACTIVE_TOPIC !== location.hash.slice(1)) renderTopic(location.hash.slice(1)); });
+window.addEventListener("scroll", () => { hideTooltip(); if (matrixAnchor && !matrixPinned) closeMatrixPopover(); }, { passive: true });
+mobileLayout.addEventListener("change", () => {
+  panel.querySelector(".topic-context")?.toggleAttribute("open", !mobileLayout.matches);
+  selectMobileChart(MOBILE_CHART, false); updateToolbarSize();
+});
+let resizeTimer;
+const chartResizeObserver = new ResizeObserver(() => {
+  updateToolbarSize();
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    panel.querySelectorAll("[data-chart]").forEach(container => {
+      if (!container.chartConfig || !container.getBoundingClientRect().width) return;
+      const width = Math.max(240, Math.round(container.getBoundingClientRect().width));
+      const svgWidth = container.querySelector("svg")?.viewBox.baseVal.width;
+      if (Math.abs(width - svgWidth) > 2) {
+        const comparison = container.parentElement.querySelector(".chart-compare");
+        const state = comparison ? { open: comparison.querySelector("details").open, series: comparison.querySelector(".compare-series").value, from: comparison.querySelector(".compare-from").value, to: comparison.querySelector(".compare-to").value } : null;
+        drawChart(container, container.chartConfig);
+        const controls = container.parentElement.querySelector(".chart-compare");
+        if (state?.open && controls) {
+          controls.querySelector(".compare-series").value = state.series;
+          controls.querySelector(".compare-series").dispatchEvent(new Event("change"));
+          controls.querySelector(".compare-from").value = state.from;
+          controls.querySelector(".compare-to").value = state.to;
+          controls.querySelector("details").open = true;
+          controls.querySelector(".compare-to").dispatchEvent(new Event("change"));
+        }
+      }
+    });
+    sendHeight();
+  }, 120);
+});
+chartResizeObserver.observe(panel);
+new ResizeObserver(updateToolbarSize).observe(document.querySelector(".explorer-toolbar"));
 
 document.querySelectorAll(".topic-nav button").forEach((button, index, buttons) => {
+  button.id = `topic-tab-${button.dataset.topic}`;
+  button.setAttribute("role", "tab"); button.setAttribute("aria-controls", "tracker-panel");
   button.addEventListener("click", () => renderTopic(button.dataset.topic));
-  button.addEventListener("keydown", event => { if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return; event.preventDefault(); const next = (index + (event.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length; buttons[next].focus(); buttons[next].click(); });
+  button.addEventListener("keydown", event => { if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return; event.preventDefault(); const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length; buttons[next].focus(); buttons[next].click(); });
 });
 document.querySelector("#topic-select").addEventListener("change", event => renderTopic(event.target.value));
 panel.addEventListener("click", event => {
-  if (event.target.closest(".matrix-popover-close")) { closeMatrixPopover(); return; }
+  const arrow = event.target.closest("[data-chart-step]");
+  if (arrow) {
+    const step = Number(arrow.dataset.chartStep);
+    selectMobileChart(MOBILE_CHART + step, false);
+    const selected = panel.querySelector(".mobile-selected");
+    const destination = selected.parentElement.querySelector(`[data-chart-step="${step}"]`);
+    // Keep keyboard focus in the new card, without jumping back to the topic heading.
+    (destination.disabled ? selected.querySelector("summary") : destination).focus({ preventScroll: true });
+    return;
+  }
+  if (event.target.closest(".study-popover-close")) {
+    const trigger = event.target.closest(".study-info").querySelector(".study-info-trigger");
+    trigger.setAttribute("aria-expanded", "false"); trigger.focus({ preventScroll: true }); return;
+  }
+  if (event.target.closest(".matrix-popover-close")) { closeMatrixPopover(true); return; }
   const matrixButton = event.target.closest("[data-matrix-cell]");
   if (matrixButton) {
     if (matrixAnchor === matrixButton && matrixPinned) closeMatrixPopover();
     else openMatrixPopover(matrixButton, true);
+    return;
+  }
+  const sortButton = event.target.closest("[data-study-sort]");
+  if (sortButton) {
+    STUDY_SORT_DIRECTION = STUDY_SORT_DIRECTION === "desc" ? "asc" : "desc";
+    const ascending = STUDY_SORT_DIRECTION === "asc";
+    sortButton.textContent = `Change ${ascending ? "↑" : "↓"}`;
+    sortButton.setAttribute("aria-label", `Sort by absolute change, ${ascending ? "ascending" : "descending"}`);
+    sortButton.title = `Sort by absolute change, ${ascending ? "ascending" : "descending"}`;
+    const metric = ({ land: "land", water: "water", climate: "greenhouse_gas", nitrogen: "fertilizer_n" })[document.querySelector("#topic-select").value];
+    const bars = panel.querySelector(".product-bars");
+    if (metric && bars) bars.innerHTML = studyBarRows(metric);
+    sendHeight();
     return;
   }
   const modeButton = event.target.closest("[data-change-mode]");
@@ -1028,6 +1589,7 @@ panel.addEventListener("click", event => {
     panel.querySelectorAll("[data-change-mode]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.changeMode === CHANGE_MODE)));
     const metric = ({ land: "land", water: "water", climate: "greenhouse_gas", nitrogen: "fertilizer_n" })[document.querySelector("#topic-select").value];
     if (metric) panel.querySelector(".product-bars").innerHTML = studyBarRows(metric);
+    document.querySelector("#open-tracker").href = standaloneURL();
     sendHeight();
     return;
   }
@@ -1049,7 +1611,7 @@ panel.addEventListener("pointerout", event => {
 });
 panel.addEventListener("focusin", event => {
   const button = event.target.closest("[data-matrix-cell]");
-  if (button) openMatrixPopover(button);
+  if (button && !restoringMatrixFocus) openMatrixPopover(button);
 });
 panel.addEventListener("focusout", event => {
   if (matrixAnchor && !matrixPinned && !panel.querySelector(".matrix-popover")?.contains(event.relatedTarget)) matrixHideTimer = setTimeout(closeMatrixPopover, 140);
@@ -1057,13 +1619,34 @@ panel.addEventListener("focusout", event => {
 document.addEventListener("click", event => {
   if (matrixAnchor && !event.target.closest("[data-matrix-cell], .matrix-popover")) closeMatrixPopover();
 });
-document.addEventListener("keydown", event => { if (event.key === "Escape" && matrixAnchor) { closeMatrixPopover(); } });
+document.addEventListener("keydown", event => { if (event.key === "Escape" && matrixAnchor) { closeMatrixPopover(true); } });
 window.addEventListener("resize", () => { if (matrixAnchor) positionMatrixPopover(matrixAnchor, panel.querySelector(".matrix-popover")); });
 
+document.addEventListener("click", event => {
+  if (!event.target.closest(".study-info")) panel.querySelectorAll(".study-info-trigger").forEach(button => button.setAttribute("aria-expanded", "false"));
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    hideTooltip(); panel.querySelectorAll('.study-info-trigger[aria-expanded="true"]').forEach(button => {
+      button.setAttribute("aria-expanded", "false");
+      if (button.closest(".study-info").contains(document.activeElement)) button.focus({ preventScroll: true });
+    });
+  }
+});
+applySavedTextEdits(document);
 panel.innerHTML = '<div class="loading">Loading the tracker…</div>';
-Promise.all(["data.json", "product-studies.json"].map(path => fetch(path).then(response => { if (!response.ok) throw new Error(`${path} failed to load`); return response.json(); }))).then(([data, studies]) => {
-  DATA = data; STUDIES = studies.studies; const ghg2023 = { year: 2023, value: 595.4 }; [DATA.overview.ghg, DATA.climate.total].forEach(series => { if (!series.some(d => d.year === 2023)) series.push(ghg2023); });
-  const initial = location.hash.slice(1); renderTopic(TOPICS[initial] ? initial : "overview");
+Promise.all(["data.json", "product-studies.json", "text-edits.json", "biotech-decisions.json"].map(path => fetch(path).then(response => { if (!response.ok) throw new Error(`${path} failed to load`); return response.json(); }))).then(([data, studies, textEdits, biotech]) => {
+  DATA = data; BIOTECH = biotech; STUDIES = studies.studies; PROJECT_TEXT_EDITS = textEdits; applySavedTextEdits(document); const ghg2023 = { year: 2023, value: 595.4 }; [DATA.overview.ghg, DATA.climate.total].forEach(series => { if (!series.some(d => d.year === 2023)) series.push(ghg2023); });
+  const requested = location.hash.slice(1), initial = TOPICS[requested] ? requested : "overview";
+  const params = new URLSearchParams(location.search);
+  const chartIndex = Math.max(0, Number.parseInt(params.get("chart"), 10) || 0);
+  CHART_CHOICES.set(initial, chartIndex);
+  if (params.get("view")) CHART_STATES.set(`${initial}:${chartIndex}`, { view: params.get("view") });
+  if (MATRIX_METRICS.includes(params.get("measure"))) selectedMatrixMetric = params.get("measure");
+  if (params.get("change") === "total") CHANGE_MODE = "total";
+  if (params.has("pathways")) selectedUSDAPathways = new Set(params.get("pathways").split(",").filter(key => Object.hasOwn(USDA_PATHWAYS, key)));
+  renderTopic(initial);
+  document.fonts?.ready.then(() => { updateToolbarSize(); sendHeight(); });
 }).catch(() => { panel.innerHTML = location.protocol === "file:"
   ? '<div class="loading">To preview locally, double-click preview.command in this folder and keep its Terminal window open.</div>'
   : '<div class="loading">The data could not be loaded. Please refresh the page.</div>'; });

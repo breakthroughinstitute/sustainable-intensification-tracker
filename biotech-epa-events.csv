@@ -1,0 +1,45 @@
+crop,event,first_registration_year,status,cancellation_year,registration_row_ids,source_url
+Corn,176,1995,Canceled(2003),2003,epa-pip-row-19,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/bt_brad.htm
+Cotton,MON531,1995,Active,,epa-pip-row-37,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/bt_brad.htm
+Corn,BT11,1996,Active,,epa-pip-row-22,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/cry1f-cry1ab-brad.pdf
+Corn,MON801,1996,Canceled(1998),1998,epa-pip-row-21,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/bt_brad.htm
+Corn,MON810,1996,Active,,epa-pip-row-20,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/cry1f-cry1ab-brad.pdf
+Corn,DBT418,1997,Canceled(2000),2000,epa-pip-row-23,https://www3.epa.gov/pesticides/chem_search/cleared_reviews/csr_PC-006463_24-Mar-97_001.pdf
+Corn,CBH351,1998,Canceled (2001),2001,epa-pip-row-24,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/starlink_corn.htm
+Corn,TC1507,2001,Active,,epa-pip-row-25,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/cry1f-cry1ab-brad.pdf
+Cotton,MON15985,2002,Active,,epa-pip-row-38; epa-pip-row-39,https://www3.epa.gov/pesticides/chem_search/reg_actions/registration/decision_PC-006487_4-Mar-03.pdf
+Corn,MON863,2003,Canceled(2010),2010,epa-pip-row-26,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/cry3bb1-brad.pdf
+Cotton,DAS-21023-5,2004,Active,,epa-pip-row-40,https://www3.epa.gov/pesticides/chem_search/reg_actions/registration/decision_PC-006512_1-Sep-05.pdf
+Cotton,DAS-24236-5,2004,Active,,epa-pip-row-41,https://www3.epa.gov/pesticides/chem_search/reg_actions/registration/decision_PC-006512_1-Sep-05.pdf
+Corn,59122-7,2005,Active,,epa-pip-row-28,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/cry3435ab1-brad.pdf
+Corn,DAS-06275-8,2005,Active,,epa-pip-row-27,https://www3.epa.gov/pesticides/chem_search/reg_actions/registration/decision_PC-006491_1-Sep-10.pdf
+Corn,MON88017,2005,Active,,epa-pip-row-29,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/cry3bb1-brad.pdf
+Corn,MIR604,2006,Active,,epa-pip-row-30,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/mcry3a-brad.pdf
+Corn,MIR162,2008,Active,,epa-pip-row-33,https://www3.epa.gov/pesticides/chem_search/reg_actions/registration/decision_PC-006599_3-Apr-09.pdf
+Corn,MON89034,2008,Active,,epa-pip-row-31; epa-pip-row-32,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/mon-89034-brad.pdf
+Cotton,COT102,2008,Active,,epa-pip-row-42,https://www3.epa.gov/pesticides/chem_search/reg_actions/registration/decision_PC-006529_12-Aug-08.pdf
+Cotton,COT67B,2008,Active,,epa-pip-row-43,https://www3.epa.gov/pesticides/chem_search/reg_actions/registration/decision_PC-006529_12-Aug-08.pdf
+Plum,C5,2010,Active,,epa-pip-row-53,https://www3.epa.gov/pesticides/chem_search/reg_actions/registration/decision_PC-006354_7-May-10.pdf
+Soybean,MON87701,2010,Active,,epa-pip-row-46,https://www3.epa.gov/pesticides/chem_search/reg_actions/pip/bt-cry1ac-protien.pdf
+Corn,5307,2012,Active,,epa-pip-row-34,https://www.regulations.gov/document?D=EPA-HQ-OPP-2012-0108-0010
+Cotton,GHB119,2012,Active,,epa-pip-row-45,https://www.regulations.gov/document?D=EPA-HQ-OPP-2011-0988-0008
+Cotton,T304-40,2012,Active,,epa-pip-row-44,https://www.regulations.gov/document?D=EPA-HQ-OPP-2011-0988-0008
+Soybean,DAS81419,2014,Active,,epa-pip-row-47; epa-pip-row-48,https://www.regulations.gov/document?D=EPA-HQ-OPP-2013-0703-0003
+Corn,MON87411,2015,Active,,epa-pip-row-35; epa-pip-row-36,https://www.regulations.gov/document?D=EPA-HQ-OPP-2014-0293-0398
+Soybean,MON87751,2015,Active,,epa-pip-row-49; epa-pip-row-50,https://www.regulations.gov/document?D=EPA-HQ-OPP-2014-0456-0008
+Papaya,X17-2,2016,Active,,epa-pip-row-54,https://www.regulations.gov/document?D=EPA-HQ-OPP-2015-0418-0005
+Potato,W8,2017,Active,,epa-pip-row-18,https://downloads.regulations.gov/EPA-HQ-OPP-2016-0036-0013/content.pdf
+Potato,X17,2017,Active,,epa-pip-row-18,https://downloads.regulations.gov/EPA-HQ-OPP-2016-0036-0013/content.pdf
+Potato,Y9,2017,Active,,epa-pip-row-18,https://downloads.regulations.gov/EPA-HQ-OPP-2016-0036-0013/content.pdf
+Cotton,MON88702,2018,Active,,epa-pip-row-17,https://www.regulations.gov/document?D=EPA-HQ-OPP-2017-0402-0007
+Soybean,GMB151,2020,Active,,epa-pip-row-16,https://www.epa.gov/ingredients-used-pesticide-products/current-and-previously-registered-section-3-plant-incorporated
+Corn,DP23211,2024,Active,,epa-pip-row-13; epa-pip-row-14,https://www.regulations.gov/document/EPA-HQ-OPP-2019-0697-0008
+Corn,DP915635,2024,Active,,epa-pip-row-15,https://www.regulations.gov/document/EPA-HQ-OPP-2022-0930-0009
+Corn,MON95379,2024,Active,,epa-pip-row-11; epa-pip-row-12,https://www.regulations.gov/document/EPA-HQ-OPP-2020-0547-0008
+Corn,DAS1131,2025,Active,,epa-pip-row-06,https://www.regulations.gov/document/EPA-HQ-OPP-2023-0018-0007
+Corn,DP51291,2025,Active,,epa-pip-row-04,https://www.regulations.gov/document/EPA-HQ-OPP-2024-0613-0011
+Corn,DP910521,2025,Active,,epa-pip-row-07,https://www.regulations.gov/document/EPA-HQ-OPP-2022-0989-0007
+Corn,MON95275,2025,Active,,epa-pip-row-08; epa-pip-row-09; epa-pip-row-10,https://www.regulations.gov/document/EPA-HQ-OPP-2024-0138-0008
+Potato,BG25,2025,Active,,epa-pip-row-05,https://www.regulations.gov/document/EPA-HQ-OPP-2024-0101-0010
+Soybean,MON94637,2025,Active,,epa-pip-row-02; epa-pip-row-03,https://www.regulations.gov/document/EPA-HQ-OPP-2024-0291-0008
+Citrus,CarriCea T1,2026,Active,,epa-pip-row-01,https://www.epa.gov/newsreleases/new-citrus-tool-help-prevent-widespread-loss-citrus-crops-and-support-americas-food

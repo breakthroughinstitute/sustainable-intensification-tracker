@@ -628,7 +628,7 @@
       "product_basis": "corn grain",
       "source_table": "Table 1.2.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's 2020 value is its published smoothed trend estimate, using USDA erosion-model inputs through 2017; it is not simply the 2017 survey value."
+      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's 2020 value is its published smoothed trend estimate, using USDA erosion-model inputs through 2017."
     },
     {
       "product": "corn",
@@ -658,7 +658,7 @@
       "product_basis": "cotton",
       "source_table": "Table 1.4.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's 2020 value is its published smoothed trend estimate, using USDA erosion-model inputs through 2017; it is not simply the 2017 survey value."
+      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's 2020 value is its published smoothed trend estimate, using USDA erosion-model inputs through 2017."
     },
     {
       "product": "cotton",
@@ -688,7 +688,7 @@
       "product_basis": "soybeans",
       "source_table": "Table 1.9.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's 2020 value is its published smoothed trend estimate, using USDA erosion-model inputs through 2017; it is not simply the 2017 survey value."
+      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's 2020 value is its published smoothed trend estimate, using USDA erosion-model inputs through 2017."
     },
     {
       "product": "soy",
@@ -718,7 +718,7 @@
       "product_basis": "wheat",
       "source_table": "Table 1.11.1",
       "source_url": "https://fieldtomarket.org/sites/default/files/wp-media/2021/12/Field-to-Market_2021-National-Indicators-Report_FINAL.pdf",
-      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's 2020 value is its published smoothed trend estimate, using USDA erosion-model inputs through 2017; it is not simply the 2017 survey value."
+      "comparison_note": "National modeled soil loss per crop acre, not per unit of output. Field to Market's 2020 value is its published smoothed trend estimate, using USDA erosion-model inputs through 2017."
     },
     {
       "product": "wheat",
