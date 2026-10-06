@@ -14,3 +14,7 @@
 !/assets/
 /assets/*
 !/assets/bti-logo.png
+
+!/rd-federal-spending.csv
+!/rd-source-comparison.csv
+!/rd-gateway-annual-totals.csv

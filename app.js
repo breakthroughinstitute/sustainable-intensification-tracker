@@ -444,23 +444,73 @@ function biotechDecisionChart() {
     ]
   };
 }
-function federalAgencyBudgetView(adjusted) {
-  const sourceSeries = adjusted ? DATA.rd.agencyBudgetAdjusted : DATA.rd.agencyBudget;
-  const series = [...sourceSeries].sort((a, b) => Number(b.name.startsWith("Research facilities")) - Number(a.name.startsWith("Research facilities")));
+function federalAgencyBudgetView() {
+  const colors = { "ARS research": "#00bfa5", "NIFA and predecessor research": "#10495e", "Other USDA research (ERS, NASS and others)": "#bc743b", "Agricultural research facilities": "#adb7bd", "Forest Service research": "#859e70" };
+  const series = DATA.rd.agencyBudgetWithForestry.map(item => ({ ...item, color: colors[item.name] }))
+    .sort((a, b) => Number(b.name === "Agricultural research facilities") - Number(a.name === "Agricultural research facilities"));
   return {
-          title: "Federal agricultural R&D budget",
-          subtitle: adjusted ? "Agency budgets with an estimated facilities adjustment, 2000–2024; dashed line: Government Budget Allocations for R&D (GBARD), classified by purpose." : "USDA agency budgets, 2000–2024; dashed line: federal R&D budget authority classified by purpose (Government Budget Allocations for R&D, or GBARD).",
-          yLabel: "Billion 2022 dollars",
-          tooltipUnit: "billion 2022 dollars",
-          type: "stacked",
-          series: series,
-          overlaySeries: [...(DATA.rd.federalBudget || []).map((series, index) => ({ ...series, name: index === 0 ? "GBARD agriculture" : index === 1 ? "GBARD 2025 · preliminary" : "GBARD 2026 · President’s proposal", marker: index === 2 ? "hollow" : "solid", color: "#252a2b", dasharray: "7 5" })), { name: adjusted ? "Adjusted agency total" : "Agency budget total", color: "#56a9d5", dasharray: "", hideInLegend: true, values: (series?.[0]?.values || []).map(point => ({ year: point.year, value: series.reduce((sum, series) => sum + series.values.find(d => d.year === point.year).value, 0), approximate: adjusted && (point.year <= 2011), source: adjusted && point.year <= 2011 ? "Includes an estimated retrospective facilities adjustment." : undefined })) }],
-          totalLabel: adjusted ? "Adjusted agency total" : "Agency budget total",
-          showChangeYears: true, labelPointSeriesOnly: true, fullWidth: true,
-          caption: adjusted ? "Estimated retrospective facilities adjustment; GBARD retains official timing. Both use the same NIH research deflator." : "Areas show USDA research and facilities budgets; the blue line shows their net total. Negative facilities funding in 2011 reflects cancellation of earlier funding. The dashed GBARD line also includes forestry and fisheries. The 2025 estimate is preliminary; 2026 is the President’s proposal.",
-          source: `<a href="https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf" target="_blank" rel="noopener">USDA, facility project histories (pp. 16-77–84)</a>; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agency budgets (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; ${sourceLinks.gbard}; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (Table 11)</a>; ${sourceLinks.brdpi}.<p>Both series use the NIH research deflator. The 2024 deflator is preliminary; 2025–26 use projected deflators. Agency-budget changes cover 2000–2024.</p>`,
-          decimals: 2
-        };
+    title: "USDA agricultural and forestry R&D funding",
+    subtitle: "Research budget authority by agency, plus agricultural research facilities, 2000–2024",
+    yLabel: "Billion 2022 dollars", tooltipUnit: "billion 2022 dollars", type: "stacked", series,
+    overlaySeries: [{ name: "USDA budget total", color: "#56a9d5", dasharray: "", hideInLegend: true,
+      values: series[0].values.map(point => ({ year: point.year, value: series.reduce((sum, item) => sum + item.values.find(d => d.year === point.year).value, 0) })) }],
+    totalLabel: "USDA budget total", showChangeYears: true, fullWidth: true,
+    caption: "Funds made available for R&D. Forest Service research is separate. The blue line is the net total; negative facilities funding in 2011 cancels earlier allocations.",
+    explanationTitle: "Coverage and accounting",
+    explanations: [
+      { title: "Research components", body: "ARS and NIFA use their research budget components, not their entire agency appropriations. Other USDA research includes ERS, NASS, APHIS and other research reported under budget function 350, with table rounding residuals. Forest Service research is reported separately under natural resources and environment; its forestry facilities are excluded throughout this chart." },
+      { title: "Budget authority and spending", body: "Budget authority permits agencies to commit funds. Obligations are commitments such as awards and contracts; outlays are payments. These measures can differ within a year. This chart consistently uses budget authority, not Gateway award amounts or university expenditures." },
+      { title: "Historical comparability", body: "Each year uses its published actual agency budget table. Program classifications and reporting definitions have changed. All values use the same NIH/BEA research deflator as the detailed spending chart; the 2024 deflator is preliminary." }
+    ],
+    source: `<a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agricultural agency budgets (annual tables)</a>; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; <a href="https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf" target="_blank" rel="noopener">USDA facility histories</a>; ${sourceLinks.brdpi}. <a href="rd-source-comparison.csv" download>Download annual dataset comparison</a>.`,
+    decimals: 2
+  };
+}
+
+function federalSpendingDetailChart() {
+  return {
+    title: "Federal agricultural and forestry R&D spending",
+    subtitle: "USDA R&D and facilities outlays + non-USDA university agricultural sciences expenditures, 2003–2024",
+    yLabel: "Billion 2022 dollars", tooltipUnit: "billion 2022 dollars", type: "stacked",
+    series: DATA.rd.federalSpendingDetail,
+    overlaySeries: [DATA.rd.federalSpendingEarlyUpper],
+    totalLabel: "Identified federal spending", showChangeYears: true, fullWidth: true, decimals: 2,
+    caption: "Agency payments and university research expenditures. The early dashed line assigns all unclassified university funding to non-USDA; it is an allocation scenario, not a confidence interval.",
+    explanationTitle: "What is included and how it differs from ERS",
+    explanations: [
+      { title: "A transparent federal spending measure", body: "Includes all USDA R&D outlays plus R&D facilities outlays, and federally funded university agricultural sciences expenditures attributed to non-USDA agencies. Forest Service R&D is separate. USDA-funded university expenditures are not added again, because their grants already overlap agency outlays. Non-USDA research outside universities is not comprehensively captured." },
+      { title: "Agency funding versus research location", body: "ARS, NIFA and other agency areas show payments through those agencies. They do not distinguish research performed inside laboratories from grants or cooperative agreements to universities and other recipients. University expenditures measure costs incurred and can occur in a different year from agency payments." },
+      { title: "Early allocation and survey changes", body: "Before 2010, some federal university funding lacks an agency assignment. The areas include only identified non-USDA funding; the dashed scenario adds all unassigned funding. Neither scenario measures all potentially missing agricultural research. University survey definitions change in 2010, 2016 and 2020; these are not a fully uniform historical series." },
+      { title: "Comparison with the first ERS chart", body: "ERS combines laboratory research net of grants with recipient expenditure reports for state universities and cooperating institutions, using research activity classifications. Its first chart includes state and other funding, excludes some recipient groups, and is not the same scope as this federal spending chart. The downloaded comparison retains alternative Gateway recipient expenditures, HERD university totals and the Fuglie funding benchmark without forcing them to match." }
+    ],
+    source: `<a href="https://ncses.nsf.gov/pubs/nsf26316" target="_blank" rel="noopener">NCSES, Survey of Federal Funds for R&D (outlays and facilities, annual tables)</a>; ${sourceLinks.herd}; ${sourceLinks.brdpi}. <a href="rd-federal-spending.csv" download>Download chart data</a>; <a href="rd-source-comparison.csv" download>download annual dataset comparison</a>.`,
+  };
+}
+
+function stateResearchFundingChart() {
+  const common = {
+    yLabel: "Billion 2022 dollars", tooltipUnit: "billion 2022 dollars", decimals: 2,
+    showChangeYears: true,
+    source: `${sourceLinks.herd}; <a href="https://portal.nifa.usda.gov/enterprise-search/" target="_blank" rel="noopener">NIFA Data Gateway, user-exported annual Financial Details</a>; ${sourceLinks.brdpi}. <a href="rd-gateway-annual-totals.csv" download>Download Gateway totals by year, mechanism and funding source</a>; <a href="rd-source-comparison.csv" download>download dataset comparison</a>.`
+  };
+  return {
+    title: "State funding: university research and project reports", fullWidth: true,
+    viewLabel: "Choose state funding dataset",
+    views: [
+      { ...common, id: "herd-state", label: "University research · HERD", subtitle: "State and local government-funded university agricultural sciences research, 2010–2024",
+        series: [DATA.rd.fundingSources.find(item => item.name === "State and local government")],
+        caption: "Research expenditures only. These state and local funds are separate from the federal spending chart; the ERS chart already includes state funding.",
+        explanationTitle: "How the state funding datasets differ",
+        explanations: [{ title: "HERD university research", body: "HERD measures university R&D expenditures financed by state and local governments in agricultural sciences. It is not a total of state agricultural research budgets or all public research institutions. Field definitions change in 2016 and 2020." }, { title: "Gateway project reports", body: "The alternative view sums State Appropriations reported on annual Gateway project financial records. It includes mixed research, extension and education activities. Project research percentages are not applied because their annual meaning and weighting remain unverified. The export has incomplete nonformula financial reporting in 2010–2014 and no positive formula financial records after 2021." }]
+      },
+      { ...common, id: "gateway-state", label: "Project reports · Gateway", subtitle: "State appropriations reported by Gateway projects, all activities, 2004–2021",
+        series: [DATA.rd.gatewayStateFunding], hideSingleSeriesSummary: true,
+        caption: "Reported project funding, not a complete research-only total. Formula reports end after 2021; nonformula reporting is incomplete in 2010–2014.",
+        explanationTitle: "Why these values differ from HERD",
+        explanations: [{ title: "Coverage and activity", body: "Gateway includes state appropriations reported by the projects in the supplied formula and other-mechanism exports. It is not restricted to agricultural sciences university research and can include extension and education; reporting guidance also allows unliquidated obligations. It is not added to the federal chart or combined with HERD state totals." }, { title: "Preserved annual totals", body: "The download retains each observed fiscal year, sponsoring agency, funding mechanism and individual funding-source column, including NSF, DOE, DOD, HHS, NIH, USAID, other USDA, capacity programs and state appropriations. Annual records are counted once per project-year. Cumulative records and cumulative award amounts are excluded; annual award fields are retained separately from expenditures. Post-2021 and future-dated observations are retained in the audit download but not shown as a continuing complete series." }]
+      }
+    ]
+  };
 }
 
 const TOPICS = {
@@ -788,7 +838,9 @@ const TOPICS = {
           source: `${sourceLinks.rd}; ${sourceLinks.bea}`,
           decimals: 1
         },
-        federalAgencyBudgetView(false)
+        federalAgencyBudgetView(),
+        federalSpendingDetailChart(),
+        stateResearchFundingChart()
       ]
     };
   }
@@ -1420,7 +1472,7 @@ function renderSeriesSummary(summary, chart) {
     if (chart.hideSingleSeriesSummary && chart.series.length === 1) return "";
     const latest = series.values.at(-1);
     const latestTotal = chart.legendShare ? chart.series.reduce((sum, item) => sum + (item.values.find(point => point.year === latest.year)?.value || 0), 0) : 0;
-    const delta = chart.hideLegendValues || (chart.labelPointSeriesOnly && series.pointsOnly) ? "" : chart.legendShare ? `${format(100 * latest.value / latestTotal, chart.decimals ?? 1)}%` : chart.summaryMode === "latest" ? formatValue(chart, latest.value) : pct(change(series.values));
+    const delta = series.hideLegendValue || chart.hideLegendValues || (chart.labelPointSeriesOnly && series.pointsOnly) ? "" : chart.legendShare ? `${format(100 * latest.value / latestTotal, chart.decimals ?? 1)}%` : chart.summaryMode === "latest" ? formatValue(chart, latest.value) : pct(change(series.values));
     const range = `${series.values[0].year}–${series.values.at(-1).year}`;
     if (series.sourceBoundary) {
       const earlier = series.values.find(point => point.year === series.sourceBoundary.earlierEnd);

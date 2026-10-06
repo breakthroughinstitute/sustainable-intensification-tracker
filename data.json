@@ -9509,7 +9509,1268 @@
           }
         ]
       }
-    ]
+    ],
+    "agencyBudgetWithForestry": [
+      {
+        "name": "ARS research",
+        "values": [
+          {
+            "year": 2000,
+            "value": 1.469151
+          },
+          {
+            "year": 2001,
+            "value": 1.719874
+          },
+          {
+            "year": 2002,
+            "value": 1.718083
+          },
+          {
+            "year": 2003,
+            "value": 1.664881
+          },
+          {
+            "year": 2004,
+            "value": 1.66651
+          },
+          {
+            "year": 2005,
+            "value": 1.653578
+          },
+          {
+            "year": 2006,
+            "value": 1.638377
+          },
+          {
+            "year": 2007,
+            "value": 1.557808
+          },
+          {
+            "year": 2008,
+            "value": 1.498073
+          },
+          {
+            "year": 2009,
+            "value": 1.467682
+          },
+          {
+            "year": 2010,
+            "value": 1.460137
+          },
+          {
+            "year": 2011,
+            "value": 1.39246
+          },
+          {
+            "year": 2012,
+            "value": 1.321477
+          },
+          {
+            "year": 2013,
+            "value": 1.227325
+          },
+          {
+            "year": 2014,
+            "value": 1.267454
+          },
+          {
+            "year": 2015,
+            "value": 1.254198
+          },
+          {
+            "year": 2016,
+            "value": 1.241533
+          },
+          {
+            "year": 2017,
+            "value": 1.238648
+          },
+          {
+            "year": 2018,
+            "value": 1.241919
+          },
+          {
+            "year": 2019,
+            "value": 1.29581
+          },
+          {
+            "year": 2020,
+            "value": 1.376444
+          },
+          {
+            "year": 2021,
+            "value": 1.450624
+          },
+          {
+            "year": 2022,
+            "value": 1.503
+          },
+          {
+            "year": 2023,
+            "value": 1.518726
+          },
+          {
+            "year": 2024,
+            "value": 1.520599
+          }
+        ]
+      },
+      {
+        "name": "NIFA and predecessor research",
+        "values": [
+          {
+            "year": 2000,
+            "value": 1.033917
+          },
+          {
+            "year": 2001,
+            "value": 1.122057
+          },
+          {
+            "year": 2002,
+            "value": 0.959634
+          },
+          {
+            "year": 2003,
+            "value": 1.05087
+          },
+          {
+            "year": 2004,
+            "value": 1.021463
+          },
+          {
+            "year": 2005,
+            "value": 1.043861
+          },
+          {
+            "year": 2006,
+            "value": 1.017502
+          },
+          {
+            "year": 2007,
+            "value": 0.978773
+          },
+          {
+            "year": 2008,
+            "value": 0.946299
+          },
+          {
+            "year": 2009,
+            "value": 0.99846
+          },
+          {
+            "year": 2010,
+            "value": 1.074915
+          },
+          {
+            "year": 2011,
+            "value": 0.911147
+          },
+          {
+            "year": 2012,
+            "value": 0.952988
+          },
+          {
+            "year": 2013,
+            "value": 0.813228
+          },
+          {
+            "year": 2014,
+            "value": 0.97318
+          },
+          {
+            "year": 2015,
+            "value": 0.964584
+          },
+          {
+            "year": 2016,
+            "value": 0.979171
+          },
+          {
+            "year": 2017,
+            "value": 0.99206
+          },
+          {
+            "year": 2018,
+            "value": 0.917795
+          },
+          {
+            "year": 2019,
+            "value": 0.962041
+          },
+          {
+            "year": 2020,
+            "value": 0.979805
+          },
+          {
+            "year": 2021,
+            "value": 1.078294
+          },
+          {
+            "year": 2022,
+            "value": 1.353
+          },
+          {
+            "year": 2023,
+            "value": 0.890819
+          },
+          {
+            "year": 2024,
+            "value": 0.832377
+          }
+        ]
+      },
+      {
+        "name": "Other USDA research (ERS, NASS and others)",
+        "values": [
+          {
+            "year": 2000,
+            "value": 0.207164
+          },
+          {
+            "year": 2001,
+            "value": 0.206017
+          },
+          {
+            "year": 2002,
+            "value": 0.1816
+          },
+          {
+            "year": 2003,
+            "value": 0.221869
+          },
+          {
+            "year": 2004,
+            "value": 0.21391
+          },
+          {
+            "year": 2005,
+            "value": 0.207495
+          },
+          {
+            "year": 2006,
+            "value": 0.195263
+          },
+          {
+            "year": 2007,
+            "value": 0.192522
+          },
+          {
+            "year": 2008,
+            "value": 0.172693
+          },
+          {
+            "year": 2009,
+            "value": 0.17323
+          },
+          {
+            "year": 2010,
+            "value": 0.169445
+          },
+          {
+            "year": 2011,
+            "value": 0.162153
+          },
+          {
+            "year": 2012,
+            "value": 0.165185
+          },
+          {
+            "year": 2013,
+            "value": 0.145932
+          },
+          {
+            "year": 2014,
+            "value": 0.161179
+          },
+          {
+            "year": 2015,
+            "value": 0.161562
+          },
+          {
+            "year": 2016,
+            "value": 0.156949
+          },
+          {
+            "year": 2017,
+            "value": 0.155259
+          },
+          {
+            "year": 2018,
+            "value": 0.150367
+          },
+          {
+            "year": 2019,
+            "value": 0.147251
+          },
+          {
+            "year": 2020,
+            "value": 0.143648
+          },
+          {
+            "year": 2021,
+            "value": 0.14433
+          },
+          {
+            "year": 2022,
+            "value": 0.144
+          },
+          {
+            "year": 2023,
+            "value": 0.146383
+          },
+          {
+            "year": 2024,
+            "value": 0.138574
+          }
+        ]
+      },
+      {
+        "name": "Agricultural research facilities",
+        "values": [
+          {
+            "year": 2000,
+            "value": 0.256579
+          },
+          {
+            "year": 2001,
+            "value": 0.310865
+          },
+          {
+            "year": 2002,
+            "value": 0.53946
+          },
+          {
+            "year": 2003,
+            "value": 0.574453
+          },
+          {
+            "year": 2004,
+            "value": 0.265315
+          },
+          {
+            "year": 2005,
+            "value": 0.437336
+          },
+          {
+            "year": 2006,
+            "value": 0.379847
+          },
+          {
+            "year": 2007,
+            "value": 0.136676
+          },
+          {
+            "year": 2008,
+            "value": 0.186733
+          },
+          {
+            "year": 2009,
+            "value": 0.428301
+          },
+          {
+            "year": 2010,
+            "value": 0.215777
+          },
+          {
+            "year": 2011,
+            "value": -0.190466
+          },
+          {
+            "year": 2012,
+            "value": 0.108005
+          },
+          {
+            "year": 2013,
+            "value": 0.081073
+          },
+          {
+            "year": 2014,
+            "value": 0.134316
+          },
+          {
+            "year": 2015,
+            "value": 0.191481
+          },
+          {
+            "year": 2016,
+            "value": 0.374802
+          },
+          {
+            "year": 2017,
+            "value": 0.242022
+          },
+          {
+            "year": 2018,
+            "value": 0.302961
+          },
+          {
+            "year": 2019,
+            "value": 0.560645
+          },
+          {
+            "year": 2020,
+            "value": 0.366623
+          },
+          {
+            "year": 2021,
+            "value": 0.255193
+          },
+          {
+            "year": 2022,
+            "value": 0.295
+          },
+          {
+            "year": 2023,
+            "value": 0.306249
+          },
+          {
+            "year": 2024,
+            "value": 0.214837
+          }
+        ]
+      },
+      {
+        "name": "Forest Service research",
+        "color": "#859e70",
+        "values": [
+          {
+            "year": 2000,
+            "value": 0.3858183491868672
+          },
+          {
+            "year": 2001,
+            "value": 0.6254088299346664
+          },
+          {
+            "year": 2002,
+            "value": 0.4290755964357574
+          },
+          {
+            "year": 2003,
+            "value": 0.4918967049241022
+          },
+          {
+            "year": 2004,
+            "value": 0.4875163305372123
+          },
+          {
+            "year": 2005,
+            "value": 0.47564301666380343
+          },
+          {
+            "year": 2006,
+            "value": 0.4576471554059601
+          },
+          {
+            "year": 2007,
+            "value": 0.4467674786459981
+          },
+          {
+            "year": 2008,
+            "value": 0.44226142803173407
+          },
+          {
+            "year": 2009,
+            "value": 0.4460334728033473
+          },
+          {
+            "year": 2010,
+            "value": 0.45141141269502033
+          },
+          {
+            "year": 2011,
+            "value": 0.42983503012674007
+          },
+          {
+            "year": 2012,
+            "value": 0.40914961706783365
+          },
+          {
+            "year": 2013,
+            "value": 0.355475231574708
+          },
+          {
+            "year": 2014,
+            "value": 0.3553267183598371
+          },
+          {
+            "year": 2015,
+            "value": 0.3494521800734205
+          },
+          {
+            "year": 2016,
+            "value": 0.34434970059880243
+          },
+          {
+            "year": 2017,
+            "value": 0.3116597653130184
+          },
+          {
+            "year": 2018,
+            "value": 0.2929368818557813
+          },
+          {
+            "year": 2019,
+            "value": 0.32504320262972525
+          },
+          {
+            "year": 2020,
+            "value": 0.3312471443406023
+          },
+          {
+            "year": 2021,
+            "value": 0.2698348623853211
+          },
+          {
+            "year": 2022,
+            "value": 0.449
+          },
+          {
+            "year": 2023,
+            "value": 0.3688471624773257
+          },
+          {
+            "year": 2024,
+            "value": 0.28179909909909906
+          }
+        ]
+      }
+    ],
+    "federalSpendingDetail": [
+      {
+        "name": "USDA research facilities",
+        "color": "#adb7bd",
+        "values": [
+          {
+            "year": 2003,
+            "value": 0.13243372824879673
+          },
+          {
+            "year": 2004,
+            "value": 0.18737872568267
+          },
+          {
+            "year": 2005,
+            "value": 0.23782150833190172
+          },
+          {
+            "year": 2006,
+            "value": 0.2822157458336754
+          },
+          {
+            "year": 2007,
+            "value": 0.3174400506168934
+          },
+          {
+            "year": 2008,
+            "value": 0.2077926709482433
+          },
+          {
+            "year": 2009,
+            "value": 0.10230125523012554
+          },
+          {
+            "year": 2010,
+            "value": 0.166797178884377
+          },
+          {
+            "year": 2011,
+            "value": 0.1531448161230002
+          },
+          {
+            "year": 2012,
+            "value": 0.08894556892778993
+          },
+          {
+            "year": 2013,
+            "value": 0.029934756343133306
+          },
+          {
+            "year": 2014,
+            "value": 0.0232000262846629
+          },
+          {
+            "year": 2015,
+            "value": 0.02273832678559928
+          },
+          {
+            "year": 2016,
+            "value": 0.024596407185628746
+          },
+          {
+            "year": 2017,
+            "value": 0.017124162929286726
+          },
+          {
+            "year": 2018,
+            "value": 0.04343930947671282
+          },
+          {
+            "year": 2019,
+            "value": 0.05344670110354544
+          },
+          {
+            "year": 2020,
+            "value": 0.08039979231568016
+          },
+          {
+            "year": 2021,
+            "value": 0.11609174311926605
+          },
+          {
+            "year": 2022,
+            "value": 0.109
+          },
+          {
+            "year": 2023,
+            "value": 0.10689826379891164
+          },
+          {
+            "year": 2024,
+            "value": 0.10323333333333333
+          }
+        ]
+      },
+      {
+        "name": "ARS R&D outlays",
+        "color": "#00bfa5",
+        "values": [
+          {
+            "year": 2003,
+            "value": 1.7869953720844132
+          },
+          {
+            "year": 2004,
+            "value": 1.822382473674817
+          },
+          {
+            "year": 2005,
+            "value": 1.7828632537364713
+          },
+          {
+            "year": 2006,
+            "value": 1.7314317379525492
+          },
+          {
+            "year": 2007,
+            "value": 1.6210017399557104
+          },
+          {
+            "year": 2008,
+            "value": 1.6132012089157537
+          },
+          {
+            "year": 2009,
+            "value": 1.5467949790794981
+          },
+          {
+            "year": 2010,
+            "value": 1.5885445608035906
+          },
+          {
+            "year": 2011,
+            "value": 1.4954140868481196
+          },
+          {
+            "year": 2012,
+            "value": 1.3913628282275712
+          },
+          {
+            "year": 2013,
+            "value": 1.3358385018123238
+          },
+          {
+            "year": 2014,
+            "value": 1.2515803653568143
+          },
+          {
+            "year": 2015,
+            "value": 1.288904102531075
+          },
+          {
+            "year": 2016,
+            "value": 1.3094658682634732
+          },
+          {
+            "year": 2017,
+            "value": 1.3117108803833633
+          },
+          {
+            "year": 2018,
+            "value": 1.2263251213810464
+          },
+          {
+            "year": 2019,
+            "value": 1.2543613524301482
+          },
+          {
+            "year": 2020,
+            "value": 1.3550044998269297
+          },
+          {
+            "year": 2021,
+            "value": 1.441211009174312
+          },
+          {
+            "year": 2022,
+            "value": 1.494
+          },
+          {
+            "year": 2023,
+            "value": 1.6005848147188393
+          },
+          {
+            "year": 2024,
+            "value": 1.6666138138138138
+          }
+        ]
+      },
+      {
+        "name": "NIFA and predecessor R&D outlays",
+        "color": "#10495e",
+        "values": [
+          {
+            "year": 2003,
+            "value": 0.865119029988893
+          },
+          {
+            "year": 2004,
+            "value": 0.8407169373549884
+          },
+          {
+            "year": 2005,
+            "value": 0.8986141556433602
+          },
+          {
+            "year": 2006,
+            "value": 0.8939374435596422
+          },
+          {
+            "year": 2007,
+            "value": 0.9141097753875357
+          },
+          {
+            "year": 2008,
+            "value": 0.8971588968643748
+          },
+          {
+            "year": 2009,
+            "value": 0.8647866108786612
+          },
+          {
+            "year": 2010,
+            "value": 0.8101577260098312
+          },
+          {
+            "year": 2011,
+            "value": 0.841653023062539
+          },
+          {
+            "year": 2012,
+            "value": 0.8983502461706783
+          },
+          {
+            "year": 2013,
+            "value": 0.8581296818364882
+          },
+          {
+            "year": 2014,
+            "value": 1.0061485083453805
+          },
+          {
+            "year": 2015,
+            "value": 0.9238941199201391
+          },
+          {
+            "year": 2016,
+            "value": 0.9346634730538923
+          },
+          {
+            "year": 2017,
+            "value": 0.8059772685384285
+          },
+          {
+            "year": 2018,
+            "value": 0.8186639093688185
+          },
+          {
+            "year": 2019,
+            "value": 0.9642221178680443
+          },
+          {
+            "year": 2020,
+            "value": 0.7911339563862928
+          },
+          {
+            "year": 2021,
+            "value": 0.8147339449541284
+          },
+          {
+            "year": 2022,
+            "value": 0.908
+          },
+          {
+            "year": 2023,
+            "value": 0.877336201088365
+          },
+          {
+            "year": 2024,
+            "value": 0.93003003003003
+          }
+        ]
+      },
+      {
+        "name": "Forest Service R&D outlays",
+        "color": "#859e70",
+        "values": [
+          {
+            "year": 2003,
+            "value": 0.52457515734913
+          },
+          {
+            "year": 2004,
+            "value": 0.5405793325004462
+          },
+          {
+            "year": 2005,
+            "value": 0.5187381893145507
+          },
+          {
+            "year": 2006,
+            "value": 0.5201922666447747
+          },
+          {
+            "year": 2007,
+            "value": 0.4923260044289782
+          },
+          {
+            "year": 2008,
+            "value": 0.4745535323007178
+          },
+          {
+            "year": 2009,
+            "value": 0.4583096234309624
+          },
+          {
+            "year": 2010,
+            "value": 0.48053472964308613
+          },
+          {
+            "year": 2011,
+            "value": 0.45428672345730314
+          },
+          {
+            "year": 2012,
+            "value": 0.45108109956236325
+          },
+          {
+            "year": 2013,
+            "value": 0.42657027788964963
+          },
+          {
+            "year": 2014,
+            "value": 0.4029478249441451
+          },
+          {
+            "year": 2015,
+            "value": 0.402109357892703
+          },
+          {
+            "year": 2016,
+            "value": 0.39354251497005993
+          },
+          {
+            "year": 2017,
+            "value": 0.38129802789211775
+          },
+          {
+            "year": 2018,
+            "value": 0.3642219025355152
+          },
+          {
+            "year": 2019,
+            "value": 0.35231192768255465
+          },
+          {
+            "year": 2020,
+            "value": 0.3398231221876082
+          },
+          {
+            "year": 2021,
+            "value": 0.30330275229357795
+          },
+          {
+            "year": 2022,
+            "value": 0.297
+          },
+          {
+            "year": 2023,
+            "value": 0.2956555584348277
+          },
+          {
+            "year": 2024,
+            "value": 0.3069099099099099
+          }
+        ]
+      },
+      {
+        "name": "Other USDA R&D outlays",
+        "color": "#bc743b",
+        "values": [
+          {
+            "year": 2003,
+            "value": 0.20467030729359495
+          },
+          {
+            "year": 2004,
+            "value": 0.1923533821167232
+          },
+          {
+            "year": 2005,
+            "value": 0.2027069232090706
+          },
+          {
+            "year": 2006,
+            "value": 0.18763533371644367
+          },
+          {
+            "year": 2007,
+            "value": 0.23220151850680165
+          },
+          {
+            "year": 2008,
+            "value": 0.17971258027956177
+          },
+          {
+            "year": 2009,
+            "value": 0.17050209205020922
+          },
+          {
+            "year": 2010,
+            "value": 0.17738747595640095
+          },
+          {
+            "year": 2011,
+            "value": 0.16987492208601704
+          },
+          {
+            "year": 2012,
+            "value": 0.16899658096280087
+          },
+          {
+            "year": 2013,
+            "value": 0.16339387837293598
+          },
+          {
+            "year": 2014,
+            "value": 0.17338967012748063
+          },
+          {
+            "year": 2015,
+            "value": 0.1615617955818896
+          },
+          {
+            "year": 2016,
+            "value": 0.1862299401197605
+          },
+          {
+            "year": 2017,
+            "value": 0.1609671315352952
+          },
+          {
+            "year": 2018,
+            "value": 0.161505124977522
+          },
+          {
+            "year": 2019,
+            "value": 0.1537956092979573
+          },
+          {
+            "year": 2020,
+            "value": 0.15007961232260297
+          },
+          {
+            "year": 2021,
+            "value": 0.152697247706422
+          },
+          {
+            "year": 2022,
+            "value": 0.15
+          },
+          {
+            "year": 2023,
+            "value": 0.17238548846851517
+          },
+          {
+            "year": 2024,
+            "value": 0.2325075075075075
+          }
+        ]
+      },
+      {
+        "name": "Non-USDA university agricultural sciences",
+        "color": "#56a9d5",
+        "values": [
+          {
+            "year": 2003,
+            "value": 0.4696306393928174,
+            "source": "Partial agency assignment: some federal university expenditures cannot be assigned to USDA versus other agencies."
+          },
+          {
+            "year": 2004,
+            "value": 0.6836305529180796,
+            "source": "Partial agency assignment: some federal university expenditures cannot be assigned to USDA versus other agencies."
+          },
+          {
+            "year": 2005,
+            "value": 0.6131820582374162,
+            "source": "Partial agency assignment: some federal university expenditures cannot be assigned to USDA versus other agencies."
+          },
+          {
+            "year": 2006,
+            "value": 0.6047395276249898,
+            "source": "Partial agency assignment: some federal university expenditures cannot be assigned to USDA versus other agencies."
+          },
+          {
+            "year": 2007,
+            "value": 0.5491022149636191,
+            "source": "Partial agency assignment: some federal university expenditures cannot be assigned to USDA versus other agencies."
+          },
+          {
+            "year": 2008,
+            "value": 0.5146757698526634,
+            "source": "Partial agency assignment: some federal university expenditures cannot be assigned to USDA versus other agencies."
+          },
+          {
+            "year": 2009,
+            "value": 0.483104719665272,
+            "source": "Partial agency assignment: some federal university expenditures cannot be assigned to USDA versus other agencies."
+          },
+          {
+            "year": 2010,
+            "value": 0.5694971964094893
+          },
+          {
+            "year": 2011,
+            "value": 0.6127156792021609
+          },
+          {
+            "year": 2012,
+            "value": 0.6619659608862144
+          },
+          {
+            "year": 2013,
+            "value": 0.6307315525573903
+          },
+          {
+            "year": 2014,
+            "value": 0.5753093675910107
+          },
+          {
+            "year": 2015,
+            "value": 0.5499120722612224
+          },
+          {
+            "year": 2016,
+            "value": 0.41169466347305395
+          },
+          {
+            "year": 2017,
+            "value": 0.4045606324261228
+          },
+          {
+            "year": 2018,
+            "value": 0.3580936184139543
+          },
+          {
+            "year": 2019,
+            "value": 0.350455472880958
+          },
+          {
+            "year": 2020,
+            "value": 0.4072463880235375
+          },
+          {
+            "year": 2021,
+            "value": 0.3904468623853211
+          },
+          {
+            "year": 2022,
+            "value": 0.431436
+          },
+          {
+            "year": 2023,
+            "value": 0.49001778906452453
+          },
+          {
+            "year": 2024,
+            "value": 0.5518798198198198
+          }
+        ]
+      }
+    ],
+    "federalSpendingEarlyUpper": {
+      "name": "Early allocation scenario",
+      "color": "#252a2b",
+      "dasharray": "5 4",
+      "hideLegendValue": true,
+      "values": [
+        {
+          "year": 2003,
+          "value": 4.1926574852032585,
+          "source": "Scenario assigns all university funding without an agency to non-USDA. Not a confidence interval."
+        },
+        {
+          "year": 2004,
+          "value": 4.306977945852579,
+          "source": "Scenario assigns all university funding without an agency to non-USDA. Not a confidence interval."
+        },
+        {
+          "year": 2005,
+          "value": 4.266128406330184,
+          "source": "Scenario assigns all university funding without an agency to non-USDA. Not a confidence interval."
+        },
+        {
+          "year": 2006,
+          "value": 4.222977263439373,
+          "source": "Scenario assigns all university funding without an agency to non-USDA. Not a confidence interval."
+        },
+        {
+          "year": 2007,
+          "value": 4.189629634117051,
+          "source": "Scenario assigns all university funding without an agency to non-USDA. Not a confidence interval."
+        },
+        {
+          "year": 2008,
+          "value": 3.9054899263970535,
+          "source": "Scenario assigns all university funding without an agency to non-USDA. Not a confidence interval."
+        },
+        {
+          "year": 2009,
+          "value": 3.648958920167364,
+          "source": "Scenario assigns all university funding without an agency to non-USDA. Not a confidence interval."
+        }
+      ]
+    },
+    "gatewayStateFunding": {
+      "definitionBreak": {
+        "earlierEnd": 2009,
+        "laterStart": 2015
+      },
+      "name": "State appropriations in Gateway project reports",
+      "values": [
+        {
+          "year": 2004,
+          "value": 2.060292928646975,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2005,
+          "value": 2.0070264573690086,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2006,
+          "value": 2.0258222680105082,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2007,
+          "value": 2.0037876068351785,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2008,
+          "value": 2.0449155850077827,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2009,
+          "value": 1.9278041017740588,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2010,
+          "value": 1.5753425045244713,
+          "approximate": true,
+          "source": "All reported project activities; not a research-only national total. Nonformula financial reporting was incomplete in this period."
+        },
+        {
+          "year": 2011,
+          "value": 1.4537510190309577,
+          "approximate": true,
+          "source": "All reported project activities; not a research-only national total. Nonformula financial reporting was incomplete in this period."
+        },
+        {
+          "year": 2012,
+          "value": 1.404007472619256,
+          "approximate": true,
+          "source": "All reported project activities; not a research-only national total. Nonformula financial reporting was incomplete in this period."
+        },
+        {
+          "year": 2013,
+          "value": 1.323116857749094,
+          "approximate": true,
+          "source": "All reported project activities; not a research-only national total. Nonformula financial reporting was incomplete in this period."
+        },
+        {
+          "year": 2014,
+          "value": 1.2628079621285824,
+          "approximate": true,
+          "source": "All reported project activities; not a research-only national total. Nonformula financial reporting was incomplete in this period."
+        },
+        {
+          "year": 2015,
+          "value": 1.343884921106356,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2016,
+          "value": 1.2635917197863722,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2017,
+          "value": 1.3873732144177806,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2018,
+          "value": 1.274799997968773,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2019,
+          "value": 1.151958301899568,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2020,
+          "value": 1.091757829816045,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        },
+        {
+          "year": 2021,
+          "value": 1.0243534848429359,
+          "approximate": false,
+          "source": "All reported project activities; not a research-only national total."
+        }
+      ]
+    }
   },
   "practices": {
     "ge": [
