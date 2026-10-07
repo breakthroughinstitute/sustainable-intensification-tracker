@@ -544,3 +544,18 @@ body:not(.local-preview) .text-edit-tools { display: none !important; }
 
 /* Filled swatches and layer order connect regulatory legends to stacked areas. */
 .regulatory-legend i { width: 12px; height: 12px; border-radius: 2px; }
+
+.series-focus-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 2px; font-family: var(--sans); font-size: .7rem; color: var(--muted); }
+.series-focus-controls button, .series-focus-button { font: inherit; color: var(--teal-dark); cursor: pointer; border: 1px solid transparent; border-radius: 4px; background: transparent; }
+.series-focus-controls button { border-color: var(--line); padding: 5px 10px; background: white; font-weight: 700; }
+.series-focus-button { text-align: left; padding: 4px; margin: -4px; font-weight: 700; line-height: 1.2; }
+.series-focus-button:hover { background: #e6f1ef; }
+.series-focus-button[aria-pressed="true"] { background: #e6f1ef; border-color: var(--teal-dark); }
+.series-focus-button:focus-visible, .series-focus-controls button:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
+.series-muted { opacity: .5; }
+.area-path { cursor: pointer; }
+
+.series-breakdown-legend { margin: 8px 2px 14px; padding: 12px; border: 1px solid var(--line); border-radius: 6px; background: #f5f9f8; }
+.series-breakdown-legend h4 { font-family: var(--sans); font-size: .75rem; margin: 0 0 8px; color: var(--teal-dark); }
+.series-breakdown-legend h4:last-child { margin: 14px 0 -4px; }
+.series-breakdown-legend > .change-note { margin-top: 12px; }

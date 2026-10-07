@@ -469,46 +469,30 @@ function federalAgencyBudgetView() {
 
 function federalSpendingDetailChart() {
   return {
-    title: "Federal agricultural and forestry R&D spending",
-    subtitle: "USDA R&D and facilities outlays + non-USDA university agricultural sciences expenditures, 2003–2024",
+    title: "Federal agricultural R&D spending",
+    subtitle: "USDA R&D and facilities payments + non-USDA-funded university agricultural sciences research",
     yLabel: "Billion 2022 dollars", tooltipUnit: "billion 2022 dollars", type: "stacked",
-    series: DATA.rd.federalSpendingDetail,
-    overlaySeries: [DATA.rd.federalSpendingEarlyUpper],
-    totalLabel: "Identified federal spending", showChangeYears: true, fullWidth: true, decimals: 2,
-    caption: "Agency payments and university research expenditures. The early dashed line assigns all unclassified university funding to non-USDA; it is an allocation scenario, not a confidence interval.",
-    explanationTitle: "What is included and how it differs from ERS",
-    explanations: [
-      { title: "A transparent federal spending measure", body: "Includes all USDA R&D outlays plus R&D facilities outlays, and federally funded university agricultural sciences expenditures attributed to non-USDA agencies. Forest Service R&D is separate. USDA-funded university expenditures are not added again, because their grants already overlap agency outlays. Non-USDA research outside universities is not comprehensively captured." },
-      { title: "Agency funding versus research location", body: "ARS, NIFA and other agency areas show payments through those agencies. They do not distinguish research performed inside laboratories from grants or cooperative agreements to universities and other recipients. University expenditures measure costs incurred and can occur in a different year from agency payments." },
-      { title: "Early allocation and survey changes", body: "Before 2010, some federal university funding lacks an agency assignment. The areas include only identified non-USDA funding; the dashed scenario adds all unassigned funding. Neither scenario measures all potentially missing agricultural research. University survey definitions change in 2010, 2016 and 2020; these are not a fully uniform historical series." },
-      { title: "Comparison with the first ERS chart", body: "ERS combines laboratory research net of grants with recipient expenditure reports for state universities and cooperating institutions, using research activity classifications. Its first chart includes state and other funding, excludes some recipient groups, and is not the same scope as this federal spending chart. The downloaded comparison retains alternative Gateway recipient expenditures, HERD university totals and the Fuglie funding benchmark without forcing them to match." }
-    ],
-    source: `<a href="https://ncses.nsf.gov/pubs/nsf26316" target="_blank" rel="noopener">NCSES, Survey of Federal Funds for R&D (outlays and facilities, annual tables)</a>; ${sourceLinks.herd}; ${sourceLinks.brdpi}. <a href="rd-federal-spending.csv" download>Download chart data</a>; <a href="rd-source-comparison.csv" download>download annual dataset comparison</a>.`,
+    series: DATA.rd.federalStateSpendingDetail.filter(series => !series.partialCoverage),
+    nonUsdaBreakdown: DATA.rd.nonUsdaUniversityBreakdown,
+    showChangeYears: true, fullWidth: true, decimals: 2,
+    caption: "Includes forestry; state funding is shown separately below. Before 2010, a small unallocated share is counted as non-USDA.",
+    source: `<a href="https://ncses.nsf.gov/pubs/nsf26316" target="_blank" rel="noopener">NCSES, federal R&D outlays and facilities</a>; ${sourceLinks.herd}; <a href="https://portal.nifa.usda.gov/enterprise-search/" target="_blank" rel="noopener">NIFA Data Gateway, annual Financial Details</a>; ${sourceLinks.brdpi}.<p>University data cover agricultural sciences; definitions change in 2010, 2016 and 2020. USDA-funded university spending is already included in USDA payments. All displayed series use the same research deflator. State project funding is retained in the download as a separate comparison, not an area in this chart.</p><a href="rd-federal-spending.csv" download>Download chart data</a>; <a href="rd-gateway-annual-totals.csv" download>Gateway totals by year, mechanism and source</a>; <a href="rd-source-comparison.csv" download>annual dataset comparison</a>.`
   };
 }
 
-function stateResearchFundingChart() {
+function gatewayStateFundingChart() {
   const common = {
-    yLabel: "Billion 2022 dollars", tooltipUnit: "billion 2022 dollars", decimals: 2,
-    showChangeYears: true,
-    source: `${sourceLinks.herd}; <a href="https://portal.nifa.usda.gov/enterprise-search/" target="_blank" rel="noopener">NIFA Data Gateway, user-exported annual Financial Details</a>; ${sourceLinks.brdpi}. <a href="rd-gateway-annual-totals.csv" download>Download Gateway totals by year, mechanism and funding source</a>; <a href="rd-source-comparison.csv" download>download dataset comparison</a>.`
+    type: "stacked", yLabel: "Billion 2022 dollars", tooltipUnit: "billion 2022 dollars", decimals: 2,
+    legendShare: true,
+    caption: "Legend shows each category’s share in 2021. Reports include mixed activities and incomplete nonformula reporting in 2010–2014; formula coverage ends in 2021.",
+    source: `<a href="https://portal.nifa.usda.gov/enterprise-search/" target="_blank" rel="noopener">NIFA Data Gateway, annual Financial Details</a>; ${sourceLinks.brdpi}.<p>State appropriations reported by projects, grouped by their funding mechanism or program label. These are state dollars supporting those projects, not NIFA grant amounts. Other capacity includes Animal Health and Renewable Resources Extension projects. The exports do not provide a state-location or research-focus classification. Categories and totals are not a complete national research-only estimate.</p><a href="rd-gateway-annual-totals.csv" download>Annual mechanism and source totals</a>; <a href="rd-source-comparison.csv" download>Annual program totals and dataset comparison</a>.`
   };
   return {
-    title: "State funding: university research and project reports", fullWidth: true,
-    viewLabel: "Choose state funding dataset",
+    title: "State funding reported by agricultural projects", fullWidth: true,
+    viewLabel: "Break down state appropriations",
     views: [
-      { ...common, id: "herd-state", label: "University research · HERD", subtitle: "State and local government-funded university agricultural sciences research, 2010–2024",
-        series: [DATA.rd.fundingSources.find(item => item.name === "State and local government")],
-        caption: "Research expenditures only. These state and local funds are separate from the federal spending chart; the ERS chart already includes state funding.",
-        explanationTitle: "How the state funding datasets differ",
-        explanations: [{ title: "HERD university research", body: "HERD measures university R&D expenditures financed by state and local governments in agricultural sciences. It is not a total of state agricultural research budgets or all public research institutions. Field definitions change in 2016 and 2020." }, { title: "Gateway project reports", body: "The alternative view sums State Appropriations reported on annual Gateway project financial records. It includes mixed research, extension and education activities. Project research percentages are not applied because their annual meaning and weighting remain unverified. The export has incomplete nonformula financial reporting in 2010–2014 and no positive formula financial records after 2021." }]
-      },
-      { ...common, id: "gateway-state", label: "Project reports · Gateway", subtitle: "State appropriations reported by Gateway projects, all activities, 2004–2021",
-        series: [DATA.rd.gatewayStateFunding], hideSingleSeriesSummary: true,
-        caption: "Reported project funding, not a complete research-only total. Formula reports end after 2021; nonformula reporting is incomplete in 2010–2014.",
-        explanationTitle: "Why these values differ from HERD",
-        explanations: [{ title: "Coverage and activity", body: "Gateway includes state appropriations reported by the projects in the supplied formula and other-mechanism exports. It is not restricted to agricultural sciences university research and can include extension and education; reporting guidance also allows unliquidated obligations. It is not added to the federal chart or combined with HERD state totals." }, { title: "Preserved annual totals", body: "The download retains each observed fiscal year, sponsoring agency, funding mechanism and individual funding-source column, including NSF, DOE, DOD, HHS, NIH, USAID, other USDA, capacity programs and state appropriations. Annual records are counted once per project-year. Cumulative records and cumulative award amounts are excluded; annual award fields are retained separately from expenditures. Post-2021 and future-dated observations are retained in the audit download but not shown as a continuing complete series." }]
-      }
+      { ...common, id: "state-program", label: "By project program", subtitle: "Reported state appropriations by project program, 2004–2021", series: DATA.rd.gatewayStateByProgram },
+      { ...common, id: "state-mechanism", label: "By funding mechanism", subtitle: "Reported state appropriations by project funding mechanism, 2004–2021", series: DATA.rd.gatewayStateByMechanism }
     ]
   };
 }
@@ -840,7 +824,7 @@ const TOPICS = {
         },
         federalAgencyBudgetView(),
         federalSpendingDetailChart(),
-        stateResearchFundingChart()
+        gatewayStateFundingChart()
       ]
     };
   }
@@ -1022,7 +1006,7 @@ function drawChart(container, chart) {
   card.querySelector(".chart-subtitle").textContent = chart.subtitle || "";
   card.querySelector(".source-disclosure").hidden = !chart.source;
   card.querySelector(".source-line").innerHTML = chart.source || "";
-  const summary = card.querySelector(".series-summary");
+  const summary = card.querySelector(".chart-card-content > .series-summary");
   summary.replaceChildren();
   card.querySelector(".chart-methods")?.remove();
   card.querySelector(".chart-explainer")?.remove();
@@ -1031,13 +1015,23 @@ function drawChart(container, chart) {
     container.innerHTML = chart.usdaFilter ? '<p class="chart-empty">Select at least one review pathway to see records.</p>' : '<p class="chart-empty">Detailed data are unavailable.</p>';
     return;
   }
+  const fullChart = chart;
+  if (!chart.series.some(series => series.name === container.focusedSeries)) container.focusedSeries = null;
+  const parentSeries = chart.series.find(series => series.name === container.focusedSeries);
+  if (parentSeries) {
+    const children = parentSeries.breakdownSeries;
+    if (!children?.some(series => series.name === container.focusedChild)) container.focusedChild = null;
+    chart = { ...chart, series: children ? children.filter(series => !container.focusedChild || series.name === container.focusedChild) : [parentSeries], overlaySeries: [], totalLabel: null, isolatedSeries: true, subtitle: children ? `${parentSeries.name} · ${container.focusedChild || "agency breakdown"}, ${parentSeries.values[0].year}–${parentSeries.values.at(-1).year}` : chart.subtitle };
+  }
   const axisUnit = document.createElement("p"); axisUnit.className = "chart-axis-unit"; axisUnit.textContent = chart.yLabel; container.append(axisUnit);
   if (chart.type === "stacked") drawStackedAreaChart(container, chart);
   else if (chart.type === "bar") drawBarChart(container, chart);
   else drawLineChart(container, chart);
   renderChartContext(container, chart);
   attachChartInteractions(container, chart);
+  attachSeriesFocus(container, fullChart);
   applySavedTextEdits(card);
+  if (parentSeries?.breakdownSeries) card.querySelector(".chart-subtitle").textContent = chart.subtitle;
 }
 
 function otherCropCounts(chart, year) {
@@ -1047,6 +1041,7 @@ function otherCropCounts(chart, year) {
 
 function chartPointTooltip(chart, series, point) {
   let html = `<strong>${escapeHTML(series.name || "Five-survey mean")}</strong><br>${point.year}: ${point.approximate ? "≈" : ""}${formatValue(chart, point.value)}${point.source ? `<br>${escapeHTML(point.source)}` : ""}`;
+  if (series.breakdownSeries) html += "<br><small>Click to explore the agency breakdown.</small>";
   if (chart.otherCrops && series.name === "Other crops") {
     const crops = otherCropCounts(chart, point.year), leading = crops.slice(0, 5);
     html += `<div class="tooltip-crops">${leading.map(crop => `${escapeHTML(crop.name)}: ${crop.value}`).join("<br>")}${crops.length > 5 ? `<br>Remaining crops: ${crops.slice(5).reduce((sum, crop) => sum + crop.value, 0)}` : ""}</div><small>Select this area or “Explore other crops” for the full breakdown.</small>`;
@@ -1063,7 +1058,7 @@ function openOtherCropBreakdown(container, year) {
 }
 
 function renderChartContext(container, chart) {
-  const summary = container.parentElement.querySelector(".series-summary");
+  const summary = container.parentElement.querySelector(":scope > .series-summary");
   if (chart.explanations) {
     const explanation = document.createElement("details"); explanation.className = "chart-methods";
     explanation.innerHTML = `<summary>${escapeHTML(chart.explanationTitle || "About these records")}</summary><div class="chart-explainer">${chart.explanations.map(item => `<section><h4>${escapeHTML(item.title)}</h4><p>${escapeHTML(item.body)}</p></section>`).join("")}</div>`;
@@ -1171,7 +1166,7 @@ function drawBarChart(container, chart) {
     });
   }
   container.append(svg);
-  renderSeriesSummary(container.parentElement.querySelector(".series-summary"), chart);
+  renderSeriesSummary(container.parentElement.querySelector(":scope > .series-summary"), chart);
 }
 
 function drawLineChart(container, chart) {
@@ -1228,7 +1223,7 @@ function drawLineChart(container, chart) {
       circles.push(circle);
     });
   });
-  container.append(svg); renderSeriesSummary(container.parentElement.querySelector(".series-summary"), chart);
+  container.append(svg); renderSeriesSummary(container.parentElement.querySelector(":scope > .series-summary"), chart);
 }
 
 function drawStackedAreaChart(container, chart) {
@@ -1236,14 +1231,14 @@ function drawStackedAreaChart(container, chart) {
   const height = width < 380 ? 280 : 320;
   const margin = { top: 18, right: 16, bottom: 34, left: width < 380 ? 52 : 64 };
   const maps = chart.series.map(series => new Map(series.values.map(d => [d.year, d.value])));
-  const years = chart.series[0].values.map(d => d.year).filter(year => maps.every(map => map.has(year))).sort((a, b) => a - b);
+  const years = chart.series[0].values.map(d => d.year).filter(year => maps.every((map, i) => chart.series[i].partialCoverage || map.has(year))).sort((a, b) => a - b);
   if (!years.length) { container.innerHTML = '<p class="chart-empty">The component series do not share a common time period.</p>'; return; }
-  const totals = years.map(year => maps.reduce((sum, map) => sum + map.get(year), 0));
+  const totals = years.map(year => maps.reduce((sum, map) => sum + (map.get(year) ?? 0), 0));
   const overlays = chart.overlaySeries || [];
   const overlayPoints = overlays.flatMap(series => series.values);
-  const positiveTotals = years.map(year => maps.reduce((sum, map) => sum + Math.max(0, map.get(year)), 0));
-  const negativeTotals = years.map(year => maps.reduce((sum, map) => sum + Math.min(0, map.get(year)), 0));
-  const xMin = Math.min(years[0], ...overlayPoints.map(d => d.year)), xMax = Math.max(years.at(-1), ...overlayPoints.map(d => d.year)), yScale = niceScale(Math.max(...positiveTotals, ...overlayPoints.map(d => d.value), 1)), yMax = yScale.max;
+  const positiveTotals = years.map(year => maps.reduce((sum, map) => sum + Math.max(0, map.get(year) ?? 0), 0));
+  const negativeTotals = years.map(year => maps.reduce((sum, map) => sum + Math.min(0, map.get(year) ?? 0), 0));
+  const xMin = Math.min(years[0], ...overlayPoints.map(d => d.year)), xMax = Math.max(years.at(-1), ...overlayPoints.map(d => d.year)), yScale = niceScale(Math.max(...positiveTotals, ...overlayPoints.map(d => d.value), chart.isolatedSeries ? 0.001 : 1)), yMax = yScale.max;
   const step = yScale.ticks[1] - yScale.ticks[0];
   const yMin = Math.min(...negativeTotals) < 0 ? -Math.ceil(Math.abs(Math.min(...negativeTotals)) / (step / 2)) * (step / 2) : 0;
   const x = year => margin.left + (year - xMin) / (xMax - xMin || 1) * (width - margin.left - margin.right);
@@ -1260,7 +1255,7 @@ function drawStackedAreaChart(container, chart) {
   // Insert zero crossings so signed areas never overlap between observations.
   const knots = [...years];
   maps.forEach(map => years.slice(1).forEach((year, i) => {
-    const a = map.get(years[i]), b = map.get(year);
+    const a = map.get(years[i]) ?? 0, b = map.get(year) ?? 0;
     if (a * b < 0) knots.push(years[i] + (year - years[i]) * Math.abs(a) / (Math.abs(a) + Math.abs(b)));
   }));
   const areaYears = [...new Set(knots)].sort((a, b) => a - b);
@@ -1272,15 +1267,16 @@ function drawStackedAreaChart(container, chart) {
   let positiveBase = areaYears.map(() => 0), negativeBase = areaYears.map(() => 0);
   chart.series.forEach((series, index) => {
     const values = years.map(year => maps[index].get(year));
-    const areaValues = areaYears.map(year => interpolate(maps[index], year));
+    const areaValues = areaYears.map(year => series.partialCoverage && (year < series.values[0].year || year > series.values.at(-1).year) ? 0 : interpolate(maps[index], year));
     const positions = new Map();
     [1, -1].forEach(sign => {
       const lower = sign > 0 ? positiveBase : negativeBase;
       const upper = areaValues.map((value, i) => lower[i] + (sign > 0 ? Math.max(0, value) : Math.min(0, value)));
       areaYears.forEach((year, i) => { if ((sign > 0 && areaValues[i] >= 0) || (sign < 0 && areaValues[i] < 0)) positions.set(year, upper[i]); });
       if (areaValues.some(value => value * sign > 0)) {
-        const topPath = areaYears.map((year, i) => `${i ? "L" : "M"}${x(year).toFixed(2)},${y(upper[i]).toFixed(2)}`).join(" ");
-        const bottomPath = [...areaYears].reverse().map((year, reverseIndex) => { const i = areaYears.length - 1 - reverseIndex; return `L${x(year).toFixed(2)},${y(lower[i]).toFixed(2)}`; }).join(" ");
+        const coveredIndices = areaYears.map((year, i) => i).filter(i => !series.partialCoverage || (areaYears[i] >= series.values[0].year && areaYears[i] <= series.values.at(-1).year));
+        const topPath = coveredIndices.map((i, j) => `${j ? "L" : "M"}${x(areaYears[i]).toFixed(2)},${y(upper[i]).toFixed(2)}`).join(" ");
+        const bottomPath = [...coveredIndices].reverse().map(i => `L${x(areaYears[i]).toFixed(2)},${y(lower[i]).toFixed(2)}`).join(" ");
         const area = document.createElementNS("http://www.w3.org/2000/svg", "path");
         area.setAttribute("d", `${topPath} ${bottomPath} Z`); area.setAttribute("class", "area-path"); area.setAttribute("fill", series.color || COLORS[index % COLORS.length]); area.chartSeries = series; svg.append(area);
       }
@@ -1289,11 +1285,12 @@ function drawStackedAreaChart(container, chart) {
     const circles = [];
     years.forEach((year, i) => {
       const point = series.values.find(point => point.year === year);
+      if (!point) return;
       const qualifier = point.approximate ? "≈" : "";
-      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(year)); circle.setAttribute("cy", y(positions.get(year))); circle.setAttribute("r", 4); circle.setAttribute("fill", series.color || COLORS[index % COLORS.length]); circle.setAttribute("class", "data-point area-point"); circle.setAttribute("tabindex", i === years.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${year}: ${qualifier}${formatValue(chart, values[i])}`);
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(year)); circle.setAttribute("cy", y(positions.get(year))); circle.setAttribute("r", 4); circle.setAttribute("fill", series.color || COLORS[index % COLORS.length]); circle.setAttribute("class", "data-point area-point"); circle.setAttribute("tabindex", year === series.values.at(-1).year ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${year}: ${qualifier}${formatValue(chart, values[i])}`);
       circle.chartDatum = { series, point };
       const show = event => showTooltip(event, chartPointTooltip(chart, series, point)); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
-      circle.addEventListener("keydown", event => { if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return; event.preventDefault(); const next = Math.max(0, Math.min(circles.length - 1, i + (event.key === 'ArrowRight' ? 1 : -1))); circles[next]?.focus(); });
+      circle.addEventListener("keydown", event => { if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return; event.preventDefault(); const next = Math.max(0, Math.min(circles.length - 1, circles.indexOf(circle) + (event.key === 'ArrowRight' ? 1 : -1))); circles[next]?.focus(); });
       circles.push(circle);
     });
   });
@@ -1317,7 +1314,7 @@ function drawStackedAreaChart(container, chart) {
       circles.push(circle); svg.append(circle);
     });
   });
-  container.append(svg); renderSeriesSummary(container.parentElement.querySelector(".series-summary"), chart);
+  container.append(svg); renderSeriesSummary(container.parentElement.querySelector(":scope > .series-summary"), chart);
 }
 
 function rangeChangeText(first, last) {
@@ -1387,7 +1384,7 @@ function attachChartInteractions(container, chart) {
   };
   const nearest = event => {
     const point = local(event), matrix = svg.getScreenCTM(), radius = 18 / Math.hypot(matrix.a, matrix.b);
-    if (chart.otherCrops && event.target.chartSeries?.name === "Other crops") {
+    if ((chart.otherCrops && event.target.chartSeries?.name === "Other crops") || event.target.chartSeries) {
       return records.filter(record => record.series === event.target.chartSeries).reduce((best, record) => !best || Math.abs(record.x - point.x) < Math.abs(best.x - point.x) ? record : best, null);
     }
     let winner = null, distance = Infinity;
@@ -1430,7 +1427,7 @@ function attachChartInteractions(container, chart) {
     if (!start || !candidates.includes(start.series)) return;
     event.preventDefault(); activeSeries = start.series; select.value = String(candidates.indexOf(activeSeries)); fillYears();
     from.value = to.value = String(start.point.year); selection.replaceChildren();
-    drag = { pointerId: event.pointerId }; svg.setPointerCapture(event.pointerId); svg.classList.add("is-dragging");
+    drag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, series: start.series }; svg.setPointerCapture(event.pointerId); svg.classList.add("is-dragging");
   });
   svg.addEventListener("pointerup", event => {
     if (event.pointerType === "touch") {
@@ -1439,17 +1436,92 @@ function attachChartInteractions(container, chart) {
       if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) < 10) {
         const record = nearest(event);
         if (record && chart.otherCrops && record.series.name === "Other crops") openOtherCropBreakdown(container, record.point.year);
+        else if (record && container.focusSeries) container.focusSeries(record.series.name);
         else if (record) hover(event, record);
       }
     }
-    if (drag) { stopDrag(); if (details.open) updateResult(); } });
+    if (drag) {
+      const clicked = Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 5;
+      const name = drag.series.name;
+      stopDrag();
+      if (clicked && container.focusSeries) container.focusSeries(name);
+      else if (details.open) updateResult();
+    } });
   svg.addEventListener("pointercancel", () => { touchStart = null; stopDrag(); selection.replaceChildren(); details.open = false; });
   svg.addEventListener("keydown", event => {
     if (chart.otherCrops && event.key === "Enter" && event.target.chartDatum?.series.name === "Other crops") {
       event.preventDefault(); openOtherCropBreakdown(container, event.target.chartDatum.point.year);
     }
-    if (event.key === "Escape") { stopDrag(); selection.replaceChildren(); details.open = false; } });
+    if (["Enter", " "].includes(event.key) && event.target.chartDatum && !(chart.otherCrops && event.target.chartDatum.series.name === "Other crops")) {
+      event.preventDefault(); container.focusSeries?.(event.target.chartDatum.series.name);
+    }
+    if (event.key === "Escape") { if (container.focusedSeries) container.focusSeries?.(container.focusedSeries); stopDrag(); selection.replaceChildren(); details.open = false; } });
   svg.addEventListener("pointerleave", () => { if (!drag) { hovered?.mark.classList.remove("is-hovered"); hovered = null; hideTooltip(); } });
+}
+
+// Isolating a series puts it on a zero baseline and rescales the axis; stacked
+// offsets no longer obscure small categories. Keep the complete legend for switching.
+function attachSeriesFocus(container, chart) {
+  container.parentElement.querySelector(".series-focus-controls")?.remove();
+  container.parentElement.querySelector(".series-breakdown-legend")?.remove();
+  container.focusSeries = null;
+  if (chart.series.length < 2) return;
+  const summary = container.parentElement.querySelector(":scope > .series-summary");
+  const parent = chart.series.find(series => series.name === container.focusedSeries);
+  renderSeriesSummary(summary, chart);
+  container.focusSeries = name => {
+    if (parent?.breakdownSeries?.some(series => series.name === name)) {
+      container.focusedChild = container.focusedChild === name ? null : name;
+    } else {
+      container.focusedSeries = container.focusedSeries === name ? null : name;
+      container.focusedChild = null;
+    }
+    drawChart(container, chart);
+    sendHeight();
+  };
+  const controls = document.createElement("div"); controls.className = "series-focus-controls";
+  const status = document.createElement("span"); status.setAttribute("role", "status");
+  status.textContent = parent?.breakdownSeries
+    ? (container.focusedChild ? `Showing only ${container.focusedChild}. Axis rescaled.` : `${parent.name} · agency breakdown. Axis rescaled.`)
+    : container.focusedSeries ? `Showing only ${container.focusedSeries}. Axis rescaled.` : "";
+  controls.append(status);
+  if (container.focusedChild) {
+    const back = document.createElement("button"); back.type = "button"; back.textContent = "Show full breakdown";
+    back.addEventListener("click", () => container.focusSeries(container.focusedChild)); controls.append(back);
+  }
+  if (container.focusedSeries) {
+    const reset = document.createElement("button"); reset.type = "button"; reset.textContent = "Show all";
+    reset.addEventListener("click", () => container.focusSeries(container.focusedSeries)); controls.append(reset);
+  }
+  if (container.focusedSeries) summary.before(controls);
+  const makeButtons = (legend, seriesList, child = false) => {
+    legend.querySelectorAll(":scope > span").forEach(row => {
+      const series = seriesList.find(series => row.textContent.trim().startsWith(series.name + " "));
+      const label = row.querySelector("b");
+      if (!series || !label || row.querySelector("button")) return;
+      const active = child ? container.focusedChild === series.name : container.focusedSeries === series.name;
+      const button = document.createElement("button"); button.type = "button"; button.className = "series-focus-button";
+      button.setAttribute("aria-pressed", String(active));
+      button.setAttribute("aria-label", active ? (child ? "Show full breakdown" : "Show all series") : `${series.breakdownSeries ? "Explore breakdown of " : "Focus on "}${series.name}`);
+      button.innerHTML = label.innerHTML; label.replaceWith(button);
+      button.addEventListener("click", () => {
+        container.focusSeries(series.name);
+        [...container.parentElement.querySelectorAll(".series-focus-button")].find(item => item.textContent === button.textContent)?.focus();
+      });
+      row.classList.toggle("series-muted", Boolean(child ? container.focusedChild && !active : container.focusedSeries && !active));
+    });
+  };
+  if (parent?.breakdownSeries) {
+    const breakdown = document.createElement("div"); breakdown.className = "series-breakdown-legend";
+    const heading = document.createElement("h4"); heading.textContent = "Agency breakdown"; breakdown.append(heading);
+    const childLegend = document.createElement("div"); childLegend.className = "series-summary";
+    renderSeriesSummary(childLegend, { ...chart, series: parent.breakdownSeries, overlaySeries: [], caption: "", totalLabel: null });
+    breakdown.append(childLegend); makeButtons(childLegend, parent.breakdownSeries, true);
+    const note = document.createElement("p"); note.className = "change-note"; note.textContent = parent.breakdownNote || ""; breakdown.append(note);
+    const fullLabel = document.createElement("h4"); fullLabel.textContent = "All funding sources"; breakdown.append(fullLabel);
+    summary.before(breakdown);
+  }
+  makeButtons(summary, chart.series);
 }
 
 function renderSeriesSummary(summary, chart) {
