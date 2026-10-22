@@ -1,0 +1,247 @@
+AGRICULTURAL R&D FUNDING AND PERFORMER EXPENDITURES — OCTOBER 21, 2026
+
+Two distinct datasets are maintained. Funding describes the source of support.
+Performer expenditure estimates describe the institutions doing the work.
+Their totals differ in scope and financial conventions and are not additive.
+The source options are alternatives, not components to add together.
+
+FUNDING
+Preferred construction: NCSES USDA agency R&D cash outlays plus separate USDA
+research-plant outlays; REEIS NIFA/predecessor, other federal, state and all
+nongovernment funds. Do not add REEIS Other USDA transfers or USDA Appropriation
+again on top of gross agency outlays. Nongovernment includes industry,
+institution-generated funds, trusts and other nonfederal sources; these are
+funds at covered institutions, not total private-sector agricultural R&D.
+
+Recovered CRIS reports supply earlier funder columns, through2001. Published
+amounts are nominal thousands, converted to millions. CRIS CSREES-administered
+figures are expenditure-report values; the later REEIS funding summaries can
+combine formula expenditures and nonformula obligations. A source-basis break
+is marked at2002. Pre1999 retained NSF agency inputs combine R&D and plant:
+the chart shows their nonNIFA total as a combined category rather than invent
+a separate facilities amount. The original agency detail remains in the source
+audit. These inputs are retained transcriptions with an unknown source vintage,
+not fresh official downloads.1999–2001 have separately identified R&D and plant.
+
+2002–2006 REEIS live queries return HTTP500. Retained public REEIS extracts from
+the Fuglie workbook are explicitly labeled older extracts. Archived public CRIS
+reports corroborate nonNIFA funder categories within publication rounding;
+their CSREES expenditure figures should not replace the REEIS NIFA funding
+values without acknowledging the financial-basis difference.
+
+2021 current LMD omits formula and nonNIFA coverage. Its $1,217.912441m of
+nonformula/directed NIFA grants is retained in preference to older covered
+values. Only missing formula $295.840201m is restored from an independently
+verified July2025 archive. Missing other federal $503.278619m, state
+$979.425702m and nongovernment $644.001432m use retained public extracts.
+NIFA preferred total is $1,513.752642m; all-funder total $5,565.458395m.
+The raw incomplete2021 export remains unchanged and quarantined as a total.
+
+Alternatives replace NIFA with NCSES cash R&D outlays, or both NIFA and the
+other-federal component with NCSES/HERD university agricultural sciences.
+Other funders stay unchanged. Earlier alternative years are unavailable where
+no compatible separate source exists; their missing values are not zero.
+
+PERFORMER EXPENDITURE ESTIMATES
+The calculated series follows Fuglie's performer construction: sum Total
+Funding for State Agricultural Experiment Stations,1890 land-grant institutions,
+veterinary schools, cooperative extension, other cooperating institutions and
+forestry schools. Exclude private SBIR performers. Add gross nonNIFA USDA agency
+R&D and plant outlays, less nonNIFA research grants/cooperative agreements
+already counted at recipients. The transfer deduction is REEIS Other USDA,
+not USDA Appropriation or all USDA funding. Subtract it once.
+
+Current Organization Type All/All reports are independently downloaded for
+2007–2024. Use their Total Funding column for performer categories; current
+NIFA Administered Funding values are defective (zero in2022–2024 and AFRI-only
+in2021) and are not used as NIFA totals.2002–2006 use retained raw organization
+extracts with unknown vintage. ERS published history is retained through2001;
+2002–2024 are author-calculated REEIS/NCSES estimates. They are an extension
+of the method, not newly published ERS observations. Published ERS remains a
+separate view through2021. Its USDA-only2022 observation is not a national total.
+
+For2021, each cooperator category retains current covered grants and adds
+its retained nonNIFA funding (older Total Funding minus archived NIFA funding
+for that institution). The archived Organization Type NIFA-filtered capture
+independently matches all seven retained NIFA institution values, including
+SBIR. It verifies those NIFA amounts, not Other Federal or all-source totals. Formula expenditure of $295.84019940m is allocated from the retained Data
+Gateway FY2021 annual Financial Details export. Reported Forestry School and
+McIntire-Stennis Tribal Colleges are explicitly grouped together; their sum
+reproduces archived forestry formula expenditure within$0.39. The aggregate
+retains a$1.60 reconciliation difference from the archived formula total.
+No institution shares are invented. The current SBIR grant amount exactly
+matches the older NIFA-financed SBIR amount; it remains excluded. The missing
+nonNIFA transfer deduction $172.946638m uses the retained report.2021 national
+performer estimate is $5,516.894380m. Recent estimates are $5,634.824387m(2022),
+$6,731.436295m(2023), $6,489.381542m(2024), all nominal millions.
+
+REEIS labels the field Total Funding and may use grant obligations for some
+nonformula projects. This calculated performer series follows ERS/Fuglie's
+source approach but must not be described as uniformly measured cash research
+expenditures. Cooperative-extension and other institution categories preserve
+the source's coverage. Keep source conventions explicit when comparing HERD.
+
+MINNESOTA CORRECTION
+NIH grants wrongly included as agricultural research are removed once:
+2006 $272.184982m;2007 $298.202645m;2008 $295.318058m. These use the NIH line
+in the Minnesota Other Federal Funding Mechanism reports, as requested.
+2007–2008 are live-verified;2006 relies on the retained extract. Funding deducts
+from other federal; performer estimates deduct from veterinary schools. Each
+is a separate dataset; do not deduct a second time within either dataset.
+The performer rebuild uses each year's own veterinary-school report, fixing
+the stale2006 references in the workbook's2007–2008 formulas.
+
+NON-USDA RECIPIENT SOURCE TOGGLE
+NCSES/HERD university agricultural sciences is compared with REEIS Other Federal
+Organization Type reports for the same six cooperator categories, excluding
+SBIR, USDA agency performers and Unknown. The current REEIS national Other
+Federal total is broader and is not substituted as if it were university-only.
+The derived2007–2008 veterinary amounts receive the NIH subtraction once.
+The live REEIS2021 query fails with HTTP500. Its selected value is filled
+from the retained funder-by-performer table: Other Federal K10:K16, excluding
+SBIR K15, totals $486.190370m. The retained national $503.278619m less USDA
+intramural $15.197006m equals the cooperator/SBIR parent $488.081613m;
+subtracting SBIR $1.891242m reproduces the six-category sum within$1.
+These numeric source cells have unknown vintage; the live failure is preserved
+and the fallback is labeled in the chart, tooltip and downloadable comparison.
+The displayed USDA outlay components stay unchanged when the source changes.
+In2024 HERD is $593.400m and REEIS cooperator funding is $772.527369m.
+HERD retains its published pass-through convention and field breaks in2010,
+2016 and2020; its field and institution population differ from REEIS.
+
+PRICES AND DISPLAY
+Nominal millions are preserved in downloads. Common constant2022 figures use
+March2025 NIH/BEA BRDPI;2024 price index is preliminary. The retained common
+index begins1993. The earlier ERS history retains its published constant2022
+values; later history is deflated using the common vintage. No constant-dollar
+values are fabricated before the available common index. Do not interpret
+definition, population or source changes as funding changes alone.
+
+PUBLIC SOURCES
+ERS methods:
+https://www.ers.usda.gov/data-products/agricultural-and-food-research-and-development-expenditures-in-the-united-states/documentation
+REEIS Organization Type reports:
+https://portal.nifa.usda.gov/lmd5/bix_reportlet/show_public/state_snapshots_organization_type_hierarchy
+REEIS Funding Mechanism reports:
+https://portal.nifa.usda.gov/lmd5/bix_reportlet/show_public/state_snapshots_funding_mechanism_hierarchy
+NCSES agency outlays:
+https://ncses.nsf.gov/surveys/federal-funds-research-development
+NCSES HERD:
+https://ncses.nsf.gov/surveys/higher-education-research-development/2024
+NIH/BEA price index:
+https://officeofbudget.od.nih.gov/gbipriceindexes.html
+Archived CRIS index:
+https://web.archive.org/web/20080920094708/http://cris.csrees.usda.gov/star/crisfin.htm
+NIFA financial conventions:
+https://portal.nifa.usda.gov/web/documents/Basic_Navigation_in_LMD_User_Guide_Start_Here.pdf
+
+Raw official exports and PDFs, signature-free query evidence, capture URLs,
+checksums, retained-extract anchors and construction checks are in the local
+research source packet. Raw reports are preserved. The full privately shared
+workbook and private comparison calculations are excluded from public builds.
+
+INTERACTIVE DETAIL — OCTOBER21,2026
+Chart1 USDA detail is gross ARS, Forest Service, other USDA and facilities,
+plus a separately negative nonNIFA transfer deduction. The signed components
+reproduce the parent net total; transfers are not allocated arbitrarily by
+agency. Agency and institution detail begin2002, while the total history
+begins1970. The published ERS view does not claim a compatible agency split.
+
+Chart3 REEISpreferred detail: USDA agencies/facilities (existing), NIFA program
+groups, other federal agency labels, state appropriations by institution type,
+and nongovernment reported funding categories. NIFA/other federal/nongovernment
+detail begin2002; state-recipient detail begins2007.2021 missing details use
+the retained public source fields with unknown vintage, except current NIFA
+grants and archive-verified formula. Some totals differ by up to$6 source
+rounding. New detail downloads preserve the selected components and provenance.
+Nongovernment categories change reporting definitions; historical category
+shifts cannot be read as equivalent changes in real funding. Detail legends
+show latest values rather than percentage changes from incomparable or zero
+baselines.
+
+Chart3 overview x/yaxes stay fixed across source toggles. A source toggle
+returns from a drilldown to the full overview. Individual drilldowns rescale
+their own axis for readability and state this explicitly. Chart4 is budget
+authority, a different financial measure from agency outlays and REEIS funding.
+Chart5 is a source-coverage diagnostic; it repeats USDA payments and is not an
+additional national expenditure estimate.
+
+
+DISPLAY REVISION — OCTOBER 22, 2026
+Visible charts: funding by funder, performer expenditures, published ERS
+intensity, USDA budget authority. The separate other-federal source-check and
+TFP comparison cards are hidden; their source comparison remains downloadable.
+The funding source selector now offers REEIS and NCSES/HERD; the NIFA-only
+alternative remains in the research data but is not displayed.
+
+All displayed monetary amounts are in 2024 dollars. The retained NIH/BEA BRDPI
+March 2025 vintage has 2022=1858.2, 2024=1998.0 (preliminary), and 2025=2050.1
+(projected). Existing constant-2022 observations are multiplied by1998/1858.2.
+Published early ERS real-dollar history is rebased without changing its original
+historical deflator vintage. Percentage/intensity/TFP observations are unchanged.
+Downloads retain original 2022-dollar columns and append matching 2024-dollar
+columns; nominal values and source provenance remain unchanged.
+
+Budget authority now includes preliminary2025 estimates from NCSES NSF26-309
+Tables11 and12: $3.232bn nominal, $3.149863909bn in2024 dollars. Mostly annualized
+continuing-resolution levels; reconciliation funding excluded.2025 prices use
+the projected index. The facilities cancellation belongs to2011, not2021.
+
+2021 formula allocation is recovered from Data Gateway annual expenditure
+records, retaining current grants and the national aggregate. The two tribal
+forestry colleges are grouped with forestry schools; a$1.60 reconciliation
+difference remains in the aggregate. Other cooperating institutions is
+displayed as Other universities and research institutions.
+State Appropriations is one funding-source category with no source subdivision;
+the available state drilldown is by recipient institution type.
+
+Manual review:2023–24 industry and institution-generated categories appear
+incomplete or regrouped. Most other-federal amounts are now unallocated to
+agencies. Source definitions change at2002 (CRIS expenditures versus REEIS
+funding, which can combine expenditure and obligation reporting). This is not
+a uniform national cash-expenditure series. Non-NIFA USDA agency inputs differ
+from Fuglie in several years, including2013–18; archived CRIS also supports
+earlier tracker entries differing from the workbook. Official NCSES2014 and2017 inputs are independently verified. Recovered
+2021/2022 releases also agree to rounding, so recent source revisions do not
+explain the larger differences in the retained author workbook. The exact
+historical source inputs or corrections require clarification. Small GIPSA
+omissions are identified in the retained workbook for2016/2017; current
+department-total inputs include those agencies. Annual comparisons can be
+affected: the2017 all-funder gap is3.27% of the preferred total. Keep verified
+official inputs and consult the detailed local reconciliation before making
+claims about short-period trends.
+
+Special Research Grants description: NIFA Types of Federal Assistance and
+Special Research Grants for Aquaculture program descriptions:
+https://www.nifa.usda.gov/about-nifa/what-we-do/types-federal-assistance
+https://www.nifa.usda.gov/grants/programs/special-research-grants-program-aquaculture-aqua
+
+
+CAPTION AND INTENSITY UPDATE — OCTOBER22,2026
+The alternate NCSES funding view is hidden behind enableNCSESFundingView=false
+in app.js; its code and all underlying source-option data remain available.
+
+Official StateSnapshots report-specific help (definition110, funding mechanism;
+111, organization type;32, funding source list) confirms capacity AD419
+expenditure reporting and noncapacity C-REEMS grant obligations. The latter
+help describes obligations during the award period of performance to date;
+it should not be treated as a uniform annual cash-flow measure. REEport's
+2016 financial manual says expenditure reporting includes unliquidated
+obligations. State, nongovernment and other-federal totals closely match
+project financial records, and do not all inherit the NIFA award-obligation
+classification. Legacy definitions and2021 crosschecks establish the basis;
+they do not independently verify every subsequent processing change.
+https://portal.nifa.usda.gov/web/bix_help/javascripts/definitions.js
+
+Intensity now covers1970–2024, using the same nominal performer spending
+estimates as the performer chart divided by BEA NIPA1.3.5 annual line4Farm
+(B359RC), September30,2026release. Both sides are current dollars; BRDPI is
+not applied to the ratio. Fiscal-year spending is compared with calendar-year
+farm-sector value added, and the research numerator includes food and
+forestry research beyond the farm-sector denominator. Updated BEA data revise
+only2021 within the historical overlap. The numerator uses ERS history through
+2001 and updated REEIS/NCSES estimates from2002, so this is not simply three
+new ratios appended to the previous published-ERS-only intensity series.
+2024 numerator6489.381542million / denominator196211million *100 =3.307348488%.
+2002ratio6.064610303%; decline2002–2024 is45.4648%. The2023–2024 ratio increase
+is affected by falling nominal farm value added. See rd-intensity.csv.

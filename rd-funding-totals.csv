@@ -1,0 +1,97 @@
+year,source_profile,nominal_million,billion_2022,coverage_status,historical_adjustment_review,default_profile,deflator_status,billion_2024
+1993,ncses_herd_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1993,ncses_nifa_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1993,reeis_preferred,3006.889000,7.162416536085117292654787848,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,True,actual,7.70127448019
+1994,ncses_herd_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1994,ncses_nifa_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1994,reeis_preferred,3108.711000,7.128972948537578674564975935,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,True,actual,7.66531479452
+1995,ncses_herd_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1995,ncses_nifa_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1995,reeis_preferred,3165.633000,7.016196613311068702290076336,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,True,actual,7.54405383349
+1996,ncses_herd_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1996,ncses_nifa_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1996,reeis_preferred,3155.710000,6.820121332868108862526168876,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,True,actual,7.33322700628
+1997,ncses_herd_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1997,ncses_nifa_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1997,reeis_preferred,3243.341198,6.819935061812379766889215797,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,True,actual,7.33302672129
+1998,ncses_herd_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1998,ncses_nifa_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1998,reeis_preferred,3389.161000,6.892567549742803983802123235,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,True,actual,7.4111236489
+1999,ncses_herd_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+1999,ncses_nifa_alternative,3716.436,7.326417754296626352641629535,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,7.87761418205
+1999,reeis_preferred,3648.213,7.191925945894334818586887333,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,True,actual,7.73300400382
+2000,ncses_herd_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+2000,ncses_nifa_alternative,3893.241,7.399427663086836452899662473,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,7.95611692544
+2000,reeis_preferred,3832.733,7.284427186867137158637618902,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,True,actual,7.83246449218
+2001,ncses_herd_alternative,,,alternative_source_unavailable,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,
+2001,ncses_nifa_alternative,4216.544,7.756070145317758859631756088,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,False,actual,8.33959108295
+2001,reeis_preferred,4123.984,7.585811788556721441298752722,complete_archived_CRIS_and_NCSES_inputs,Pre2002 NIFA uses CRIS expenditure-report basis; break at2002 REEIS funding summaries,True,actual,8.15652349238
+2002,ncses_herd_alternative,,,adopted_older_extract,,False,actual,
+2002,ncses_nifa_alternative,4558.418016,8.115792237,adopted_older_extract,,False,actual,8.72637654156
+2002,reeis_preferred,4601.39654,8.192311057,adopted_older_extract,,True,actual,8.80865218593
+2003,ncses_herd_alternative,4347.110724,7.476676367,adopted_older_extract,,False,actual,8.03917736587
+2003,ncses_nifa_alternative,4602.816855,7.916470085,adopted_older_extract,,False,actual,8.51205856734
+2003,reeis_preferred,4684.288965,8.056595478,adopted_older_extract,,True,actual,8.66272616782
+2004,ncses_herd_alternative,4531.435099,7.514110924,adopted_older_extract,,False,actual,8.07942827799
+2004,ncses_nifa_alternative,4812.11024,7.979531722,adopted_older_extract,,False,actual,8.57986458969
+2004,reeis_preferred,4910.389983,8.142501041,adopted_older_extract,,True,actual,8.75509475832
+2005,ncses_herd_alternative,4643.314232,7.41127513,adopted_older_extract,,False,actual,7.96885572583
+2005,ncses_nifa_alternative,4973.099876,7.937651769,adopted_older_extract,,False,actual,8.53483383622
+2005,reeis_preferred,5098.343184,8.137554805,adopted_older_extract,,True,actual,8.74977639672
+2006,ncses_herd_alternative,4838.122597,7.380510147,adopted_older_extract,,False,actual,7.9357761671
+2006,ncses_nifa_alternative,5159.304744,7.870470467,adopted_older_extract,NIH correction and national base from retained older REEIS extract,False,actual,8.46259820959
+2006,reeis_preferred,5274.812588,8.046676587,adopted_older_extract,NIH correction and national base from retained older REEIS extract,True,actual,8.65206103801
+2007,ncses_herd_alternative,4984.650574,7.325591345,adopted,,False,actual,7.8767255986
+2007,ncses_nifa_alternative,5270.009238,7.74496296,adopted,,False,actual,8.32764825857
+2007,reeis_preferred,5264.820175,7.737336958,adopted,,True,actual,8.31944852119
+2008,ncses_herd_alternative,5058.876719,7.102685848,adopted,,False,actual,7.6370500077
+2008,ncses_nifa_alternative,5381.871963,7.556172634,adopted,,False,actual,8.12465446278
+2008,reeis_preferred,5630.543069,7.905307995,adopted,,True,actual,8.50005670757
+2009,ncses_herd_alternative,4960.933235,6.766795961,adopted,,False,actual,7.27588974819
+2009,ncses_nifa_alternative,5318.487418,7.25450585,adopted,,False,actual,7.80029205053
+2009,reeis_preferred,5583.61335,7.616142059,adopted,,True,actual,8.18913563335
+2010,ncses_herd_alternative,4759.400579,6.300433252,adopted,,False,actual,6.77444066166
+2010,ncses_nifa_alternative,4938.041376,6.536915641,adopted,,False,actual,7.02871458977
+2010,reeis_preferred,5269.515494,6.975716813,adopted,,True,actual,7.50052857194
+2011,ncses_herd_alternative,4748.756913,6.111323565,adopted,,False,actual,6.57110347803
+2011,ncses_nifa_alternative,5015.637936,6.454781088,adopted,,False,actual,6.9404007178
+2011,reeis_preferred,5404.104984,6.954711463,adopted,,True,actual,7.47794290339
+2012,ncses_herd_alternative,4739.399551,6.022122706,adopted,,False,actual,6.4751916729
+2012,ncses_nifa_alternative,4828.653389,6.135533183,adopted,,False,actual,6.59713448479
+2012,reeis_preferred,4994.669445,6.346481648,adopted,,True,actual,6.82395346717
+2013,ncses_herd_alternative,4508.914796,5.623886075,adopted,,False,actual,6.04699406837
+2013,ncses_nifa_alternative,4559.457506,5.686927062,adopted,,False,actual,6.11477788714
+2013,reeis_preferred,4599.806975,5.737254209,adopted,,True,actual,6.16889135162
+2014,ncses_herd_alternative,4508.443852,5.505053467,adopted,,False,actual,5.91922119635
+2014,ncses_nifa_alternative,4479.392534,5.469580238,adopted,,False,actual,5.88107917098
+2014,reeis_preferred,4496.066697,5.489940292,adopted,,True,actual,5.90297099527
+2015,ncses_herd_alternative,4651.396843,5.56657797,adopted,,False,actual,5.98537443981
+2015,ncses_nifa_alternative,4632.881902,5.544420139,adopted,,False,actual,5.96154958439
+2015,reeis_preferred,4834.298308,5.785466037,adopted,,True,actual,6.22073035299
+2016,ncses_herd_alternative,4606.761987,5.395704459,adopted,,False,actual,5.80164541442
+2016,ncses_nifa_alternative,4727.341708,5.53693436,adopted,,False,actual,5.95350061957
+2016,reeis_preferred,4852.426133,5.683440429,adopted,,True,actual,6.11102894045
+2017,ncses_herd_alternative,4567.06978,5.213816468,adopted,,False,actual,5.60607324457
+2017,ncses_nifa_alternative,4650.972539,5.309600769,adopted,,False,actual,5.70906379101
+2017,reeis_preferred,4933.102201,5.631683056,adopted,,True,actual,6.0553776482
+2018,ncses_herd_alternative,4519.492171,5.033938951,adopted,,False,actual,5.41266280492
+2018,ncses_nifa_alternative,4654.551122,5.184371453,adopted,,False,actual,5.57441296044
+2018,reeis_preferred,4984.785873,5.552196313,adopted,,True,actual,5.96991079183
+2019,ncses_herd_alternative,4664.793969,5.088119367,adopted,,False,actual,5.47091943562
+2019,ncses_nifa_alternative,4824.421568,5.262233011,adopted,,False,actual,5.65813236249
+2019,reeis_preferred,5036.005346,5.493017806,adopted,,True,actual,5.90628004326
+2020,ncses_herd_alternative,4611.371162,4.943377116,adopted,,False,actual,5.31528763199
+2020,ncses_nifa_alternative,4907.490059,5.260815754,adopted,,False,actual,5.65660847944
+2020,reeis_preferred,5374.261975,5.761193955,adopted,,True,actual,6.19463218281
+2021,ncses_herd_alternative,4700.749134,4.916379828,complete_mixed_vintage_recovery,,False,actual,5.28625922739
+2021,ncses_nifa_alternative,4830.705753,5.05229776,complete_mixed_vintage_recovery,,False,actual,5.43240282234
+2021,reeis_preferred,5565.458395,5.820754652,complete_mixed_vintage_recovery,,True,actual,6.25867387509
+2022,ncses_herd_alternative,5027.7636,5.0277636,adopted,,False,actual,5.40602285696
+2022,ncses_nifa_alternative,5154.474842,5.154474842,adopted,,False,actual,5.5422671049
+2022,reeis_preferred,5673.306061,5.673306061,adopted,,True,actual,6.10013212242
+2023,ncses_herd_alternative,5408.640877,5.208777651,adopted,,False,actual,5.60065533672
+2023,ncses_nifa_alternative,5652.328709,5.443460589,adopted,,False,actual,5.85299443376
+2023,reeis_preferred,6789.645737,6.538750821,adopted,,True,actual,7.03068783789
+2024,ncses_herd_alternative,5827.815653,5.420043567,adopted,,False,preliminary,5.82781565325
+2024,ncses_nifa_alternative,6020.435055,5.599185395,adopted,,False,preliminary,6.020435055
+2024,reeis_preferred,6547.219123,6.089110398,adopted,,True,preliminary,6.54721912345

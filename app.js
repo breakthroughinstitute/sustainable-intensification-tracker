@@ -3,6 +3,7 @@ const panel = document.querySelector("#tracker-panel");
 const tooltip = document.querySelector("#tooltip");
 let DATA;
 let BIOTECH;
+let RD_UPDATED;
 let STUDIES;
 let CHANGE_MODE = "annual";
 let STUDY_SORT_DIRECTION = "desc";
@@ -48,7 +49,7 @@ function setTextEditMode(enabled) {
   reset.hidden = !enabled;
   status.hidden = !enabled;
   if (enabled && !LOCAL_EDIT_SERVER) status.textContent = "This hosted page saves text only in your browser. Use the local preview to save edits into the project source.";
-  else if (enabled) status.textContent = "Click highlighted text to edit, then save your changes to the tracker project.";
+  else if (enabled) status.textContent = "Click highlighted titles, captions or notes to edit, then save your changes to the tracker project.";
   document.body.classList.toggle("text-edit-mode", enabled);
   applySavedTextEdits();
 }
@@ -177,10 +178,11 @@ function filteredUSDAChart(chart) {
     });
     return templates.map((series, index) => {
       let count = 0;
-      return { ...series, color: series.color || COLORS[index % COLORS.length], values: series.values.map(point => ({ year: point.year, value: count += annual.get(`${series.name}:${point.year}`) || 0 })) };
+      return { ...series, color: series.color || (series.name === "Canola" ? "#8b6bb1" : series.name === "Other crops" ? "#738184" : COLORS[index % COLORS.length]), values: series.values.map(point => ({ year: point.year, value: count += annual.get(`${series.name}:${point.year}`) || 0 })) };
     });
   };
-  return { ...chart, series: aggregate(chart.series, crop => majorCrops.has(crop) ? crop : "Other crops").filter(series => series.values.at(-1).value > 0), otherCrops: aggregate(BIOTECH.usdaOtherCrops, crop => crop), filteredRecordCount: records.length };
+  const otherCrops = aggregate(BIOTECH.usdaOtherCrops, crop => crop);
+  return { ...chart, series: withCropBreakdown(aggregate(BIOTECH.usdaByCrop, crop => majorCrops.has(crop) ? crop : "Other crops").filter(series => series.values.at(-1).value > 0), otherCrops), otherCrops, recordRows: BIOTECH.usdaDetails.filter(row => selectedUSDAPathways.has(row.pathway)), filteredRecordCount: records.length };
 }
 function renderUSDAFilter(container, chart) {
   const content = container.parentElement;
@@ -360,7 +362,7 @@ function renderProducts() {
   updateMetric();
 }
 function studyBarRows(metric) {
-  const rows = studyRows(metric);
+  const rows = studyRows(metric).filter(row => ACTIVE_TOPIC !== 'livestock' || ['beef','dairy','pork','chicken','eggs'].includes(row.product));
   const values = rows.map(studyChange);
   const minChange = Math.min(0, ...values), maxChange = Math.max(0, ...values);
   const extent = Math.max(maxChange - minChange, 0.01);
@@ -368,13 +370,15 @@ function studyBarRows(metric) {
   const bars = panel.querySelector(".product-bars");
   if (bars) bars.style.setProperty("--product-zero", String(zero / 100));
   const axis = panel.querySelector(".product-bar-axis");
-  if (axis) axis.innerHTML = `<span class="bar-direction">${minChange < 0 ? "← Decrease" : ""}</span><span class="bar-zero" style="left:${zero}%">0%</span>${maxChange > 0 ? '<span class="bar-increase">Increase →</span>' : ""}`;
+  if (axis) axis.innerHTML = ACTIVE_TOPIC === 'livestock'
+    ? `<span class="bar-direction">${minChange < 0 ? `−${Math.abs(minChange).toFixed(1)}%` : ""}</span><span class="bar-zero" style="left:${zero}%">0%</span><span class="bar-increase">${maxChange > 0 ? `+${maxChange.toFixed(1)}%` : ""}</span>`
+    : `<span class="bar-direction">${minChange < 0 ? "← Decrease" : ""}</span><span class="bar-zero" style="left:${zero}%">0%</span>${maxChange > 0 ? '<span class="bar-increase">Increase →</span>' : ""}`;
   const nitrogenLabels = { fertilizer_n: "Fertilizer N applied", reactive_n_loss: "Reactive N loss", n_leached: "N leached", marine_eutrophication: "Marine eutrophication" };
   const bar = row => {
     const value = studyChange(row);
     const width = Math.abs(value) / extent * 100;
     const left = value > 0 ? zero : zero - width;
-    return `<div class="product-bar-row ${metric === "fertilizer_n" ? "nitrogen-product-bar" : ""}"><div class="product-bar-name"><strong>${PRODUCT_NAMES[row.product]}</strong><small>${studyPeriod(row)}</small></div><div class="product-bar-track" role="img" aria-label="${PRODUCT_NAMES[row.product]}, ${nitrogenLabels[row.metric] || STUDY_METRIC_NAMES[metric]}, ${studyPeriod(row)}: ${studyDelta(row)}"><span class="${value > 0 ? "increase" : "decrease"}" style="left:${left}%;width:${width}%"></span></div><strong class="product-bar-value">${studyDelta(row)}</strong>${studyDetails(row)}</div>`;
+    return `<div class="product-bar-row ${metric === "fertilizer_n" ? "nitrogen-product-bar" : ""}"><div class="product-bar-name"><strong>${PRODUCT_NAMES[row.product]}</strong><small>${studyPeriod(row)}</small>${ACTIVE_TOPIC === 'livestock' && metric === 'fertilizer_n' ? `<small>${nitrogenLabels[row.metric]}</small>` : ''}</div><div class="product-bar-track" role="img" aria-label="${PRODUCT_NAMES[row.product]}, ${nitrogenLabels[row.metric] || STUDY_METRIC_NAMES[metric]}, ${studyPeriod(row)}: ${studyDelta(row)}"><span class="${value > 0 ? "increase" : "decrease"}" style="left:${left}%;width:${width}%"></span></div><strong class="product-bar-value">${studyDelta(row)}</strong>${studyDetails(row)}</div>`;
   };
   return rows.map(bar).join("");
 }
@@ -407,31 +411,42 @@ function studyBars(metric) {
 // subtitle, caption, and source inside its view. Inline series.name values are
 // legend labels; names in DATA come from data.json.
 const DEFAULT_CHART_CAPTION = "Percent change from first to latest available year";
+const CROP_DETAIL_COLORS = ["#0dc3a8", "#0d4459", "#ee5c36", "#f8b944", "#56a9d5", "#8b6bb1", "#e82269", "#738184", "#6d9e76", "#ab773c", "#a9d9ce", "#5e7894", "#dba48b", "#aaa4c8", "#b1be63"];
+function withCropBreakdown(series, otherCrops) {
+  const children = [...otherCrops].filter(crop => crop.values.at(-1).value > 0).sort((a, b) => b.values.at(-1).value - a.values.at(-1).value || a.name.localeCompare(b.name)).map((crop, i) => ({ ...crop, color: CROP_DETAIL_COLORS[i % CROP_DETAIL_COLORS.length] }));
+  return series.map(item => item.name === "Other crops" ? { ...item, breakdownLabel: "crop breakdown", breakdownSeries: children } : item);
+}
+
 function biotechDecisionChart() {
   const common = {
-    type: "stacked", summaryMode: "latest", comparisonMode: "absolute", decimals: 0, hideLegendValues: true, legendReverse: true,
-    caption: "Regulatory decisions are a step toward bringing a crop to market. These records can cover several plant lines or revisit a product, so they do not count unique varieties or confirm commercial sales. 2026 runs through October 2.",
-    yLabel: "Cumulative records", tooltipUnit: "", totalLabel: "Total records"
+    compactRecords: true, integerTicks: true, recordUnit: "records", type: "stacked", summaryMode: "latest", comparisonMode: "absolute", decimals: 0, hideLegendValues: true, legendReverse: true,
+    caption: "Completed USDA regulatory records, not unique varieties or commercial sales. Partial 2026: through October 2.",
+    yLabel: "Cumulative records", tooltipUnit: "", totalLabel: "Records shown"
   };
   const usdaSources = '<a href="https://www.aphis.usda.gov/biotechnology/legacy-petition-process/petitions" target="_blank" rel="noopener">USDA petition determinations</a>; <a href="https://www.aphis.usda.gov/regulatory-status-review-table" target="_blank" rel="noopener">regulatory status reviews</a>; <a href="https://www.aphis.usda.gov/confirmation-letters" target="_blank" rel="noopener">exemption confirmations</a>; <a href="https://www.aphis.usda.gov/biotechnology/regulated-article-inquiry" target="_blank" rel="noopener">Am I Regulated letters</a>';
   const download = '<a href="biotech-records.csv" download>Download underlying records (CSV)</a>';
   const eventDownload = '<a href="biotech-epa-events.csv" download>Download identified EPA crop events (CSV)</a>';
-  const cropSeries = BIOTECH.usdaByCrop.map(series => ({ ...series, color: series.name === "Canola" ? "#8b6bb1" : series.name === "Other crops" ? "#738184" : undefined }));
+  const cropSeries = withCropBreakdown(BIOTECH.usdaByCrop.map(series => ({ ...series, color: series.name === "Canola" ? "#8b6bb1" : series.name === "Other crops" ? "#738184" : undefined })), BIOTECH.usdaOtherCrops);
   const epa = {
-    ...common, yLabel: "Cumulative crop events", totalLabel: "Identified crop events", comparisonLabel: "additional crop events",
-    caption: "A crop event is a plant line with a particular genetic modification. Each identified event is counted once, even when EPA lists several pest-control ingredients for it. An event can be bred into many seed varieties. Registration does not confirm commercial sales. 2026 runs through October 2.",
+    ...common, yLabel: "Cumulative crop events", totalLabel: "All crops · identified events", comparisonLabel: "additional crop events",
+    caption: "Each identified crop event is counted once, including later cancellations. Exempt products are excluded. Partial 2026: through October 2.",
     explanations: [
       { title: "What does this count cover?", body: "This is a minimum count of individually identified crop events in EPA’s registration list. Two older potato listings cover groups of plants without identifying all their individual lines and are excluded. USDA and EPA may review the same crop, so their totals should not be added." },
       { title: "What about PIPs exempt from registration?", body: "Some engineered pest protections similar to those achievable through conventional breeding can qualify for an exemption from EPA registration. These include certain changes to genes from plants that can be crossed, or reducing an existing gene’s activity to create pest resistance. This chart covers registered protections and does not estimate the number of exempt products." }
     ],
     source: `<a href="https://www.epa.gov/ingredients-used-pesticide-products/current-and-previously-registered-section-3-plant-incorporated" target="_blank" rel="noopener">EPA current and previously registered PIPs</a>; <a href="https://downloads.regulations.gov/EPA-HQ-OPP-2016-0036-0013/content.pdf" target="_blank" rel="noopener">EPA’s 2017 potato decision</a>; <a href="https://www.epa.gov/newsreleases/new-citrus-tool-help-prevent-widespread-loss-citrus-crops-and-support-americas-food" target="_blank" rel="noopener">EPA’s 2026 citrus decision</a>; <a href="https://www.epa.gov/pesticides/epa-posts-resources-rule-accelerate-use-plant-incorporated-biotechnologies-protect" target="_blank" rel="noopener">EPA registration exemptions</a>.<p>Ingredients linked to the same named crop event are combined and dated to their first registration in the source table. The potato decision identifies three lines—W8, X17, and Y9—under one ingredient listing. The citrus decision identifies one product with three gene edits. The two unresolved older listings concern New Leaf potatoes and potatoes protected against leaf roll virus. ${eventDownload}; ${download}.</p>`
   };
+  const fdaSource = '<a href="https://hfpappexternal.fda.gov/scripts/fdcc/index.cfm?set=NewPlantVarietyConsultations&showAll=true" target="_blank" rel="noopener">Source: FDA, New Plant Variety Consultations inventory</a>; <a href="https://www.fda.gov/food/food-new-plant-varieties/programs-food-new-plant-varieties" target="_blank" rel="noopener">FDA consultation programs</a>.<p>Author’s calculations: one consultation per distinct biotechnology notification file (BNF) number, dated by FDA’s response letter. The inventory’s 223 plant-line rows represent 161 consultation files across 20 crops. Crop labels are standardized: Fuji apple → apple; starch potato → potato; sugar from sugarcane → sugarcane. Other crops combines the remaining 15 crops. Data retrieved October 8, 2026; FDA marks the inventory updated June 10, 2026. The latest listed letter is March 24, 2026; later completions may not yet be published. The earliest listed response letters are in 1995, although FDA dates its first consultation to 1994. Other FDA submission programs and genome-edited plant premarket meetings are excluded. <a href="fda-consultations.csv" download>Download consultation records (CSV)</a>; <a href="fda-consultations-annual.csv" download>Download annual counts (CSV)</a>.</p>';
+  const fdaExplanations = [
+    { title: "What does a completed consultation mean?", body: "FDA reviews the developer’s assessment of food safety and regulatory issues. It closes a consultation when those issues are resolved, typically with a letter stating it has no further questions. Developers remain responsible for safe, lawful food. This is a voluntary consultation, not a product approval or evidence of sales." },
+    { title: "Does this include every gene-edited crop?", body: "No. The program covers genetically engineered crops and some gene-edited crops, but the inventory does not capture every new variety. FDA also offers a separate premarket meeting route for genome-edited plants. Those meetings are excluded, and the inventory does not consistently label breeding methods, so no gene-edited versus transgenic split is inferred. USDA, EPA and FDA may review the same crop; their totals should not be added." }
+  ];
   return {
-    title: "Genetically engineered and gene-edited crop decisions", fullWidth: true,
+    title: "Biotech crop decisions and food-safety consultations", fullWidth: true,
     views: [
-      { ...common, id: "usda-crop", label: "USDA · by crop", usdaFilter: true, subtitle: "USDA decisions on biotech crops, by crop, 1992–2026", series: cropSeries, otherCrops: BIOTECH.usdaOtherCrops,
+      { ...common, id: "usda-crop", recordRows: BIOTECH.usdaDetails, recordKind: "usda-crop", recordUnit: "records", recordPanel: "USDA records", recordAgency: "USDA", recordColumns: ["Decision date", "Crop / description", "Review pathway", "Outcome", "USDA record"], label: "USDA · by crop", usdaFilter: true, subtitle: "USDA decisions on biotech crops, by crop, 1992–2026", series: cropSeries, otherCrops: BIOTECH.usdaOtherCrops,
         source: `${usdaSources}.<p>One record per completed crop petition, regulatory status review, exemption confirmation, or favorable Am I Regulated response. Uses the effective or response date; pending requests and non-crop organisms are excluded. Scope includes food, feed, fiber, tobacco, and biofuel crops. Other crops combines the smaller crop categories. These USDA decisions do not establish FDA or EPA approval or commercial adoption. ${download}.</p>` },
-      { ...common, id: "usda-pathway", label: "USDA · by review pathway", explanationTitle: "About review pathways", subtitle: "USDA approvals by regulatory pathway", series: BIOTECH.usdaByPathway,
+      { ...common, id: "usda-pathway", recordRows: BIOTECH.usdaDetails.map(row => ({ ...row, crop: USDA_PATHWAYS[row.pathway], traits: row.crop })), recordKind: "usda-pathway", recordGroupLabel: "Pathway", recordUnit: "records", recordPanel: "USDA records", recordAgency: "USDA", recordColumns: ["Decision date", "Crop / description", "Crop", "Outcome", "USDA record"], label: "USDA · by review pathway", explanationTitle: "About review pathways", subtitle: "Completed USDA regulatory records by review pathway, 1992–2026", series: BIOTECH.usdaByPathway,
         explanations: [
           { title: "Petition determinations", body: "Used from 1992 through the 2021 transition; new petitions resumed March 3, 2025. USDA assesses plant-pest risk and grants nonregulated status to crops previously subject to its rules. The route covers many older transgenic crops." },
           { title: "Regulatory status reviews", body: "April 5, 2021–December 2, 2024. Created by the 2020 SECURE rule, this short-lived replacement for petitions expanded to all plants in October 2021. USDA assessed increased plant-pest risk." },
@@ -439,65 +454,185 @@ function biotechDecisionChart() {
           { title: "Am I Regulated responses", body: "New inquiries stopped in June 2020 and resumed January 8, 2025. USDA determines whether a plant falls outside its biotechnology regulations and therefore does not need a petition for nonregulated status. Only responses finding plants nonregulated are counted here. This route includes gene-edited and some transgenic crops." }
         ],
         source: `${usdaSources}.<p>Pathways have different criteria and are not equivalent to transgenic versus gene-edited categories. Exemption confirmations and Am I Regulated letters are findings of regulatory status, not product approvals. The 2020 rules were vacated in December 2024; earlier responses remain valid. Public records do not cover every developer self-determination. <a href="https://www.aphis.usda.gov/vacatur-2020-regulations" target="_blank" rel="noopener">USDA’s account of the December 2024 ruling and restarted processes</a>; <a href="https://www.aphis.usda.gov/sites/default/files/brs_2020518.pdf" target="_blank" rel="noopener">2020 rule and phased implementation dates (p. 29815)</a>; <a href="https://www.aphis.usda.gov/news/program-update/aphis-resumes-receipt-petitions-nonregulated-status" target="_blank" rel="noopener">USDA guidance on gene-edited and transgenic plants</a>. ${download}.</p>` },
-      { ...epa, id: "epa-crop", label: "EPA · all registrations", subtitle: "Crop events with EPA-registered plant-incorporated protectants (PIPs): pest protection built into the plant itself, such as Bt corn’s insect-killing proteins.", series: BIOTECH.epaEventsByCrop }
+      { ...epa, id: "epa-crop", recordRows: BIOTECH.epaDetails, recordKind: "epa", recordUnit: "crop events", recordPanel: "EPA crop events", recordAgency: "EPA", recordColumns: ["First registered", "Crop event", "Registration status", "Cancellation year", "EPA source"], label: "EPA · all registrations", subtitle: "Crop events with EPA-registered plant-incorporated protectants (PIPs): pest protection built into the plant itself, such as Bt corn’s insect-killing proteins.", series: BIOTECH.epaEventsByCrop },
+      { ...common, id: "fda-crop", label: "FDA · by crop", compactRecords: true, subtitle: "Completed FDA food-safety consultations on biotech crops, by crop, 1995–2026",
+        integerTicks: true, yLabel: "Cumulative consultations", totalLabel: "All crops · completed consultations", comparisonLabel: "additional consultations", series: withCropBreakdown(BIOTECH.fda.byCrop, BIOTECH.fda.otherCrops), otherCrops: BIOTECH.fda.otherCrops, recordRows: BIOTECH.fda.plantLines, recordKind: "consultations", recordUnit: "consultations",
+        caption: "One completed consultation per FDA file, not a product approval. Partial 2026: letters listed through March 24; publication may lag.",
+        explanationTitle: "About FDA consultations", explanations: fdaExplanations, source: fdaSource },
+      { ...common, id: "fda-meetings", label: "FDA · premarket meetings", subtitle: "FDA premarket meeting records for gene-edited crops, 2024–2026",
+        integerTicks: true, yLabel: "Cumulative meeting records", totalLabel: "All crops · meeting records", comparisonLabel: "additional meeting records",
+        series: withCropBreakdown(BIOTECH.fdaMeetings.byCrop, BIOTECH.fdaMeetings.otherCrops), otherCrops: BIOTECH.fdaMeetings.otherCrops, recordRows: BIOTECH.fdaMeetings.records, recordKind: "meetings", recordUnit: "meeting records", recordPanel: "Premarket meeting records", recordAgency: "FDA", recordColumns: ["Meeting date", "Plant line / designation", "Trait", "Developer", "FDA file"],
+        caption: "Voluntary meetings for certain gene-edited foods, not FDA food-safety evaluations or approvals. Partial 2026: meetings listed through July 9; publication may lag.",
+        explanationTitle: "About premarket meetings", explanations: [{ title: "How do meetings differ from consultations?", body: "FDA offers these voluntary meetings for certain gene-edited foods. Developers share the steps they have taken to ensure safe, lawful food. A meeting does not represent FDA’s evaluation of a food-safety assessment, and does not replace a full consultation when food-safety questions warrant one. Counts do not confirm sales or cover every gene-edited variety." }],
+        source: '<a href="https://hfpappexternal.fda.gov/scripts/fdcc/index.cfm?set=GenomeEditedPlants&showAll=true" target="_blank" rel="noopener">Source: FDA, premarket meeting inventory</a>; <a href="https://www.fda.gov/food/programs-food-new-plant-varieties/premarket-meetings-food-genome-edited-plants" target="_blank" rel="noopener">FDA program description</a>.<p>One record per published VPM identifier: 12 entries across nine crops. VPM 0005-A and 0005-B describe separate rice entries with the same meeting date; both are counted, so the total is inventory records, not distinct meeting sessions. A record can cover multiple plant lines or edits. Dates are meeting dates. Retrieved October 9, 2026; inventory updated August 21, 2026; latest listed meeting July 9, 2026. Publication may lag. <a href="fda-premarket-meetings.csv" download>Download meeting records (CSV)</a>.</p>' }
+
 
     ]
   };
 }
 function federalAgencyBudgetView() {
   const colors = { "ARS research": "#00bfa5", "NIFA and predecessor research": "#10495e", "Other USDA research (ERS, NASS and others)": "#bc743b", "Agricultural research facilities": "#adb7bd", "Forest Service research": "#859e70" };
-  const series = DATA.rd.agencyBudgetWithForestry.map(item => ({ ...item, color: colors[item.name] }))
-    .sort((a, b) => Number(b.name === "Agricultural research facilities") - Number(a.name === "Agricultural research facilities"));
+  const series = DATA.rd.agencyBudgetWithForestry.map(item => ({ ...item, color: colors[item.name], name: item.name === "Other USDA research (ERS, NASS and others)" ? "ERS, NASS, and other USDA research" : item.name === "Agricultural research facilities" ? "USDA research facilities" : item.name }))
+    .sort((a, b) => Number(b.name === "USDA research facilities") - Number(a.name === "USDA research facilities"));
   return {
-    title: "USDA agricultural and forestry R&D funding",
-    subtitle: "Research budget authority by agency, plus agricultural research facilities, 2000–2024",
-    yLabel: "Billion 2022 dollars", tooltipUnit: "billion 2022 dollars", type: "stacked", series,
-    overlaySeries: [{ name: "USDA budget total", color: "#56a9d5", dasharray: "", hideInLegend: true,
-      values: series[0].values.map(point => ({ year: point.year, value: series.reduce((sum, item) => sum + item.values.find(d => d.year === point.year).value, 0) })) }],
+    title: "USDA R&D budget authority",
+    subtitle: `Authority to commit federal research and facilities funds, ${Math.min(...series.flatMap(item => item.values.map(point => point.year)))}–${Math.max(...series.flatMap(item => item.values.map(point => point.year)))}`,
+    yLabel: "Billion 2024 dollars", tooltipUnit: "billion 2024 dollars", currency: true, hideTooltipSource: true, drilldownOnly: true, type: "stacked", series,
     totalLabel: "USDA budget total", showChangeYears: true, fullWidth: true,
-    caption: "Funds made available for R&D. Forest Service research is separate. The blue line is the net total; negative facilities funding in 2011 cancels earlier allocations.",
-    explanationTitle: "Coverage and accounting",
-    explanations: [
-      { title: "Research components", body: "ARS and NIFA use their research budget components, not their entire agency appropriations. Other USDA research includes ERS, NASS, APHIS and other research reported under budget function 350, with table rounding residuals. Forest Service research is reported separately under natural resources and environment; its forestry facilities are excluded throughout this chart." },
-      { title: "Budget authority and spending", body: "Budget authority permits agencies to commit funds. Obligations are commitments such as awards and contracts; outlays are payments. These measures can differ within a year. This chart consistently uses budget authority, not Gateway award amounts or university expenditures." },
-      { title: "Historical comparability", body: "Each year uses its published actual agency budget table. Program classifications and reporting definitions have changed. All values use the same NIH/BEA research deflator as the detailed spending chart; the 2024 deflator is preliminary." }
-    ],
-    source: `<a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agricultural agency budgets (annual tables)</a>; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; <a href="https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf" target="_blank" rel="noopener">USDA facility histories</a>; ${sourceLinks.brdpi}. <a href="rd-source-comparison.csv" download>Download annual dataset comparison</a>.`,
+    caption: `Budget authority for USDA R&D; amounts differ from obligations, outlays and expenditures. ${series.filter(item => item.name.includes("facilities")).flatMap(item => item.values.filter(point => point.value < 0).map(point => `The negative facilities value in ${point.year} cancels earlier authority.`)).join(" ")} 2025 is preliminary, mainly reflecting annualized continuing-resolution funding; reconciliation funding is excluded. BRDPI uses a preliminary 2024 index and projected 2025 index.`,
+    source: `<a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agricultural agency budgets (annual tables)</a>; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; <a href="https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf" target="_blank" rel="noopener">USDA facility histories</a>; ${sourceLinks.brdpi}. <a href="rd-budget-authority.csv" download>Download budget authority in 2024 dollars</a>.`,
     decimals: 2
   };
 }
 
-function federalSpendingDetailChart() {
+function performerExpenditureChart() {
+  const sources = `<a href="https://portal.nifa.usda.gov/lmd5/bix_reportlet/show_public/state_snapshots_organization_type_hierarchy" target="_blank" rel="noopener">REEIS Organization Type reports</a>; ${sourceLinks.rd}; ${sourceLinks.herd}; ${sourceLinks.brdpi}.<p><a href="rd-performer-expenditures.csv" download>Updated annual performer estimates</a>; <a href="rd-performer-components.csv" download>Institution components</a>; <a href="rd-performer-usda-detail.csv" download>USDA agencies and transfer deduction</a>; <a href="rd-performer-history.csv" download>Historical series</a>; <a href="rd-performer-formula-2021.csv" download>2021 formula expenditures by recipient type</a>; <a href="https://www.nifa.usda.gov/data/data-gateway" target="_blank" rel="noopener">NIFA Data Gateway</a>.</p>`;
   return {
-    title: "Federal agricultural R&D spending",
-    subtitle: "USDA R&D and facilities payments + non-USDA-funded university agricultural sciences research",
-    yLabel: "Billion 2022 dollars", tooltipUnit: "billion 2022 dollars", type: "stacked",
-    series: DATA.rd.federalStateSpendingDetail.filter(series => !series.partialCoverage),
-    nonUsdaBreakdown: DATA.rd.nonUsdaUniversityBreakdown,
-    showChangeYears: true, fullWidth: true, decimals: 2,
-    caption: "Includes forestry; state funding is shown separately below. Before 2010, a small unallocated share is counted as non-USDA.",
-    source: `<a href="https://ncses.nsf.gov/pubs/nsf26316" target="_blank" rel="noopener">NCSES, federal R&D outlays and facilities</a>; ${sourceLinks.herd}; <a href="https://portal.nifa.usda.gov/enterprise-search/" target="_blank" rel="noopener">NIFA Data Gateway, annual Financial Details</a>; ${sourceLinks.brdpi}.<p>University data cover agricultural sciences; definitions change in 2010, 2016 and 2020. USDA-funded university spending is already included in USDA payments. All displayed series use the same research deflator. State project funding is retained in the download as a separate comparison, not an area in this chart.</p><a href="rd-federal-spending.csv" download>Download chart data</a>; <a href="rd-gateway-annual-totals.csv" download>Gateway totals by year, mechanism and source</a>; <a href="rd-source-comparison.csv" download>annual dataset comparison</a>.`
+    title: "Public agricultural R&D expenditures by performer",
+    subtitle: "ERS history, 1970–2001; updated performer estimates, 2002–2024",
+    type: "stacked", yLabel: "Billion 2024 dollars", tooltipUnit: "billion 2024 dollars", currency: true, decimals: 2,
+    hideTooltipSource: true, drilldownOnly: true, fullWidth: true, showChangeYears: true,
+    series: RD_UPDATED.performerUpdated, overviewLegendLabel: "All performers",
+    caption: "ERS data cover 1970–2001. Estimates for 2002–2024 follow the ERS approach using REEIS institution funding and NCSES USDA outlays, with overlapping transfers deducted once. Private SBIR recipients are excluded. Nonagricultural Minnesota veterinary-school NIH funding is subtracted in 2006–2008. All amounts use 2024 dollars, adjusted with BRDPI.",
+    source: sources
   };
 }
 
-function gatewayStateFundingChart() {
-  const common = {
-    type: "stacked", yLabel: "Billion 2022 dollars", tooltipUnit: "billion 2022 dollars", decimals: 2,
-    legendShare: true,
-    caption: "Legend shows each category’s share in 2021. Reports include mixed activities and incomplete nonformula reporting in 2010–2014; formula coverage ends in 2021.",
-    source: `<a href="https://portal.nifa.usda.gov/enterprise-search/" target="_blank" rel="noopener">NIFA Data Gateway, annual Financial Details</a>; ${sourceLinks.brdpi}.<p>State appropriations reported by projects, grouped by their funding mechanism or program label. These are state dollars supporting those projects, not NIFA grant amounts. Other capacity includes Animal Health and Renewable Resources Extension projects. The exports do not provide a state-location or research-focus classification. Categories and totals are not a complete national research-only estimate.</p><a href="rd-gateway-annual-totals.csv" download>Annual mechanism and source totals</a>; <a href="rd-source-comparison.csv" download>Annual program totals and dataset comparison</a>.`
-  };
+function agriculturalFundingChart() {
+  // Retain the alternative data and view below; set true to restore the selector.
+  const enableNCSESFundingView = false;
+  const profileSeries = enableNCSESFundingView ? [RD_UPDATED.fundingProfiles.reeis_preferred, RD_UPDATED.fundingProfiles.ncses_herd_alternative] : [RD_UPDATED.fundingProfiles.reeis_preferred];
+  const profileTotals = profileSeries.flatMap(series => series[0].values.map(point => series.reduce((sum, item) => sum + (item.values.find(value => value.year === point.year)?.value || 0), 0)));
+  const fixedY = niceScale(Math.max(...profileTotals));
+  const sourceYears = profileSeries.flatMap(series => series.flatMap(item => item.values.map(point => point.year)));
+  const common = { yMax: fixedY.max, yTicks: fixedY.ticks, xMin: Math.min(...sourceYears), xMax: Math.max(...sourceYears), type: "stacked", yLabel: "Billion 2024 dollars", tooltipUnit: "billion 2024 dollars", currency: true, decimals: 2, fullWidth: true, showChangeYears: true, hideTooltipSource: true, drilldownOnly: true,
+    caption: "USDA agencies and facilities use NCSES cash outlays. REEIS NIFA combines formula expenditure reports and nonformula grant obligations. REEIS state, nongovernment and other-federal values are reported project expenditures, which can include unliquidated obligations. Pre-2002 values use CRIS expenditure summaries. Nonagricultural Minnesota NIH funding is removed in 2006–2008. 2023–2024 industry and institution-generated amounts may be incomplete or regrouped; most other-federal support lacks agency detail. Values are in 2024 dollars using BRDPI.",
+    source: `<a href="https://portal.nifa.usda.gov/lmd5/bix_reportlet/show_public/state_snapshots_funding_mechanism_hierarchy" target="_blank" rel="noopener">REEIS Funding Mechanism reports</a>; <a href="https://ncses.nsf.gov/surveys/federal-funds-research-development" target="_blank" rel="noopener">NCSES agency outlays</a>; ${sourceLinks.herd}; ${sourceLinks.brdpi}.<p><a href="rd-funding-components.csv" download>Funding components and source provenance</a>; <a href="rd-funding-totals.csv" download>Totals by source option</a>; <a href="rd-funding-drilldowns.csv" download>Funding detail by program, agency and recipient</a>; <a href="rd-updated-methods.txt" download>Methods and historical breaks</a>; <a href="rd-nonusda-source-comparison.csv" download>Other-federal recipient source comparison</a>; <a href="https://www.nifa.usda.gov/about-nifa/what-we-do/types-federal-assistance" target="_blank" rel="noopener">NIFA grant types</a>.</p>` };
+  const sourceViews = [
+    { ...common, id: "funding-reeis", label: "NIFA REEIS", subtitle: "Federal, state and nongovernment spending and support, with historical CRIS reports", series: RD_UPDATED.fundingProfiles.reeis_preferred },
+    { ...common, id: "funding-ncses-herd", label: "NSF NCSES", subtitle: "NIFA outlays and other federal university expenditures from NSF NCSES; state and nongovernment support from REEIS", series: RD_UPDATED.fundingProfiles.ncses_herd_alternative }
+  ];
+  return { title: "Agricultural R&D funding by funder", fullWidth: true, resetFocusOnViewChange: true, hideViewControls: !enableNCSESFundingView, showViewLabel: enableNCSESFundingView, viewLabel: "Select source for NIFA and other federal estimates", views: enableNCSESFundingView ? sourceViews : [sourceViews[0]] };
+}
+
+function federalSpendingDetailChart() {
+  const common = { type: "stacked", yLabel: "Billion 2024 dollars", tooltipUnit: "billion 2024 dollars", decimals: 2, showChangeYears: true,
+    caption: "Only the other-federal recipient component changes between these views. This diagnostic repeats the USDA payments to show the source difference; it is not additional spending and should not be added to charts 1 or 3.",
+    explanationTitle: "Comparing recipient sources",
+    explanations: [
+      { title: "What changes with the source?", body: "Only the non-USDA recipient component changes. NCSES/HERD covers university agricultural sciences. REEIS covers the six cooperating-institution categories, excluding SBIR and USDA agency performers; its scope includes forestry, veterinary schools and other cooperating institutions. The two values are not estimates of identical populations." },
+      { title: "How the composite avoids overlap", body: "USDA agency R&D and facilities outlays are counted gross. Only research financed by other federal agencies is added. USDA-financed university funding is not added again. REEIS Minnesota NIH corrections are applied once in 2007–2008. The unavailable live2021 value is filled from the retained REEIS funder-by-performer table, excluding SBIR; its source vintage is unknown." }
+    ],
+    source: `${sourceLinks.herd}; <a href="https://portal.nifa.usda.gov/lmd5/bix_reportlet/show_public/state_snapshots_organization_type_hierarchy" target="_blank" rel="noopener">REEIS Organization Type reports, Other Federal filter</a>; ${sourceLinks.brdpi}.<p><a href="rd-federal-spending.csv" download>NCSES federal composite</a>; <a href="rd-nonusda-source-comparison.csv" download>Non-USDA recipient source comparison</a>; <a href="rd-updated-methods.txt" download>Methods and coverage</a>.</p>` };
+  return { title: "Source check: other-federal recipient research", fullWidth: true, viewLabel: "Non-USDA recipient source", views: [
+    { ...common, id: "federal-ncses", label: "NCSES / HERD universities", subtitle: "NCSES/HERD recipient values added to the same USDA payments; a source check, not a second national expenditure estimate", series: RD_UPDATED.federalComposites.ncses },
+    { ...common, id: "federal-reeis", caption: "Only the other-federal recipient component changes; USDA payments are identical. 2021 uses a retained REEIS table with unknown vintage. This diagnostic is not additional spending.", label: "REEIS cooperating institutions", subtitle: "REEIS recipient values added to the same USDA payments; coverage differs from HERD universities", series: RD_UPDATED.federalComposites.reeis }
+  ] };
+}
+
+function rdProductivityChart() {
+  const tfp = DATA.rd.productivityComparison;
+  const values = new Map(tfp.values.map(point => [point.year, point.value]));
+  const growth = tfp.values.filter(point => point.year >= 1970 && values.has(point.year - 20)).map(point => {
+    const years = Array.from({ length: 21 }, (_, i) => point.year - 20 + i);
+    const center = point.year - 10;
+    const meanLog = years.reduce((sum, year) => sum + Math.log(values.get(year)), 0) / years.length;
+    const slope = years.reduce((sum, year) => sum + (year - center) * (Math.log(values.get(year)) - meanLog), 0) / years.reduce((sum, year) => sum + (year - center) ** 2, 0);
+    return { year: point.year, value: 100 * Math.expm1(slope), source: `Fitted annual TFP growth over ${point.year - 20}–${point.year}; 21 annual observations.` };
+  });
   return {
-    title: "State funding reported by agricultural projects", fullWidth: true,
-    viewLabel: "Break down state appropriations",
-    views: [
-      { ...common, id: "state-program", label: "By project program", subtitle: "Reported state appropriations by project program, 2004–2021", series: DATA.rd.gatewayStateByProgram },
-      { ...common, id: "state-mechanism", label: "By funding mechanism", subtitle: "Reported state appropriations by project funding mechanism, 2004–2021", series: DATA.rd.gatewayStateByMechanism }
-    ]
+    title: "Public research and productivity growth", fullWidth: true,
+    subtitle: "Published ERS spending and total factor productivity (TFP) growth, 1970–2023",
+    yLabel: "R&D: billion 2024 dollars", tooltipUnit: "billion 2024 dollars", decimals: 2,
+    dualAxis: true, xMin: 1970, xMax: 2023, yMin: 0, yMax: 10, yTicks: [0,2,4,6,8,10],
+    rightAxis: { label: "TFP growth: % per year", min: 0, max: 2.5, ticks: [0,0.5,1,1.5,2,2.5], color: "#b85c32" },
+    summaryMode: "latest", latestYearLabel: true,
+    series: [
+      { name: "Public R&D spending · left axis", color: "#0d4459", tooltipUnit: "billion 2024 dollars", decimals: 2, values: DATA.rd.spending },
+      { name: "20-year TFP growth trend · right axis", color: "#b85c32", dasharray: "6 4", axis: "right", tooltipUnit: "% per year", decimals: 2, comparisonMode: "percentage-points", values: growth }
+    ],
+    caption: "TFP growth reflects a fitted trend over the preceding 20 years. Spending ends in 2021; TFP ends in 2023. Research can affect productivity over decades.",
+    explanationTitle: "How is the growth trend measured?",
+    explanations: [
+      { title: "Measuring productivity growth", body: "TFP measures farm output relative to the combined use of land, labor, capital and other inputs. Each growth estimate fits a straight line to log TFP using 21 annual observations spanning the preceding 20 years, then converts the slope to an annual percentage rate. This reduces sensitivity to individual endpoint years." },
+      { title: "Interpreting the comparison", body: "Annual R&D spending supports productivity gains over decades. These trends do not measure research's contribution to productivity growth. Each line uses its own scale; their relative heights and crossings have no economic meaning. The 20-year window smooths productivity growth and does not represent a research lag." }
+    ],
+    source: `${sourceLinks.productivity}; ${sourceLinks.rd}.<p>TFP uses the June 2026 ERS national productivity accounts. Spending uses the ERS public agricultural and food R&D total shown in the first chart, in 2024 dollars. Each series ends at its latest available observation. Productivity also reflects weather, farm management, private research and other influences.</p>`
   };
+}
+
+function livestockCharts() {
+  const l = DATA.livestock;
+  const link = (url, label) => `<a href="${url}" target="_blank" rel="noopener">${label}</a>`;
+  const download = '<a href="livestock-productivity.csv" download>Download livestock observations (CSV)</a>';
+  const ncc = `${link('https://www.nationalchickencouncil.org/about-the-industry/statistics/u-s-broiler-performance/', 'National Chicken Council, U.S. Broiler Performance')}.<p>Industry compilation, 1925–2025, retrieved October 17, 2026. Broiler feed efficiency is the reciprocal of the reported feed conversion ratio, shown as pounds of live weight per pound of feed. NCC attributes its table to USDA and other reliable sources but does not identify each observation’s underlying source or sampling error. Earlier observations are spaced five or ten years apart; 2005–2025 is annual. It is a long-run performance benchmark, not a harmonized USDA survey series. ${download}.</p>`;
+  const dairy = `${link('https://www.ers.usda.gov/sites/default/files/_laserfiche/publications/109626/ERR-334.pdf', 'USDA ERS, Structure, Costs, and Technology Used on U.S. Dairy Farms (2024), figures 8–12')}.<p>National estimates from ARMS dairy surveys in 2000, 2005, 2010, 2016 and 2021. Automatic take-offs and nutritionist use were not asked in 2016; those values are absent. Dashed lines connect surveyed years, not annual observations. Milk-sales shares cover all sales from farms reporting any use, not the fraction of individual cows treated or milk produced with a technology. Breeding technologies combine artificial insemination, embryo transfer and/or sexed semen; they do not measure genomic selection specifically. Practices overlap and should not be added. ${download}.</p>`;
+  const indexed = (series, year) => ({ ...series, values: series.values.filter(point => point.year >= year).map(point => ({ ...point,
+    rawValue: point.value, rawUnit: series.unit, baselineYear: year,
+    value: 100 * point.value / series.values.find(p => p.year === year).value })) });
+  const percentChange = (series, year) => {
+    const baseline = series.values.find(point => point.year === year).value;
+    return { ...series, values: series.values.map(point => ({ ...point,
+      rawValue: point.value, rawUnit: series.unit, baselineYear: year, baselineValue: baseline, displayMode: 'percent-change',
+      value: 100 * (point.value / baseline - 1) })) };
+  };
+  const feedEfficiency = (series, name, unit) => ({ ...series, name, unit,
+    values: series.values.map(point => ({ ...point, value: 1 / point.value })) });
+  const annual = { showAllPoints: true, decimals: 2, showChangeYears: true };
+  const share = { ...annual, yLabel: 'Percent', tooltipUnit: '%', tickSuffix: '%',
+    yMin: 0, yMax: 100, yTicks: [0,25,50,75,100], summaryMode: 'latest', latestYearLabel: true, showChangeYears: false, decimals: 0 };
+  const scaleSource = `${link('https://www.govinfo.gov/content/pkg/GOVPUB-A93-PURL-gpo224091/pdf/GOVPUB-A93-PURL-gpo224091.pdf', 'USDA ERS, Three Decades of Consolidation in U.S. Agriculture (2018), appendix table B-5')}.<p>Six Census years, 1987–2012. The midpoint is the operation size dividing animals equally between larger and smaller operations; it is not the average farm, median farm or a CAFO threshold. Broilers, fed cattle and hogs use annual sales/removals; cows use year-end inventories. The shared index compares changes in scale, not animal counts or productivity. Raw values and units are retained on hover and focus. These historical estimates are not a description of today’s farm sizes. ${download}.</p>`;
+  const environmentSource = `${link('product-studies.json', 'Download the existing product-study comparisons (JSON)')}.<p>Uses the same selected studies, endpoints, product bases and reported changes as By product. Bars show within-study change; annual rates are equivalent compound rates between endpoints, not measured annual trends. Study periods, system boundaries and water measures differ. Select each row’s details for its source, original values and units. The 2010–2020 chicken report is industry commissioned and not peer reviewed; its rebuilt baseline must not be joined to the older 1965–2010 study.</p>`;
+  const porkHistoryView = { ...annual, id: 'pork-history', label: 'Pork · 1960–2015 history', subtitle: 'Four environmental intensities in one pork LCA, at five-year intervals. Each measure is indexed to 1960 = 100.',
+    yLabel: 'Index (1960 = 100)', tooltipUnit: 'index points', decimals: 1, series: l.porkHistory.map(s=>indexed(s,1960)),
+    caption: 'Retrospective model estimates, not observed annual measurements. Footprints do not fall smoothly; feed-crop yields and irrigation also affect them.',
+    source: `${link('https://porkcheckoff.org/wp-content/uploads/2021/02/16-214-THOMA-final-rpt.pdf', 'Putman et al. (2018), A Retrospective Assessment of US Pork Production, table 9')}.<p>Production-weighted modeled cradle-to-farm-gate impacts per kg live weight marketed, including cull animals. Four different units share a common 1960 base; original values remain on hover and in the CSV. Model assumptions, manure management and upstream feed production affect this history; it is not an estimate of the causal effect of any one practice. ${download}.</p>` };
+  const charts = [
+    { title: 'Broiler productivity', subtitle: 'Change from 1925 to 2025 in feed efficiency (live weight per unit of feed), survival to market, market weight and market age. Every series starts at 0% change in 1925.',
+      yLabel: 'Change from 1925', tooltipUnit: '%', tickSuffix: '%', decimals: 0, summaryMode: 'latest', latestYearLabel: true, yMin: -100, yMax: 200, yTicks: [-100,-50,0,50,100,150,200],
+      series: [
+        percentChange(feedEfficiency(l.broilers.feed, 'Broiler feed efficiency', 'lb live weight per lb feed'),1925),
+        { ...percentChange(l.broilers.survival,1925), name: 'Survival to market' },
+        { ...percentChange(l.broilers.weight,1925), name: 'Market weight' },
+        { ...percentChange(l.broilers.age,1925), name: 'Market age' }
+      ],
+      caption: 'The chart compares relative change across different measures. Hover or focus a point for its absolute value and unit. Survival is 100 minus reported mortality; it is not chick hatchability or first-week survival. Genetics, nutrition, housing and health management contribute jointly.', source: ncc },
+    { title: 'Pig productivity', subtitle: 'Change from 2004 in feed efficiency (live-weight gain per unit of feed) and pigs saved per litter. Each series is indexed to 2004 = 0% change.',
+      yLabel: 'Change from 2004', tooltipUnit: '%', tickSuffix: '%', decimals: 0, summaryMode: 'latest', latestYearLabel: true, yMin: -50, yMax: 40, yTicks: [-50,-25,0,25,40],
+      series: [
+        percentChange(feedEfficiency(l.hogFeed[0], 'Farrow-to-finish feed efficiency', 'lb live-weight gain per lb feed'),2004),
+        percentChange(feedEfficiency(l.hogFeed[1], 'Feeder-to-finish feed efficiency', 'lb live-weight gain per lb feed'),2004),
+        { ...percentChange(l.litter,2004), dasharray: '4 3' }
+      ],
+      caption: 'Farrow-to-finish includes breeding and piglet production; feeder-to-finish covers the finishing stage. Litter values are pigs saved, not all piglets born. Markers show reported survey years; unavailable years are not filled.',
+      source: `${link('https://ers.usda.gov/sites/default/files/_laserfiche/publications/45148/40364_err158.pdf', 'USDA ERS (2013), U.S. Hog Production From 1992 to 2009, table 6')}; ${link('https://www.nass.usda.gov/Surveys/Guide_to_NASS_Surveys/Hog_Inventory/', 'USDA NASS, Hogs and Pigs survey')}; ${link('https://www.nass.usda.gov/Publications/Todays_Reports/reports/hgpg1225.pdf', 'December 2025 annual table')}.<p>Hog feed efficiency is the reciprocal of feed conversion (reported lb feed per hundredweight of gain divided by 100), shown as lb live-weight gain per lb feed. Feed conversion observations are from the 1992 Farm Costs and Returns Survey and 1998, 2004 and 2009 ARMS. Piglets saved per litter uses annual December–November periods; 2006–2008 and 2022 are unavailable. Latest revisions were taken from archived December releases and may differ from later Quick Stats revisions. Absolute plotted values and units are retained in tooltips; the CSV preserves source observations. These indicators have different output bases and are shown as within-series percentage changes, not as directly comparable quantities. ${download}.</p>` },
+    { title: 'Dairy technology and feeding practices', viewLabel: 'Choose adoption denominator', views: [
+      { ...share, id: 'dairy-sales', label: 'Share of milk sales', subtitle: 'Share of U.S. milk sales from farms using each practice, 2000–2021.', series: l.dairyAdoption.sales,
+        caption: 'Larger adopters account for more milk sales than their share of farms. These are overlapping practices, not additive shares.', source: dairy },
+      { ...share, id: 'dairy-farms', label: 'Share of farms', subtitle: 'Share of U.S. dairy farms using each practice, 2000–2021.', series: l.dairyAdoption.farms,
+        caption: 'Breeding technologies spread selected genetics; nutritionists and computerized systems help match feeding and milking to animal needs.', source: dairy }
+    ]},
+    { ...annual, title: 'Livestock operation size', subtitle: 'Change in the midpoint operation size, 1987–2012, indexed to 1987 = 100. Hogs and dairy consolidated faster than beef cow herds.',
+      id: 'scale-index', yLabel: 'Index (1987 = 100)', tooltipUnit: 'index points', decimals: 0, series: l.scale.map(s => indexed(s,1987)),
+      caption: 'Select a series to focus and rescale it. Half of the animals are on larger operations and half on smaller ones. Scale can support technology use, but this is not a productivity measure.', source: scaleSource },
+    { title: 'Environmental efficiency of livestock production', fullWidth: true, viewLabel: 'Choose environmental measure', views: [
+      ...['greenhouse_gas','land','water','energy','fertilizer_n'].map(metric => ({ id: `livestock-${metric}`, label: metric === 'fertilizer_n' ? 'Nitrogen-related' : STUDY_METRIC_NAMES[metric],
+        type: 'livestock-studies', metric, subtitle: metric === 'fertilizer_n'
+          ? 'Beef reactive N loss, milk N leaching and chicken marine eutrophication per unit of product. These are different measures; compare changes within each study.'
+          : 'Change per unit of product in the existing U.S. life-cycle studies. Periods and methods differ.', source: environmentSource }))
+    ]}
+  ];
+  charts.retainedViews = { porkHistory: porkHistoryView };
+  return charts;
 }
 
 const TOPICS = {
+  livestock: () => ({
+    title: 'How livestock productivity has changed',
+    why: 'Selective breeding, better nutrition and feeding, disease control, improved housing, and labor-saving systems have helped producers obtain more output from feed, animals and labor. Larger and more specialized operations can make some of these practices easier to use. The charts track practices and performance; they do not assign a share of national productivity growth to each driver.',
+    happened: 'Broilers need much less feed per pound of live weight than in the early industry, while reaching heavier weights at younger ages. U.S. piglets saved per litter rose from 8.94 in 2004 to 11.79 in 2025. Dairy technology adoption and the scale of production have also changed. Environmental impacts per unit often fell, but the study comparisons below have different periods and boundaries, and do not show that every total impact declined.',
+    charts: livestockCharts()
+  }),
   overview: () => ({
     title: "Output is decoupling from resource use and impacts",
     intro: "",
@@ -800,31 +935,25 @@ const TOPICS = {
     return {
       title: "Public agricultural R&D remains below its peak",
       why: "In the United States, public agricultural research supports yields, resource efficiency, animal health, and environmental performance. Because its benefits can take decades to emerge, sustained investment matters.",
-      happened: "After peaking in 2002, inflation-adjusted public agricultural and food R&D spending was 29 percent lower by 2021. Agricultural productivity continued to rise, but more slowly after 2000. These parallel trends do not show that lower research spending caused the slowdown.",
+      happened: "Updated performer estimates extend through 2024 and remain below the early-2000s peak after inflation. Funding and expenditures are shown separately, with source options for REEIS and NCSES. Agricultural productivity continued to rise, but these parallel trends do not establish the effect of research spending.",
       charts: [
-        {
-          title: "Total public agricultural R&D spending",
-          subtitle: "USDA agencies and state universities: agricultural and food research, all funding sources",
-          yLabel: "Billion 2022 dollars",
-          tooltipUnit: "billion 2022 dollars",
-          type: "stacked",
-          series: DATA.rd.components || single("Public R&D", DATA.rd.spending),
-          source: sourceLinks.rd,
-          decimals: 1
-        },
+        agriculturalFundingChart(),
+        performerExpenditureChart(),
         {
           title: "Public agricultural R&D intensity",
-          subtitle: "The same ERS spending total, as a share of gross farm value added",
+          hideTooltipSource: true, drilldownOnly: true,
+          subtitle: "Public agricultural and food R&D spending as a share of gross farm value added, 1970–2024",
           yLabel: "% of gross farm value added",
           tooltipUnit: "%",
           tickSuffix: "%",
           series: single("R&D intensity", DATA.rd.intensity || []),
-          source: `${sourceLinks.rd}; ${sourceLinks.bea}`,
+          caption: "Spending follows the performer chart: ERS history through 2001 and updated estimates for 2002–2024. The share uses current-dollar spending and BEA farm value added, comparing fiscal-year research spending with calendar-year farm value added.",
+          source: `${sourceLinks.rd}; ${sourceLinks.bea}. <a href="rd-intensity.csv" download>Download spending, farm value added and intensity</a>.`,
           decimals: 1
         },
-        federalAgencyBudgetView(),
-        federalSpendingDetailChart(),
-        gatewayStateFundingChart()
+        federalAgencyBudgetView()
+        // Retained for restoration: federalSpendingDetailChart(),
+        // Retained for restoration: rdProductivityChart()
       ]
     };
   }
@@ -867,11 +996,30 @@ function renderTopic(id) {
     const savedView = CHART_STATES.get(`${id}:${index}`)?.view;
     const active = chart.views?.find(view => view.id === (savedView === "epa-active" ? "epa-crop" : savedView)) || chart.views?.[0] || chart;
     panel.querySelectorAll(`[data-chart-view="${index}"]`).forEach(button => button.setAttribute("aria-pressed", String(button.dataset.view === active.id)));
+    const chartContainer = panel.querySelector(`[data-chart="${index}"]`);
+    if (chart.legendAddons) chartContainer.toggleAddon = flag => {
+      const flags = (chartContainer.chartConfig.addonFlags || 0) ^ flag;
+      chartContainer.focusedSeries = null; chartContainer.focusedChild = null;
+      switchChartView(chartContainer, chart.views.find(view => view.addonFlags === flags));
+      chartContainer.parentElement.querySelector(`[data-${flags & flag ? "hide" : "enable"}-addon="${flag}"]`)?.focus({ preventScroll: true });
+    };
     drawChart(panel.querySelector(`[data-chart="${index}"]`), active);
+    const addons = [...panel.querySelectorAll(`[data-chart-addon="${index}"]`)];
+    addons.forEach(input => {
+      input.checked = Boolean(active.addonFlags & Number(input.value));
+      input.addEventListener("change", () => {
+        const flags = addons.reduce((sum, item) => sum + (item.checked ? Number(item.value) : 0), 0);
+        const container = panel.querySelector(`[data-chart="${index}"]`);
+        container.focusedSeries = null; container.focusedChild = null;
+        switchChartView(container, chart.views.find(view => view.addonFlags === flags));
+      });
+    });
     panel.querySelectorAll(`[data-chart-view="${index}"]`).forEach(button => button.addEventListener("click", () => {
       const view = chart.views.find(item => item.id === button.dataset.view);
       panel.querySelectorAll(`[data-chart-view="${index}"]`).forEach(item => item.setAttribute("aria-pressed", String(item === button)));
-      switchChartView(panel.querySelector(`[data-chart="${index}"]`), view);
+      const container = panel.querySelector(`[data-chart="${index}"]`);
+      if (chart.resetFocusOnViewChange) { container.focusedSeries = null; container.focusedChild = null; }
+      switchChartView(container, view);
     }));
   });
   applySavedTextEdits(panel);
@@ -891,7 +1039,7 @@ function renderTopic(id) {
 function rememberChartState() {
   panel.querySelectorAll("[data-chart]").forEach(container => {
     const card = container.closest(".chart-card");
-    CHART_STATES.set(`${ACTIVE_TOPIC}:${container.dataset.chart}`, { view: card.querySelector('[data-chart-view][aria-pressed="true"]')?.dataset.view });
+    CHART_STATES.set(`${ACTIVE_TOPIC}:${container.dataset.chart}`, { view: container.chartConfig?.id || card.querySelector('[data-chart-view][aria-pressed="true"]')?.dataset.view });
   });
   panel.querySelectorAll(".chart-card, .product-evidence").forEach((card, index) => CARD_STATES.set(`${ACTIVE_TOPIC}:${index}`, card.open));
 }
@@ -939,6 +1087,11 @@ function selectMobileChart(index, scroll = true) {
   MOBILE_CHART = Math.max(0, Math.min(index, cards.length - 1));
   CHART_CHOICES.set(ACTIVE_TOPIC, MOBILE_CHART);
   cards.forEach((card, i) => {
+    const heading = card.querySelector(":scope > summary");
+    if (heading) {
+      if (mobileLayout.matches) { heading.setAttribute("role", "group"); heading.tabIndex = -1; card.open = true; }
+      else { heading.removeAttribute("role"); heading.removeAttribute("tabindex"); }
+    }
     card.classList.toggle("mobile-selected", i === MOBILE_CHART);
     card.closest(".mobile-chart-frame")?.classList.toggle("mobile-selected-frame", i === MOBILE_CHART);
   });
@@ -965,18 +1118,23 @@ function selectMobileChart(index, scroll = true) {
 
 function chartCard(chart, index, topicId) {
   const active = chart.views?.[0] || chart;
-  const controls = chart.views ? `<div class="view-toggle" role="group" aria-label="${chart.viewLabel || "Choose chart view"}">${chart.views.map((view, viewIndex) => `<button type="button" data-chart-view="${index}" data-view="${view.id}" aria-pressed="${viewIndex === 0}">${view.label}</button>`).join("")}</div>` : "";
+  const controls = chart.hideViewControls || chart.legendAddons ? "" : chart.addonControls ? `<div class="view-toggle funding-addons" role="group" aria-label="Add funding sources">${[[1,"State support"],[2,"Nongovernment support"]].map(([flag,label]) => `<label><input type="checkbox" data-chart-addon="${index}" value="${flag}"> ${label}</label>`).join("")}</div>` : chart.views ? `<div class="view-toggle" role="group" aria-label="${chart.viewLabel || "Choose chart view"}">${chart.views.map((view, viewIndex) => `<button type="button" data-chart-view="${index}" data-view="${view.id}" aria-pressed="${viewIndex === 0}">${view.label}</button>`).join("")}</div>` : "";
   const heading = chart.title ? `<h3 data-editable-key="topic:${topicId}:chart:${index}:title">${chart.title}</h3>` : "";
-  return `<details class="chart-card ${chart.fullWidth ? "full-width" : ""}" open><summary class="chart-card-heading">${heading}</summary><div class="chart-card-content"><p class="chart-subtitle" data-editable-key="topic:${topicId}:chart:${index}:subtitle" data-subtitle="${index}">${active.subtitle || ""}</p>${controls}<div class="chart-wrap" data-chart="${index}"></div><div class="series-summary" data-summary="${index}"></div><details class="source-disclosure"><summary>Sources</summary><div class="source-line"></div></details></div></details>`;
+  return `<details class="chart-card ${chart.fullWidth ? "full-width" : ""}" open><summary class="chart-card-heading">${heading}</summary><div class="chart-card-content"><p class="chart-subtitle" data-editable-key="topic:${topicId}:chart:${index}:subtitle" data-subtitle="${index}">${active.subtitle || ""}</p>${chart.showViewLabel ? `<p class="change-note">${escapeHTML(chart.viewLabel)}</p>` : ""}${controls}<div class="chart-wrap" data-chart="${index}"></div><div class="series-summary" data-summary="${index}"></div><details class="source-disclosure"><summary>Sources</summary><div class="source-line"></div></details></div></details>`;
 }
 
-function formatValue(chart, value) {
+function formatValue(chart, value, series) {
+  if (series?.tooltipUnit !== undefined) chart = { ...chart, tooltipUnit: series.tooltipUnit, decimals: series.decimals ?? chart.decimals };
+  if (chart.currency) {
+    const millions = Math.abs(value) < 0.1;
+    return `${format(millions ? value * 1000 : value, Math.min(chart.decimals ?? 2, 2))} ${millions ? "million" : "billion"} 2024 dollars`;
+  }
   const number = format(value, chart.decimals ?? 1);
-  return chart.tooltipUnit === "%" ? `${number}%` : `${number} ${chart.tooltipUnit || ""}`.trim();
+  return chart.tooltipUnit?.startsWith("%") ? `${number}${chart.tooltipUnit}` : `${number} ${chart.tooltipUnit || ""}`.trim();
 }
 
 function switchChartView(container, chart) {
-  const content = container.parentElement, controls = content.querySelector(".view-toggle");
+  const content = container.parentElement, controls = content.querySelector(".view-toggle") || content.querySelector(".chart-subtitle");
   const before = controls.getBoundingClientRect().top, scrollBefore = window.scrollY;
   const expandedHeight = [...content.querySelectorAll("details[open]")].reduce((sum, details) => sum + details.getBoundingClientRect().height - details.querySelector("summary").getBoundingClientRect().height, 0);
   content.viewHeight = Math.max(content.viewHeight || 0, content.getBoundingClientRect().height - expandedHeight);
@@ -984,7 +1142,7 @@ function switchChartView(container, chart) {
   content.style.minHeight = `${content.getBoundingClientRect().height}px`;
   drawChart(container, chart);
   applySavedTextEdits(content);
-  content.style.minHeight = `${content.viewHeight}px`;
+  content.style.minHeight = chart.compactRecords ? "" : `${content.viewHeight}px`;
   const restore = () => {
     if (content.isConnected) window.scrollTo({ top: scrollBefore + controls.getBoundingClientRect().top - before, behavior: "instant" });
   };
@@ -994,36 +1152,77 @@ function switchChartView(container, chart) {
   document.querySelector("#open-tracker").href = standaloneURL();
 }
 
+// Keys follow the existing title/subtitle convention. View-specific prose gets a
+// separate suffix so edits survive redraws without replacing another view's text.
+function chartTextKey(chart, field) {
+  return chart.textEditKey ? `${chart.textEditKey}:${field}` : "";
+}
+function chartEditableText(chart, field, value, tag = "p", className = "") {
+  const key = chartTextKey(chart, field);
+  return `<${tag}${className ? ` class="${escapeHTML(className)}"` : ""}${key ? ` data-editable-key="${escapeHTML(key)}"` : ""}>${escapeHTML(value)}</${tag}>`;
+}
+function chartExplanationMarkup(chart) {
+  return (chart.explanations || []).map((item, index) => `<section>${chartEditableText(chart, `explanation:${index}:title`, item.title, "h4")}${chartEditableText(chart, `explanation:${index}:body`, item.body)}</section>`).join("");
+}
+
 function drawChart(container, chart) {
   hideTooltip();
   container.chartConfig = chart;
+  if (container.recordKind !== chart.recordKind) { container.recordsOpen = false; container.recordSelection = null; container.recordKind = chart.recordKind; }
   if (chart.usdaFilter) chart = filteredUSDAChart(chart);
+  container.chartConfig = chart;
   renderUSDAFilter(container, chart);
   container.parentElement.querySelector(".chart-compare")?.remove();
   container.replaceChildren();
   const card = container.closest(".chart-card");
-  chart = { ...chart, title: chart.title || card.querySelector("h3")?.textContent || chart.yLabel || "Chart" };
+  chart = { ...chart, textEditKey: `topic:${ACTIVE_TOPIC}:chart:${container.dataset.chart}${chart.id ? `:view:${encodeURIComponent(chart.id)}` : ""}`, title: chart.title || card.querySelector("h3")?.textContent || chart.yLabel || "Chart" };
   card.querySelector(".chart-subtitle").textContent = chart.subtitle || "";
   card.querySelector(".source-disclosure").hidden = !chart.source;
-  card.querySelector(".source-line").innerHTML = chart.source || "";
+  card.querySelector(".source-line").innerHTML = (chart.source || "") + (chart.compactRecords ? `<div class="chart-explainer">${chartExplanationMarkup(chart)}</div>` : "");
+  card.querySelector(".source-disclosure > summary").textContent = chart.compactRecords ? "Sources and methods" : "Sources";
   const summary = card.querySelector(".chart-card-content > .series-summary");
   summary.replaceChildren();
   card.querySelector(".chart-methods")?.remove();
-  card.querySelector(".chart-explainer")?.remove();
   card.querySelector(".crop-breakdown")?.remove();
+  card.querySelector(".plant-records")?.remove();
+  card.querySelector(".record-launch")?.remove();
+  card.querySelector(".series-focus-controls")?.remove();
+  card.querySelector(".series-breakdown-legend")?.remove();
+  if (chart.type === 'livestock-studies') {
+    container.innerHTML = `<div class="livestock-study-controls">${changeToggle()}</div><div class="product-bar-sort-row"><span></span><div class="product-bar-axis" aria-label="Change from zero"></div>${studySortHeader()}<span></span></div><div class="product-bars"></div><p class="livestock-study-note">Equivalent compound annual change between each study’s endpoints. Choose Total to see the full-period change; select a row’s details for values, units and sources. These are within-study comparisons, not comparable absolute footprints.</p>`;
+    container.querySelector('.product-bars').innerHTML = studyBarRows(chart.metric);
+    container.querySelector('.livestock-study-note').textContent = CHANGE_MODE === 'annual'
+      ? 'Equivalent compound annual change between each study’s endpoints. Choose Total to see the full-period change; select a row’s details for values, units and sources. These are within-study comparisons, not comparable absolute footprints.'
+      : 'Total change between each study’s endpoints. Period lengths differ; choose Per year for equivalent compound rates. Select a row’s details for values, units and sources. These are within-study comparisons, not comparable absolute footprints.';
+    const studyNote = container.querySelector(".livestock-study-note");
+    studyNote.dataset.editableKey = chartTextKey(chart, `study-note:${CHANGE_MODE}`);
+    applySavedTextEdits(card);
+    sendHeight();
+    return;
+  }
   if (!chart.series?.length || chart.series.some(series => !series.values?.length)) {
     container.innerHTML = chart.usdaFilter ? '<p class="chart-empty">Select at least one review pathway to see records.</p>' : '<p class="chart-empty">Detailed data are unavailable.</p>';
     return;
   }
   const fullChart = chart;
+  if (chart.drilldownOnly) {
+    // R&D opens informative breakdowns only. The original leaf isolation path
+    // remains below for other topics and can be restored by removing this flag.
+    container.focusedChild = null;
+    if (!chart.series.some(series => series.name === container.focusedSeries && hasInformativeBreakdown(series))) container.focusedSeries = null;
+  }
   if (!chart.series.some(series => series.name === container.focusedSeries)) container.focusedSeries = null;
   const parentSeries = chart.series.find(series => series.name === container.focusedSeries);
+  if (!parentSeries) container.focusedChild = null;
   if (parentSeries) {
     const children = parentSeries.breakdownSeries;
+    const childYears = (children || [parentSeries]).flatMap(series => series.values.map(point => point.year));
     if (!children?.some(series => series.name === container.focusedChild)) container.focusedChild = null;
-    chart = { ...chart, series: children ? children.filter(series => !container.focusedChild || series.name === container.focusedChild) : [parentSeries], overlaySeries: [], totalLabel: null, isolatedSeries: true, subtitle: children ? `${parentSeries.name} · ${container.focusedChild || "agency breakdown"}, ${parentSeries.values[0].year}–${parentSeries.values.at(-1).year}` : chart.subtitle };
+    chart = { ...chart, decimals: children ? parentSeries.breakdownDecimals ?? chart.decimals : chart.decimals, summaryMode: children ? parentSeries.breakdownSummaryMode || chart.summaryMode : chart.summaryMode, series: children ? children.filter(series => !container.focusedChild || series.name === container.focusedChild) : [parentSeries], overlaySeries: [], totalLabel: null, isolatedSeries: true, subtitle: children ? `${parentSeries.name} · ${container.focusedChild || parentSeries.breakdownLabel || "agency breakdown"}, ${Math.min(...childYears)}–${Math.max(...childYears)}` : chart.subtitle };
   }
-  const axisUnit = document.createElement("p"); axisUnit.className = "chart-axis-unit"; axisUnit.textContent = chart.yLabel; container.append(axisUnit);
+  const axisUnit = document.createElement("p"); axisUnit.className = "chart-axis-unit"; axisUnit.textContent = chart.yLabel;
+  if (chart.dualAxis) { axisUnit.classList.add("dual-axis-units"); axisUnit.innerHTML = `<span style="color:#0d4459">R&D · $bn (2024)</span><span style="color:${chart.rightAxis.color}">TFP growth · %/year</span>`; }
+  container.append(axisUnit);
   if (chart.type === "stacked") drawStackedAreaChart(container, chart);
   else if (chart.type === "bar") drawBarChart(container, chart);
   else drawLineChart(container, chart);
@@ -1040,43 +1239,145 @@ function otherCropCounts(chart, year) {
 }
 
 function chartPointTooltip(chart, series, point) {
-  let html = `<strong>${escapeHTML(series.name || "Five-survey mean")}</strong><br>${point.year}: ${point.approximate ? "≈" : ""}${formatValue(chart, point.value)}${point.source ? `<br>${escapeHTML(point.source)}` : ""}`;
-  if (series.breakdownSeries) html += "<br><small>Click to explore the agency breakdown.</small>";
+  let html = `<strong>${escapeHTML(series.name || "Five-survey mean")}</strong><br>${point.year}: ${point.approximate ? "≈" : ""}${formatValue(chart, point.value, series)}${point.source && !chart.hideTooltipSource ? `<br>${escapeHTML(point.source)}` : ""}`;
+  if (point.rawValue !== undefined) html += `<br>${format(point.rawValue, 4)} ${escapeHTML(point.rawUnit)}`;
+  if (series.breakdownSeries && (!chart.drilldownOnly || hasInformativeBreakdown(series))) html += `<br><small>Click to explore the ${escapeHTML(series.breakdownLabel || "agency breakdown")}.</small>`;
+  if (chart.recordRows && series.name !== "Other crops") html += "<br><small>Select once to isolate this series; select it again at a year to view records.</small>";
   if (chart.otherCrops && series.name === "Other crops") {
     const crops = otherCropCounts(chart, point.year), leading = crops.slice(0, 5);
-    html += `<div class="tooltip-crops">${leading.map(crop => `${escapeHTML(crop.name)}: ${crop.value}`).join("<br>")}${crops.length > 5 ? `<br>Remaining crops: ${crops.slice(5).reduce((sum, crop) => sum + crop.value, 0)}` : ""}</div><small>Select this area or “Explore other crops” for the full breakdown.</small>`;
+    html += `<div class="tooltip-crops">${leading.map(crop => `${escapeHTML(crop.name)}: ${crop.value}`).join("<br>")}${crops.length > 5 ? `<br>Remaining crops: ${crops.slice(5).reduce((sum, crop) => sum + crop.value, 0)}` : ""}</div><small>Select this area or its legend label to see each crop separately.</small>`;
   }
   return html;
 }
 
 function openOtherCropBreakdown(container, year) {
+  const chart = container.chartConfig;
+  if (chart.compactRecords && chart.series.find(series => series.name === "Other crops")?.breakdownSeries) {
+    container.focusedSeries = "Other crops";
+    container.focusedChild = null;
+    container.recordsOpen = false;
+    container.recordFocusYear = year;
+    drawChart(container, chart);
+    sendHeight();
+    return;
+  }
   const details = container.parentElement.querySelector(".crop-breakdown");
   if (!details) return;
   details.updateYear(year);
-  details.open = true;
+  if (details.tagName === "DETAILS") details.open = true; else details.hidden = false;
   sendHeight();
+}
+
+function openPlantRecords(container, crop, year) {
+  let details = container.parentElement.querySelector(".plant-records");
+  if (!details) return;
+  container.recordsOpen = true;
+  const config = container.chartConfig;
+  if (config.compactRecords) {
+    const focused = config.series.some(series => series.name === crop) ? crop : "Other crops";
+    if (container.focusedSeries !== focused) {
+      container.recordSelection = { kind: config.recordKind, crop, year };
+      container.focusedSeries = focused;
+      container.focusedChild = focused === "Other crops" ? crop : null;
+      container.recordFocusYear = year;
+      drawChart(container, config);
+      details = container.parentElement.querySelector(".plant-records");
+    }
+  }
+  if (details.tagName === "DETAILS") details.open = true; else details.hidden = false;
+  details.selectRecords(crop, year);
+  details.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  sendHeight();
+}
+
+function renderPlantRecords(container, chart) {
+  const details = document.createElement(chart.compactRecords ? "section" : "details"); details.className = "plant-records";
+  if (chart.compactRecords) details.hidden = !container.recordsOpen;
+  const rows = [...chart.recordRows].sort((a, b) => b.completed.localeCompare(a.completed) || a.crop.localeCompare(b.crop) || String(a.bnf || a.vpm || a.id).localeCompare(String(b.bnf || b.vpm || b.id), undefined, { numeric: true }));
+  const crops = [...new Set(rows.map(row => row.crop))].sort();
+  const years = chart.series[0].values.map(point => point.year);
+  const isMeeting = chart.recordKind === "meetings";
+  const isConsultation = chart.recordKind === "consultations";
+  const agency = chart.recordAgency || "FDA";
+  const groupLabel = chart.recordGroupLabel || "Crop";
+  const panelTitle = chart.recordPanel || "Plant lines";
+  const columns = chart.recordColumns || ["FDA letter", "Plant line / designation", "Trait", "Developer", "FDA file"];
+  const recordLink = row => row.bnf ? `BNF ${row.bnf}` : row.vpm ? `VPM ${row.vpm}` : row.id;
+  const entryLabel = isConsultation ? "plant-line" : "record";
+  const renderRow = row => `<tr data-record-crop="${escapeHTML(row.crop)}" data-record-year="${row.completed.slice(0, 4)}"><td>${escapeHTML(row.completed)}</td>${chart.compactRecords ? "" : `<td>${escapeHTML(row.crop)}</td>`}<td>${escapeHTML(row.designation)}</td><td>${escapeHTML(row.traits)}</td><td>${escapeHTML(row.developer)}</td><td><a href="${escapeHTML(row.source_url)}" target="_blank" rel="noopener">${escapeHTML(recordLink(row))}</a></td></tr>`;
+  details.innerHTML = `${chart.compactRecords ? `<div class="record-panel-heading"><h4>${escapeHTML(panelTitle)}</h4><button type="button" class="record-close">Hide records</button></div>` : `<summary>${isMeeting ? "Explore premarket meeting records" : "Explore plant-line records"}</summary>`}${chart.compactRecords ? "" : `<p>${isMeeting ? "Published meeting entries for the selected crop are shown below, across all years." : "Plant-line entries for the selected crop are shown below, across all years; a consultation can cover several lines, and source repetitions are retained."} Records from the selected year are highlighted. These records are not product approvals.</p>`}<div class="record-controls"><label>${escapeHTML(groupLabel)}<select aria-label="${escapeHTML(groupLabel)} for records" data-record-group>${crops.map(crop => `<option>${escapeHTML(crop)}</option>`).join("")}</select></label><label>${chart.compactRecords ? "Jump to year" : isMeeting ? "Meeting year" : "Completion year"}<select aria-label="Year for records">${years.map(year => `<option>${year}</option>`).join("")}</select></label></div><p class="record-selection-status" role="status"></p><div class="record-table-scroll" tabindex="0" aria-label="${agency} records for the selected ${groupLabel.toLowerCase()}; scroll to explore all years"><table class="${chart.compactRecords ? "record-table-compact" : ""} record-table-${agency.toLowerCase()}"><caption>Published FDA ${isMeeting ? "premarket meeting entries" : "plant-line consultation entries"}</caption><thead><tr>${columns.map((name, i) => `<th scope="col">${escapeHTML(name)}</th>${i === 0 && !chart.compactRecords ? '<th scope="col">Crop</th>' : ''}`).join("")}</tr></thead><tbody></tbody></table></div>`;
+  const cropSelect = details.querySelector('[data-record-group]');
+  const yearSelect = details.querySelector('[aria-label="Year for records"]');
+  const scroller = details.querySelector(".record-table-scroll");
+  details.selectRecords = (crop, year) => {
+    cropSelect.value = crops.includes(crop) ? crop : crops[0];
+    yearSelect.value = years.includes(year) ? String(year) : String(years.at(-1));
+    container.recordSelection = { kind: chart.recordKind, crop: cropSelect.value, year: Number(yearSelect.value) };
+    const filteredRows = rows.filter(row => row.crop === cropSelect.value);
+    details.querySelector("tbody").innerHTML = filteredRows.map(renderRow).join("");
+    const allRows = [...details.querySelectorAll("tbody tr")];
+    const matching = allRows.filter(row => row.dataset.recordYear === yearSelect.value);
+    allRows.forEach(row => row.classList.toggle("record-selected", matching.includes(row)));
+    scroller.querySelector("caption").textContent = `${cropSelect.value} · all years, newest first`;
+    const selectedFiles = new Set(rows.filter(row => row.crop === cropSelect.value && row.completed.slice(0, 4) === yearSelect.value).map(row => row.bnf || row.vpm || row.id));
+    details.querySelector(".record-selection-status").textContent = chart.compactRecords
+      ? `${cropSelect.value} · ${yearSelect.value}: ${matching.length} ${entryLabel} ${matching.length === 1 ? "entry" : "entries"}${isConsultation ? ` in ${selectedFiles.size} consultation ${selectedFiles.size === 1 ? "file" : "files"}` : ""}. ${matching.length ? "Highlighted below." : "No entries this year; showing the nearest listed year."}`
+      : `${cropSelect.value} · ${yearSelect.value}: ${matching.length} listed entries. ${matching.length ? "Highlighted below; all years for this crop remain available." : "No entries this year; showing the nearest listed year."}`;
+    const target = matching[0] || allRows.filter(row => row.dataset.recordCrop === cropSelect.value).sort((a, b) => Math.abs(Number(a.dataset.recordYear) - Number(yearSelect.value)) - Math.abs(Number(b.dataset.recordYear) - Number(yearSelect.value)))[0];
+    requestAnimationFrame(() => {
+      if ((details.tagName === "DETAILS" ? details.open : !details.hidden) && target && target.isConnected) scroller.scrollTop += target.getBoundingClientRect().top - scroller.getBoundingClientRect().top - scroller.clientHeight / 2 + target.clientHeight / 2;
+    });
+  };
+  const update = () => { details.selectRecords(cropSelect.value, Number(yearSelect.value)); sendHeight(); };
+  cropSelect.addEventListener("change", () => {
+    update();
+    if (chart.compactRecords) {
+      container.recordsOpen = true;
+      container.recordFocusYear = Number(yearSelect.value);
+      container.focusedSeries = container.chartConfig.series.some(series => series.name === cropSelect.value) ? cropSelect.value : "Other crops";
+      container.focusedChild = container.focusedSeries === "Other crops" ? cropSelect.value : null;
+      drawChart(container, container.chartConfig);
+      container.parentElement.querySelector('[data-record-group]')?.focus({ preventScroll: true });
+    }
+  });
+  yearSelect.addEventListener("change", () => { container.recordFocusYear = Number(yearSelect.value); update(); });
+  if (!chart.compactRecords) details.addEventListener("toggle", () => { if (details.open) update(); sendHeight(); });
+  details.querySelector(".record-close")?.addEventListener("click", () => { container.recordsOpen = false; details.hidden = true; container.parentElement.querySelector(".record-launch")?.focus({ preventScroll: true }); sendHeight(); });
+  container.parentElement.querySelector(":scope > .series-summary").after(details);
+  const previous = container.recordSelection;
+  const focusedCrop = crops.includes(container.focusedChild) ? container.focusedChild : crops.includes(container.focusedSeries) ? container.focusedSeries : null;
+  details.selectRecords(focusedCrop || (previous?.kind === chart.recordKind ? previous.crop : crops.includes("Corn") ? "Corn" : crops[0]), focusedCrop ? container.recordFocusYear ?? years.at(-1) : previous?.kind === chart.recordKind ? previous.year : years.at(-1));
+  if (chart.compactRecords) {
+    const launch = document.createElement("button"); launch.type = "button"; launch.className = "record-launch"; launch.textContent = `Browse ${isConsultation ? "plant lines" : "records"}`;
+    launch.addEventListener("click", () => openPlantRecords(container, cropSelect.value, Number(yearSelect.value)));
+    details.before(launch);
+  }
 }
 
 function renderChartContext(container, chart) {
   const summary = container.parentElement.querySelector(":scope > .series-summary");
-  if (chart.explanations) {
+  if (chart.explanations && !chart.compactRecords) {
     const explanation = document.createElement("details"); explanation.className = "chart-methods";
-    explanation.innerHTML = `<summary>${escapeHTML(chart.explanationTitle || "About these records")}</summary><div class="chart-explainer">${chart.explanations.map(item => `<section><h4>${escapeHTML(item.title)}</h4><p>${escapeHTML(item.body)}</p></section>`).join("")}</div>`;
+    explanation.innerHTML = `<summary>${escapeHTML(chart.explanationTitle || "About these records")}</summary><div class="chart-explainer">${chartExplanationMarkup(chart)}</div>`;
     explanation.addEventListener("toggle", sendHeight);
     summary.after(explanation);
   }
-  if (!chart.otherCrops) return;
+  if (chart.recordRows) renderPlantRecords(container, chart);
+  if (!chart.otherCrops || chart.compactRecords) return;
   const years = chart.series[0].values.map(point => point.year);
-  const details = document.createElement("details"); details.className = "crop-breakdown";
-  details.innerHTML = `<summary>Explore other crops</summary><label>Cumulative decisions through <select aria-label="Year for other crops">${years.map(year => `<option value="${year}">${year}</option>`).join("")}</select></label><p class="crop-breakdown-note"></p><ul class="crop-counts"></ul>`;
+  const details = document.createElement(chart.compactRecords ? "section" : "details"); details.className = "crop-breakdown";
+  if (chart.compactRecords) details.hidden = true;
+  details.innerHTML = `${chart.compactRecords ? `<div class="record-panel-heading"><h4>Other crops</h4><button type="button" class="crop-close">Hide breakdown</button></div>` : "<summary>Explore other crops</summary>"}<label>${chart.recordKind ? "Cumulative records" : "Cumulative decisions"} through <select aria-label="Year for other crops">${years.map(year => `<option value="${year}">${year}</option>`).join("")}</select></label><p class="crop-breakdown-note"></p><ul class="crop-counts"></ul>`;
   const select = details.querySelector("select");
   details.updateYear = year => {
     select.value = String(year);
     const crops = otherCropCounts(chart, year), total = crops.reduce((sum, crop) => sum + crop.value, 0);
-    details.querySelector(".crop-breakdown-note").textContent = `${total} records across ${crops.length} crops${year === 2026 ? "; 2026 through October 2" : ""}. Each crop is shown separately below.`;
-    details.querySelector("ul").innerHTML = crops.map(crop => `<li><span>${escapeHTML(crop.name)}</span><strong>${crop.value}</strong></li>`).join("");
+    details.querySelector(".crop-breakdown-note").textContent = `${total} ${chart.recordKind === "consultations" ? "consultations" : "records"} across ${crops.length} crops${year === 2026 ? (chart.recordKind === "consultations" ? "; partial 2026, letters through March 24" : chart.recordKind === "meetings" ? "; partial 2026, meetings through July 9" : "; 2026 through October 2") : ""}. ${chart.recordRows ? "Select a crop to see its records in this year." : "Each crop is shown separately below."}`;
+    details.querySelector("ul").innerHTML = crops.map(crop => `<li>${chart.recordRows ? `<button type="button" data-record-crop="${escapeHTML(crop.name)}">${escapeHTML(crop.name)}</button>` : `<span>${escapeHTML(crop.name)}</span>`}<strong>${crop.value}</strong></li>`).join("");
   };
+  details.addEventListener("click", event => { const button = event.target.closest("[data-record-crop]"); if (button) { openPlantRecords(container, button.dataset.recordCrop, Number(select.value)); if (chart.compactRecords) details.hidden = true; } });
   select.addEventListener("change", () => { details.updateYear(Number(select.value)); sendHeight(); });
+  details.querySelector(".crop-close")?.addEventListener("click", () => { details.hidden = true; container.parentElement.querySelector(".other-crops-button")?.focus({ preventScroll: true }); sendHeight(); });
   details.addEventListener("toggle", sendHeight);
   details.updateYear(years.at(-1));
   summary.after(details);
@@ -1099,7 +1400,7 @@ function drawBarChart(container, chart) {
   svg.setAttribute("role", "img");
   svg.setAttribute("aria-label", `${chart.title}. ${chart.subtitle || ""}`);
   const description = document.createElementNS("http://www.w3.org/2000/svg", "desc");
-  description.textContent = chart.rollingSeries ? `Bars show completed annual surveys, the overlaid line averages the last five measured summers, and the dashed line shows the ${chart.goalLabel || "goal"}. Missing survey years have no bar. Focus a bar and use the arrow keys to explore measured years.` : "One bar per completed annual survey. Missing survey years have no bar. Focus a bar and use the arrow keys to explore measured years.";
+  description.textContent = chart.barDescription || (chart.rollingSeries ? `Bars show completed annual surveys, the overlaid line averages the last five measured summers, and the dashed line shows the ${chart.goalLabel || "goal"}. Missing survey years have no bar. Focus a bar and use the arrow keys to explore measured years.` : "One bar per completed annual survey. Missing survey years have no bar. Focus a bar and use the arrow keys to explore measured years.");
   svg.append(description);
   (chart.yTicks || yScale.ticks).forEach(tick => {
     svg.append(line(margin.left, y(tick), width - margin.right, y(tick), "grid-line"));
@@ -1172,10 +1473,10 @@ function drawBarChart(container, chart) {
 function drawLineChart(container, chart) {
   const width = Math.max(240, Math.round(container.getBoundingClientRect().width || 720));
   const height = width < 380 ? 280 : 320;
-  const margin = { top: 18, right: chart.series.length > 1 ? 24 : 16, bottom: 34, left: width < 380 ? 52 : 64 };
+  const margin = { top: 18, right: chart.dualAxis ? (width < 380 ? 48 : 64) : chart.series.length > 1 ? 24 : 16, bottom: 34, left: width < 380 ? 52 : 64 };
   const all = chart.series.flatMap(s => s.values);
-  const allYears = all.map(d => d.year), values = all.map(d => d.value);
-  const xMin = Math.min(...allYears), xMax = Math.max(...allYears);
+  const allYears = all.map(d => d.year), values = chart.series.filter(series => series.axis !== "right").flatMap(series => series.values.map(point => point.value));
+  const xMin = chart.xMin ?? Math.min(...allYears), xMax = chart.xMax ?? Math.max(...allYears);
   const yScale = niceScale(Math.max(...values, 1));
   const yMin = chart.yMin ?? 0;
   const yMax = chart.yMax ?? yScale.max;
@@ -1190,7 +1491,17 @@ function drawLineChart(container, chart) {
   xTicks.forEach(tick => { svg.append(line(x(tick), height - margin.bottom, x(tick), height - margin.bottom + 5, "axis-line")); svg.append(text(x(tick), height - margin.bottom + 19, tick, "tick-label", "middle")); });
   svg.append(line(margin.left, margin.top, margin.left, height - margin.bottom, "axis-line")); svg.append(line(margin.left, height - margin.bottom, width - margin.right, height - margin.bottom, "axis-line"));
   const axisLabel = text(15, (height - margin.bottom + margin.top) / 2, chart.yLabel, "axis-label", "middle"); axisLabel.setAttribute("transform", `rotate(-90 15 ${(height - margin.bottom + margin.top) / 2})`); svg.append(axisLabel);
+  const primaryY = y;
+  const right = chart.rightAxis;
+  const rightY = value => height - margin.bottom - (value - right.min) / (right.max - right.min) * (height - margin.top - margin.bottom);
+  if (chart.dualAxis) {
+    svg.append(line(width - margin.right, margin.top, width - margin.right, height - margin.bottom, "axis-line"));
+    right.ticks.forEach(tick => { const label = text(width - margin.right + 8, rightY(tick) + 4, `${axisNumber(tick, right.ticks)}%`, "tick-label right-axis-tick"); label.setAttribute("fill", right.color); label.style.fill = right.color; svg.append(label); });
+    const label = text(width - 12, (height - margin.bottom + margin.top) / 2, right.label, "axis-label", "middle"); label.setAttribute("transform", `rotate(90 ${width - 12} ${(height - margin.bottom + margin.top) / 2})`); label.style.fill = right.color; svg.append(label);
+    axisLabel.style.fill = "#0d4459";
+  }
   chart.series.forEach((series, index) => {
+    const y = series.axis === "right" ? rightY : primaryY;
     const color = series.color || COLORS[index % COLORS.length]; const sorted = [...series.values].sort((a, b) => a.year - b.year);
     const appendPath = (points, dasharray) => {
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -1213,17 +1524,22 @@ function drawLineChart(container, chart) {
     } else if (!series.pointsOnly) appendPath(sorted, series.dasharray);
     const circles = [];
     sorted.forEach((d, pointIndex) => {
-      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(d.year)); circle.setAttribute("cy", y(d.value)); circle.setAttribute("r", series.pointsOnly ? 5 : (chart.pointRadius ?? 4.2)); circle.setAttribute("fill", color); circle.setAttribute("class", `data-point line-point${series.pointsOnly || series.breakOnMissingYear ? " always-visible" : ""}`); circle.setAttribute("tabindex", pointIndex === sorted.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${d.year}: ${formatValue(chart, d.value)}`);
-      const qualifier = d.approximate ? "≈" : "";
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(d.year)); circle.setAttribute("cy", y(d.value)); circle.setAttribute("r", series.pointsOnly ? 5 : (chart.pointRadius ?? 4.2)); circle.setAttribute("fill", color); circle.setAttribute("class", `data-point line-point${series.pointsOnly || series.breakOnMissingYear || chart.showAllPoints ? " always-visible" : ""}`); circle.setAttribute("tabindex", pointIndex === sorted.length - 1 ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${d.year}: ${formatValue(chart, d.value, series)}`);
       circle.chartDatum = { series, point: d };
-      const source = d.source ? `<br>${escapeHTML(d.source)}` : "";
-      circle.setAttribute("aria-label", `${series.name}, ${d.year}: ${d.approximate ? "approximately " : ""}${formatValue(chart, d.value)}${d.source ? `, ${d.source}` : ""}`);
-      const show = event => showTooltip(event, `<strong>${series.name}</strong><br>${d.year}: ${qualifier}${formatValue(chart, d.value)}${source}`); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
+      circle.setAttribute("aria-label", `${series.name}, ${d.year}: ${d.approximate ? "approximately " : ""}${formatValue(chart, d.value, series)}${d.rawValue !== undefined ? `, ${format(d.rawValue,4)} ${d.rawUnit}` : ''}${d.source ? `, ${d.source}` : ""}`);
+      const show = event => showTooltip(event, chartPointTooltip(chart, series, d)); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
       circle.addEventListener("keydown", event => { if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return; event.preventDefault(); const next = Math.max(0, Math.min(circles.length - 1, pointIndex + (event.key === 'ArrowRight' ? 1 : -1))); circles[next]?.focus(); });
       circles.push(circle);
     });
   });
   container.append(svg); renderSeriesSummary(container.parentElement.querySelector(":scope > .series-summary"), chart);
+}
+
+function integerCountScale(maxValue) {
+  const scale = niceScale(Math.max(1, maxValue));
+  const step = Math.max(1, Math.ceil(scale.ticks[1] - scale.ticks[0]));
+  const count = Math.max(1, Math.ceil(maxValue / step));
+  return { max: step * count, ticks: Array.from({ length: count + 1 }, (_, index) => step * index) };
 }
 
 function drawStackedAreaChart(container, chart) {
@@ -1238,7 +1554,8 @@ function drawStackedAreaChart(container, chart) {
   const overlayPoints = overlays.flatMap(series => series.values);
   const positiveTotals = years.map(year => maps.reduce((sum, map) => sum + Math.max(0, map.get(year) ?? 0), 0));
   const negativeTotals = years.map(year => maps.reduce((sum, map) => sum + Math.min(0, map.get(year) ?? 0), 0));
-  const xMin = Math.min(years[0], ...overlayPoints.map(d => d.year)), xMax = Math.max(years.at(-1), ...overlayPoints.map(d => d.year)), yScale = niceScale(Math.max(...positiveTotals, ...overlayPoints.map(d => d.value), chart.isolatedSeries ? 0.001 : 1)), yMax = yScale.max;
+  const xMin = chart.isolatedSeries ? years[0] : chart.xMin ?? Math.min(years[0], ...overlayPoints.map(d => d.year)), xMax = chart.isolatedSeries ? years.at(-1) : chart.xMax ?? Math.max(years.at(-1), ...overlayPoints.map(d => d.year));
+  const yScale = !chart.isolatedSeries && chart.yTicks ? { max: chart.yMax, ticks: chart.yTicks } : (chart.integerTicks ? integerCountScale : niceScale)(chart.isolatedSeries ? Math.max(...positiveTotals, ...overlayPoints.map(d => d.value), 0.001) : chart.yMax ?? Math.max(...positiveTotals, ...overlayPoints.map(d => d.value), 1)), yMax = yScale.max;
   const step = yScale.ticks[1] - yScale.ticks[0];
   const yMin = Math.min(...negativeTotals) < 0 ? -Math.ceil(Math.abs(Math.min(...negativeTotals)) / (step / 2)) * (step / 2) : 0;
   const x = year => margin.left + (year - xMin) / (xMax - xMin || 1) * (width - margin.left - margin.right);
@@ -1278,7 +1595,9 @@ function drawStackedAreaChart(container, chart) {
         const topPath = coveredIndices.map((i, j) => `${j ? "L" : "M"}${x(areaYears[i]).toFixed(2)},${y(upper[i]).toFixed(2)}`).join(" ");
         const bottomPath = [...coveredIndices].reverse().map(i => `L${x(areaYears[i]).toFixed(2)},${y(lower[i]).toFixed(2)}`).join(" ");
         const area = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        area.setAttribute("d", `${topPath} ${bottomPath} Z`); area.setAttribute("class", "area-path"); area.setAttribute("fill", series.color || COLORS[index % COLORS.length]); area.chartSeries = series; svg.append(area);
+        area.setAttribute("d", `${topPath} ${bottomPath} Z`); area.setAttribute("class", "area-path"); area.setAttribute("fill", series.color || COLORS[index % COLORS.length]);
+        if (chart.drilldownOnly && !hasInformativeBreakdown(series)) area.style.cursor = "crosshair";
+        area.chartSeries = series; svg.append(area);
       }
       if (sign > 0) positiveBase = upper; else negativeBase = upper;
     });
@@ -1289,11 +1608,16 @@ function drawStackedAreaChart(container, chart) {
       const qualifier = point.approximate ? "≈" : "";
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", x(year)); circle.setAttribute("cy", y(positions.get(year))); circle.setAttribute("r", 4); circle.setAttribute("fill", series.color || COLORS[index % COLORS.length]); circle.setAttribute("class", "data-point area-point"); circle.setAttribute("tabindex", year === series.values.at(-1).year ? "0" : "-1"); circle.setAttribute("aria-label", `${series.name}, ${year}: ${qualifier}${formatValue(chart, values[i])}`);
       circle.chartDatum = { series, point };
+      // Zero-height categories share another crop's boundary. Keep their keyboard
+      // access, but never let their invisible pointer target intercept that crop.
+      if (chart.recordRows && chart.series.length > 1 && point.value === 0) circle.style.pointerEvents = "none";
       const show = event => showTooltip(event, chartPointTooltip(chart, series, point)); circle.addEventListener("pointerenter", show); circle.addEventListener("pointermove", show); circle.addEventListener("focus", show); circle.addEventListener("pointerleave", hideTooltip); circle.addEventListener("blur", hideTooltip); svg.append(circle);
       circle.addEventListener("keydown", event => { if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return; event.preventDefault(); const next = Math.max(0, Math.min(circles.length - 1, circles.indexOf(circle) + (event.key === 'ArrowRight' ? 1 : -1))); circles[next]?.focus(); });
       circles.push(circle);
     });
   });
+  // Keep every annual hit point above later stacked areas, so its crop is clickable.
+  svg.append(...svg.querySelectorAll(".area-point"));
   overlays.forEach(series => {
     const sorted = [...series.values].sort((a, b) => a.year - b.year);
     if (!series.pointsOnly) {
@@ -1333,17 +1657,30 @@ function attachChartInteractions(container, chart) {
     rect: mark.tagName === "rect" ? { x: Number(mark.getAttribute("x")), y: Number(mark.getAttribute("y")), width: Number(mark.getAttribute("width")), height: Number(mark.getAttribute("height")) } : null
   }));
   const candidates = [...new Set(records.map(record => record.series))].filter(series => series.values.length > 1);
+  let totalRecords = [];
+  if (chart.type === "stacked" && chart.series.length > 1) {
+    const maps = chart.series.map(series => new Map(series.values.map(point => [point.year, point])));
+    const years = [...maps[0].keys()].filter(year => maps.every(map => map.has(year))).sort((a,b) => a-b);
+    const total = { name: "Total (shown areas)", values: years.map(year => ({ year,
+      value: maps.reduce((sum, map) => sum + map.get(year).value, 0),
+      approximate: maps.some(map => map.get(year).approximate) })) };
+    if (years.length > 1) {
+      candidates.unshift(total);
+      totalRecords = total.values.map(point => ({ series: total, point, x: records.find(record => record.point.year === point.year).x, y: 18, aggregate: true }));
+    }
+  }
   const previous = container.parentElement.querySelector(".chart-compare");
   previous?.remove();
   if (!candidates.length) return;
   const name = series => series.name || "Five-survey mean";
   const comparison = document.createElement("div"); comparison.className = "chart-compare";
   comparison.innerHTML = `<details><summary>Compare dates</summary><div class="compare-controls"><label>Series<select class="compare-series" aria-label="Series to compare">${candidates.map((series, i) => `<option value="${i}">${escapeHTML(name(series))}</option>`).join("")}</select></label><label>From<select class="compare-from" aria-label="Start year"></select></label><label>To<select class="compare-to" aria-label="End year"></select></label><button type="button" class="compare-clear">Clear</button></div><p class="compare-result" role="status" aria-live="polite"></p></details>`;
+  comparison.hidden = Boolean(chart.compactRecords);
   container.after(comparison);
   const details = comparison.querySelector("details"), select = comparison.querySelector(".compare-series"), from = comparison.querySelector(".compare-from"), to = comparison.querySelector(".compare-to"), result = comparison.querySelector(".compare-result");
   const selection = document.createElementNS("http://www.w3.org/2000/svg", "g"); selection.setAttribute("class", "range-selection"); selection.setAttribute("aria-hidden", "true"); svg.append(selection);
   let activeSeries = candidates[0], drag = null, hovered = null;
-  const pointsFor = series => records.filter(record => record.series === series).sort((a, b) => a.point.year - b.point.year);
+  const pointsFor = series => [...records, ...totalRecords].filter(record => record.series === series).sort((a, b) => a.point.year - b.point.year);
   const fillYears = () => {
     const points = pointsFor(activeSeries);
     const options = points.map(record => `<option value="${record.point.year}">${record.point.year}</option>`).join("");
@@ -1358,6 +1695,7 @@ function attachChartInteractions(container, chart) {
     Object.entries({ x: Math.min(a.x, b.x), y: 18, width: Math.abs(a.x - b.x), height: height - 52, class: "range-band" }).forEach(([key, value]) => band.setAttribute(key, value)); selection.append(band);
     [a, b].forEach(record => {
       selection.append(line(record.x, 18, record.x, height - 34, "range-boundary"));
+      if (record.aggregate) return;
       const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       Object.entries({ cx: record.x, cy: record.y, r: 5, class: "range-endpoint" }).forEach(([key, value]) => dot.setAttribute(key, value)); selection.append(dot);
     });
@@ -1372,10 +1710,11 @@ function attachChartInteractions(container, chart) {
     const boundary = activeSeries.definitionBreak || activeSeries.sourceBoundary;
     const caution = boundary && first.year <= boundary.earlierEnd && last.year >= boundary.laterStart ? " Definitions or sources change within this range." : "";
     const approximate = first.approximate || last.approximate ? " Approximate endpoint values." : "";
-    const rescission = chart.type === "stacked" && name(activeSeries) === "Research facilities" && first.year <= 2011 && last.year >= 2011 ? " Includes the 2011 rescission of prior-year funding." : "";
+    const rescissionYears = name(activeSeries).toLowerCase().includes("facilities") ? activeSeries.values.filter(point => point.value < 0 && point.year >= first.year && point.year <= last.year).map(point => point.year) : [];
+    const rescission = rescissionYears.length ? ` Includes cancellation of prior authority in ${rescissionYears.join(", ")}.` : "";
     const percentagePoints = chart.tooltipUnit === "%" && first.year !== last.year ? ` (${format(last.value - first.value, 1)} percentage points)` : "";
-    const rangeDescription = chart.comparisonMode === "absolute" && first.year !== last.year ? `${format(last.value - first.value, 0)} ${chart.comparisonLabel || "additional records"}` : rangeChangeText(first, last);
-    result.innerHTML = `<strong>${escapeHTML(name(activeSeries))} · ${first.year}–${last.year}: ${rangeDescription}${percentagePoints}</strong><br>${first.approximate ? "≈" : ""}${formatValue(chart, first.value)} → ${last.approximate ? "≈" : ""}${formatValue(chart, last.value)}${caution || approximate || rescission ? `<br><span>${escapeHTML(caution + approximate + rescission)}</span>` : ""}`;
+    const rangeDescription = activeSeries.comparisonMode === "percentage-points" && first.year !== last.year ? `${format(last.value - first.value, 2)} percentage points` : chart.comparisonMode === "absolute" && first.year !== last.year ? `${format(last.value - first.value, 0)} ${chart.comparisonLabel || "additional records"}` : rangeChangeText(first, last);
+    result.innerHTML = `<strong>${escapeHTML(name(activeSeries))} · ${first.year}–${last.year}: ${rangeDescription}${percentagePoints}</strong><br>${first.approximate ? "≈" : ""}${formatValue(chart, first.value, activeSeries)} → ${last.approximate ? "≈" : ""}${formatValue(chart, last.value, activeSeries)}${caution || approximate || rescission ? `<br><span>${escapeHTML(caution + approximate + rescission)}</span>` : ""}`;
     drawSelection(a, b);
   };
   const local = event => {
@@ -1383,12 +1722,14 @@ function attachChartInteractions(container, chart) {
     return point.matrixTransform(svg.getScreenCTM().inverse());
   };
   const nearest = event => {
+    if (event.target.chartDatum) return records.find(record => record.mark === event.target) || null;
     const point = local(event), matrix = svg.getScreenCTM(), radius = 18 / Math.hypot(matrix.a, matrix.b);
     if ((chart.otherCrops && event.target.chartSeries?.name === "Other crops") || event.target.chartSeries) {
       return records.filter(record => record.series === event.target.chartSeries).reduce((best, record) => !best || Math.abs(record.x - point.x) < Math.abs(best.x - point.x) ? record : best, null);
     }
     let winner = null, distance = Infinity;
     records.forEach(record => {
+      if (chart.recordRows && chart.series.length > 1 && record.point.value === 0) return;
       const dx = record.rect ? Math.max(record.rect.x - point.x, 0, point.x - record.rect.x - record.rect.width) : record.x - point.x;
       const dy = record.rect ? Math.max(record.rect.y - point.y, 0, point.y - record.rect.y - record.rect.height) : record.y - point.y;
       const candidate = Math.hypot(dx, dy);
@@ -1411,6 +1752,7 @@ function attachChartInteractions(container, chart) {
   let touchStart = null;
   svg.addEventListener("pointerdown", event => { if (event.pointerType === "touch") touchStart = { x: event.clientX, y: event.clientY }; });
   svg.addEventListener("pointermove", event => {
+    if (chart.compactRecords && drag) return;
     if (!drag) { if (event.pointerType !== "touch") hover(event, nearest(event)); return; }
     const point = local(event), points = pointsFor(activeSeries);
     const end = points.reduce((best, record) => Math.abs(record.x - point.x) < Math.abs(best.x - point.x) ? record : best);
@@ -1427,7 +1769,7 @@ function attachChartInteractions(container, chart) {
     if (!start || !candidates.includes(start.series)) return;
     event.preventDefault(); activeSeries = start.series; select.value = String(candidates.indexOf(activeSeries)); fillYears();
     from.value = to.value = String(start.point.year); selection.replaceChildren();
-    drag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, series: start.series }; svg.setPointerCapture(event.pointerId); svg.classList.add("is-dragging");
+    drag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, series: start.series, year: start.point.year }; svg.setPointerCapture(event.pointerId); svg.classList.add("is-dragging");
   });
   svg.addEventListener("pointerup", event => {
     if (event.pointerType === "touch") {
@@ -1436,15 +1778,15 @@ function attachChartInteractions(container, chart) {
       if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) < 10) {
         const record = nearest(event);
         if (record && chart.otherCrops && record.series.name === "Other crops") openOtherCropBreakdown(container, record.point.year);
-        else if (record && container.focusSeries) container.focusSeries(record.series.name);
+        else if (record && container.focusSeries) container.focusSeries(record.series.name, record.point.year);
         else if (record) hover(event, record);
       }
     }
     if (drag) {
       const clicked = Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 5;
-      const name = drag.series.name;
+      const name = drag.series.name, year = drag.year;
       stopDrag();
-      if (clicked && container.focusSeries) container.focusSeries(name);
+      if (clicked && container.focusSeries) container.focusSeries(name, year);
       else if (details.open) updateResult();
     } });
   svg.addEventListener("pointercancel", () => { touchStart = null; stopDrag(); selection.replaceChildren(); details.open = false; });
@@ -1453,14 +1795,18 @@ function attachChartInteractions(container, chart) {
       event.preventDefault(); openOtherCropBreakdown(container, event.target.chartDatum.point.year);
     }
     if (["Enter", " "].includes(event.key) && event.target.chartDatum && !(chart.otherCrops && event.target.chartDatum.series.name === "Other crops")) {
-      event.preventDefault(); container.focusSeries?.(event.target.chartDatum.series.name);
+      event.preventDefault(); container.focusSeries?.(event.target.chartDatum.series.name, event.target.chartDatum.point.year);
     }
-    if (event.key === "Escape") { if (container.focusedSeries) container.focusSeries?.(container.focusedSeries); stopDrag(); selection.replaceChildren(); details.open = false; } });
+    if (event.key === "Escape") { if (container.focusedSeries) container.resetSeries?.(); stopDrag(); selection.replaceChildren(); details.open = false; } });
   svg.addEventListener("pointerleave", () => { if (!drag) { hovered?.mark.classList.remove("is-hovered"); hovered = null; hideTooltip(); } });
 }
 
 // Isolating a series puts it on a zero baseline and rescales the axis; stacked
 // offsets no longer obscure small categories. Keep the complete legend for switching.
+function hasInformativeBreakdown(series) {
+  return (series?.breakdownSeries || []).filter(child => child.values?.some(point => point.value !== 0)).length > 1;
+}
+
 function attachSeriesFocus(container, chart) {
   container.parentElement.querySelector(".series-focus-controls")?.remove();
   container.parentElement.querySelector(".series-breakdown-legend")?.remove();
@@ -1468,10 +1814,21 @@ function attachSeriesFocus(container, chart) {
   if (chart.series.length < 2) return;
   const summary = container.parentElement.querySelector(":scope > .series-summary");
   const parent = chart.series.find(series => series.name === container.focusedSeries);
-  renderSeriesSummary(summary, chart);
-  container.focusSeries = name => {
+  renderSeriesSummary(summary, container.focusedSeries ? { ...chart, overlaySeries: [] } : chart);
+  summary.querySelector(".other-crops-button")?.addEventListener("click", () => openOtherCropBreakdown(container, chart.series[0].values.at(-1).year));
+  container.resetSeries = () => { if (chart.compactRecords) { container.recordsOpen = false; container.recordSelection = null; } container.focusedSeries = null; container.focusedChild = null; drawChart(container, chart); sendHeight(); };
+  container.focusSeries = (name, year) => {
+    // Keep the previous isolation behavior below for non-R&D charts. R&D leaf
+    // clicks do not rescale the same series or hide sibling breakdown categories.
+    // Restore the old R&D isolation behavior by enabling this retained override:
+    // chart = { ...chart, drilldownOnly: false };
+    if (chart.drilldownOnly && !chart.series.some(series => series.name === name && hasInformativeBreakdown(series))) return;
+    if (chart.recordRows) container.recordSelection = { kind: chart.recordKind, crop: name, year: year ?? container.recordFocusYear ?? chart.series[0].values.at(-1).year };
+    if (chart.recordRows && container.focusedSeries === name) { openPlantRecords(container, name, year ?? container.recordFocusYear ?? chart.series[0].values.at(-1).year); return; }
+    container.recordFocusYear = year ?? chart.series[0].values.at(-1).year;
     if (parent?.breakdownSeries?.some(series => series.name === name)) {
-      container.focusedChild = container.focusedChild === name ? null : name;
+      if (chart.compactRecords && container.focusedChild === name) { openPlantRecords(container, name, container.recordFocusYear); return; }
+      container.focusedChild = chart.compactRecords ? name : container.focusedChild === name ? null : name;
     } else {
       container.focusedSeries = container.focusedSeries === name ? null : name;
       container.focusedChild = null;
@@ -1482,27 +1839,28 @@ function attachSeriesFocus(container, chart) {
   const controls = document.createElement("div"); controls.className = "series-focus-controls";
   const status = document.createElement("span"); status.setAttribute("role", "status");
   status.textContent = parent?.breakdownSeries
-    ? (container.focusedChild ? `Showing only ${container.focusedChild}. Axis rescaled.` : `${parent.name} · agency breakdown. Axis rescaled.`)
-    : container.focusedSeries ? `Showing only ${container.focusedSeries}. Axis rescaled.` : "";
+    ? (container.focusedChild ? `Showing only ${container.focusedChild}. Axis rescaled.` : `${parent.name} · ${parent.breakdownLabel || "agency breakdown"}. Axis rescaled.`)
+    : container.focusedSeries ? chart.compactRecords ? `${container.focusedSeries} · ${parent.values.at(-1).value} ${chart.recordUnit || "records"}` : `Showing only ${container.focusedSeries}. ${chart.dualAxis ? "Axes unchanged." : "Axis rescaled."}${chart.recordRows ? " Select a year on this crop again to see its records." : ""}` : "";
   controls.append(status);
   if (container.focusedChild) {
     const back = document.createElement("button"); back.type = "button"; back.textContent = "Show full breakdown";
-    back.addEventListener("click", () => container.focusSeries(container.focusedChild)); controls.append(back);
+    back.addEventListener("click", () => { if (chart.compactRecords) { container.focusedChild = null; container.recordsOpen = false; drawChart(container, chart); sendHeight(); } else container.focusSeries(container.focusedChild); }); controls.append(back);
   }
   if (container.focusedSeries) {
     const reset = document.createElement("button"); reset.type = "button"; reset.textContent = "Show all";
-    reset.addEventListener("click", () => container.focusSeries(container.focusedSeries)); controls.append(reset);
+    reset.addEventListener("click", () => container.resetSeries()); controls.append(reset);
   }
   if (container.focusedSeries) summary.before(controls);
   const makeButtons = (legend, seriesList, child = false) => {
     legend.querySelectorAll(":scope > span").forEach(row => {
-      const series = seriesList.find(series => row.textContent.trim().startsWith(series.name + " "));
+      const series = seriesList.find(series => row.textContent.trim() === series.name || row.textContent.trim().startsWith(series.name + " "));
       const label = row.querySelector("b");
-      if (!series || !label || row.querySelector("button")) return;
+      if (chart.drilldownOnly && (child || !hasInformativeBreakdown(series))) return;
+      if (!series || !label || row.querySelector(".series-focus-button, .other-crops-button")) return;
       const active = child ? container.focusedChild === series.name : container.focusedSeries === series.name;
       const button = document.createElement("button"); button.type = "button"; button.className = "series-focus-button";
       button.setAttribute("aria-pressed", String(active));
-      button.setAttribute("aria-label", active ? (child ? "Show full breakdown" : "Show all series") : `${series.breakdownSeries ? "Explore breakdown of " : "Focus on "}${series.name}`);
+      button.setAttribute("aria-label", active ? (child ? (chart.compactRecords ? `View records for ${series.name}` : "Show full breakdown") : chart.recordRows ? `View records for ${series.name}` : "Show all series") : `${series.breakdownSeries ? "Explore breakdown of " : "Focus on "}${series.name}`);
       button.innerHTML = label.innerHTML; label.replaceWith(button);
       button.addEventListener("click", () => {
         container.focusSeries(series.name);
@@ -1511,14 +1869,21 @@ function attachSeriesFocus(container, chart) {
       row.classList.toggle("series-muted", Boolean(child ? container.focusedChild && !active : container.focusedSeries && !active));
     });
   };
+  if (parent?.breakdownSeries && chart.compactRecords) {
+    renderSeriesSummary(summary, { ...chart, series: parent.breakdownSeries, totalLabel: `Other crops · ${chart.recordUnit || "records"}` });
+    makeButtons(summary, parent.breakdownSeries, true);
+    return;
+  }
   if (parent?.breakdownSeries) {
     const breakdown = document.createElement("div"); breakdown.className = "series-breakdown-legend";
-    const heading = document.createElement("h4"); heading.textContent = "Agency breakdown"; breakdown.append(heading);
+    const heading = document.createElement("h4"); heading.textContent = parent.breakdownLabel ? parent.breakdownLabel[0].toUpperCase() + parent.breakdownLabel.slice(1) : "Agency breakdown"; breakdown.append(heading);
     const childLegend = document.createElement("div"); childLegend.className = "series-summary";
-    renderSeriesSummary(childLegend, { ...chart, series: parent.breakdownSeries, overlaySeries: [], caption: "", totalLabel: null });
+    renderSeriesSummary(childLegend, { ...chart, series: parent.breakdownSeries, overlaySeries: [], hiddenLegendSeries: [], hiddenOverlaySeries: [], decimals: parent.breakdownDecimals ?? chart.decimals, summaryMode: parent.breakdownSummaryMode || chart.summaryMode, legendShare: Boolean(parent.breakdownLegendShare), editableCaption: false, caption: parent.breakdownSummaryMode === "latest" ? `Latest available values · ${parent.breakdownSeries[0].values.at(-1).year}` : parent.breakdownLegendShare ? `Share of reported state support in ${parent.values.at(-1).year}` : "", totalLabel: null });
     breakdown.append(childLegend); makeButtons(childLegend, parent.breakdownSeries, true);
-    const note = document.createElement("p"); note.className = "change-note"; note.textContent = parent.breakdownNote || ""; breakdown.append(note);
-    const fullLabel = document.createElement("h4"); fullLabel.textContent = "All funding sources"; breakdown.append(fullLabel);
+    const note = document.createElement("p"); note.className = "change-note"; note.textContent = parent.breakdownNote || "";
+    if (parent.breakdownNote) note.dataset.editableKey = chartTextKey(chart, `breakdown:${encodeURIComponent(parent.name)}:note`);
+    breakdown.append(note);
+    const fullLabel = document.createElement("h4"); fullLabel.textContent = chart.overviewLegendLabel || "All funding sources"; breakdown.append(fullLabel);
     summary.before(breakdown);
   }
   makeButtons(summary, chart.series);
@@ -1527,8 +1892,11 @@ function attachSeriesFocus(container, chart) {
 function renderSeriesSummary(summary, chart) {
   summary.classList.toggle("multi", chart.series.length > 1);
   summary.classList.toggle("regulatory-legend", Boolean(chart.hideLegendValues));
-  const caption = chart.caption === undefined ? (chart.summaryMode === "latest" ? "Latest available values" : DEFAULT_CHART_CAPTION) : chart.caption;
-  const note = caption ? `<p class="change-note">${escapeHTML(caption)}</p>` : "";
+  const caption = chart.caption === undefined ? (chart.summaryMode === "latest" ? "Latest available values" : "") : chart.caption;
+  // Keep calculated labels (for example latest-year and share captions) live.
+  const note = caption ? chart.caption !== undefined && chart.editableCaption !== false
+    ? chartEditableText(chart, "caption", caption, "p", "change-note")
+    : `<p class="change-note">${escapeHTML(caption)}</p>` : "";
   let total = "";
   if (chart.totalLabel) {
     const firstYear = Math.max(...chart.series.map(series => series.values[0].year));
@@ -1536,29 +1904,44 @@ function renderSeriesSummary(summary, chart) {
     const first = chart.series.reduce((sum, series) => sum + series.values.find(point => point.year === firstYear).value, 0);
     const last = chart.series.reduce((sum, series) => sum + series.values.find(point => point.year === lastYear).value, 0);
     const totalValue = chart.summaryMode === "latest" ? formatValue(chart, last) : pct((last / first - 1) * 100);
-    total = `<strong class="total-change">${chart.totalLabel}: ${totalValue} <small>${chart.summaryMode === "latest" ? lastYear : `${firstYear}–${lastYear}`}</small></strong>`;
+    total = `<strong class="total-change">${chart.totalLabel}: ${totalValue} <small>${chart.summaryMode === "latest" ? lastYear : ""}</small></strong>`;
   }
-  const legendSeries = [...chart.series, ...(chart.overlaySeries || []).filter(series => !series.hideInLegend).map(series => ({ ...series, isOverlay: true }))].map((series, index) => ({ ...series, color: series.color || COLORS[index % COLORS.length] }));
+  const legendSeries = [...chart.series, ...(chart.hiddenLegendSeries || []).map(series => ({ ...series, isHidden: true })), ...(chart.hiddenOverlaySeries || []).map(series => ({ ...series, isHidden: true, isOverlay: true })), ...(chart.overlaySeries || []).filter(series => !series.hideInLegend).map(series => ({ ...series, isOverlay: true }))].map((series, index) => ({ ...series, color: series.color || COLORS[index % COLORS.length] }));
+  if (chart.legendOrder) legendSeries.sort((a,b) => chart.legendOrder.indexOf(a.name) - chart.legendOrder.indexOf(b.name));
   if (chart.legendReverse) legendSeries.reverse();
+  const periods = [...new Set(legendSeries.filter(series => !series.isHidden && !series.hideLegendValue && !series.pointsOnly && !series.sourceBoundary).map(series => `${series.values[0].year}–${series.values.at(-1).year}`))];
+  const showChange = !chart.hideLegendValues && !chart.legendShare && chart.summaryMode !== "latest";
+  const periodDescription = "Change from first to latest year:";
+  const changeHeading = showChange && periods.length ? `<p class="legend-change-heading">${escapeHTML(periodDescription)}</p>` : "";
   const rows = legendSeries.map((series, index) => {
+    if (series.isHidden) return `<span class="series-muted"><i style="background:${series.color}"></i><button type="button" class="series-focus-button" data-enable-addon="${series.addonFlag}" aria-label="Show ${escapeHTML(series.name)}">${escapeHTML(series.name)} <small>Show</small></button></span>`;
     if (chart.hideSingleSeriesSummary && chart.series.length === 1) return "";
     const latest = series.values.at(-1);
     const latestTotal = chart.legendShare ? chart.series.reduce((sum, item) => sum + (item.values.find(point => point.year === latest.year)?.value || 0), 0) : 0;
-    const delta = series.hideLegendValue || chart.hideLegendValues || (chart.labelPointSeriesOnly && series.pointsOnly) ? "" : chart.legendShare ? `${format(100 * latest.value / latestTotal, chart.decimals ?? 1)}%` : chart.summaryMode === "latest" ? formatValue(chart, latest.value) : pct(change(series.values));
+    const delta = series.hideLegendValue || chart.hideLegendValues || (chart.labelPointSeriesOnly && series.pointsOnly) ? "" : chart.legendShare ? `${format(100 * latest.value / latestTotal, chart.decimals ?? 1)}%` : chart.summaryMode === "latest" ? formatValue(chart, latest.value, series) : series.values[0].value === 0 ? "—" : pct(change(series.values));
     const range = `${series.values[0].year}–${series.values.at(-1).year}`;
     if (series.sourceBoundary) {
       const earlier = series.values.find(point => point.year === series.sourceBoundary.earlierEnd);
       const color = series.color || COLORS[index % COLORS.length];
       return `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true"><line x1="0" y1="2" x2="18" y2="2" stroke="${color}" stroke-width="3" stroke-dasharray="5 4"></line></svg><b>No-till · CTIC/USGS ${formatValue(chart, earlier.value)} <small>${series.sourceBoundary.earlierEnd}</small></b></span><span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true"><line x1="0" y1="2" x2="18" y2="2" stroke="${color}" stroke-width="3"></line></svg><b>No-till · Census ${delta} <small>${series.values.at(-1).year}</small></b></span>`;
     }
+    const hideControl = series.addonFlag ? ` <button type="button" class="legend-hide" data-hide-addon="${series.addonFlag}" aria-label="Hide ${escapeHTML(series.name)}">Hide</button>` : "";
     return chart.series.length === 1
-      ? `<span class="single-change"><strong>${delta}</strong> <small>${chart.summaryMode === "latest" ? series.values.at(-1).year : range}</small></span>`
+      ? `<span class="single-change"><strong>${delta}</strong> <small>${chart.summaryMode === "latest" ? series.values.at(-1).year : ""}</small></span>`
       : chart.type === "stacked" && !series.isOverlay
-        ? `<span><i style="background:${series.color || COLORS[index % COLORS.length]}"></i>${chart.otherCrops && series.name === "Other crops" ? `<button type="button" class="other-crops-button" aria-label="Explore other crop records">${series.name} ${delta}</button>` : `<b>${series.name} ${delta}${chart.showChangeYears ? ` <small>${range}</small>` : ""}</b>`}</span>`
-        : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="1.5" fill="${series.marker === "hollow" ? "none" : series.color || COLORS[index % COLORS.length]}" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="${series.marker === "hollow" ? 1 : 0}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}${chart.showChangeYears && !(chart.labelPointSeriesOnly && series.pointsOnly) ? ` <small>${range}</small>` : chart.latestYearLabel ? ` <small>${series.values.at(-1).year}</small>` : ""}</b></span>`;
+        ? `<span><i style="background:${series.color || COLORS[index % COLORS.length]}"></i>${chart.otherCrops && series.name === "Other crops" ? `<button type="button" class="other-crops-button" aria-label="Explore other crop records">${series.name} ${delta}</button>` : `<b>${series.name} ${delta}</b>`}${hideControl}</span>`
+        : `<span><svg class="legend-line" viewBox="0 0 18 4" aria-hidden="true">${series.pointsOnly ? `<circle cx="9" cy="2" r="1.5" fill="${series.marker === "hollow" ? "none" : series.color || COLORS[index % COLORS.length]}" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="${series.marker === "hollow" ? 1 : 0}"></circle>` : `<line x1="0" y1="2" x2="18" y2="2" stroke="${series.color || COLORS[index % COLORS.length]}" stroke-width="3" ${series.dasharray ? `stroke-dasharray="${series.dasharray}"` : ""}></line>`}</svg><b>${series.name} ${delta}${chart.latestYearLabel ? ` <small>${series.values.at(-1).year}</small>` : ""}</b></span>`;
   }).join("");
   const overlayKey = chart.rollingSeries ? `<div class="overlay-key"><span><i class="key-bar"></i> Annual survey</span><span><i class="key-average"></i> Five-survey mean</span><span><i class="key-goal"></i> ${chart.goalLabel || "Goal"}</span></div>` : "";
-  summary.innerHTML = note + overlayKey + total + rows;
+  summary.innerHTML = note + overlayKey + changeHeading + total + rows;
+  summary.querySelectorAll("[data-enable-addon]").forEach(button => button.addEventListener("click", () => {
+    const input = summary.closest(".chart-card-content").querySelector(`[data-chart-addon][value="${button.dataset.enableAddon}"]`);
+    if (input) { input.checked = true; input.dispatchEvent(new Event("change")); }
+    else summary.closest(".chart-card-content").querySelector(".chart-wrap")?.toggleAddon?.(Number(button.dataset.enableAddon));
+  }));
+  summary.querySelectorAll("[data-hide-addon]").forEach(button => button.addEventListener("click", () => {
+    summary.closest(".chart-card-content").querySelector(".chart-wrap")?.toggleAddon?.(Number(button.dataset.hideAddon));
+  }));
   summary.hidden = !summary.innerHTML;
 }
 
@@ -1595,7 +1978,7 @@ function standaloneURL() {
   else if (ACTIVE_TOPIC) {
     url.searchParams.set("chart", String(MOBILE_CHART));
     const card = [...panel.querySelectorAll(".chart-card, .product-evidence")][MOBILE_CHART];
-    const view = card?.querySelector('[data-chart-view][aria-pressed="true"]')?.dataset.view;
+    const view = card?.querySelector("[data-chart]")?.chartConfig?.id || card?.querySelector('[data-chart-view][aria-pressed="true"]')?.dataset.view;
     if (view) url.searchParams.set("view", view);
     if (card?.querySelector("[data-chart]")?.chartConfig?.usdaFilter && selectedUSDAPathways.size !== Object.keys(USDA_PATHWAYS).length) url.searchParams.set("pathways", [...selectedUSDAPathways].join(",") || "none");
   }
@@ -1647,7 +2030,9 @@ const chartResizeObserver = new ResizeObserver(() => {
       if (Math.abs(width - svgWidth) > 2) {
         const comparison = container.parentElement.querySelector(".chart-compare");
         const state = comparison ? { open: comparison.querySelector("details").open, series: comparison.querySelector(".compare-series").value, from: comparison.querySelector(".compare-from").value, to: comparison.querySelector(".compare-to").value } : null;
+        const methodsOpen = container.parentElement.querySelector(".chart-methods")?.open;
         drawChart(container, container.chartConfig);
+        if (methodsOpen) container.parentElement.querySelector(".chart-methods")?.setAttribute("open", "");
         const controls = container.parentElement.querySelector(".chart-compare");
         if (state?.open && controls) {
           controls.querySelector(".compare-series").value = state.series;
@@ -1673,6 +2058,8 @@ document.querySelectorAll(".topic-nav button").forEach((button, index, buttons) 
 });
 document.querySelector("#topic-select").addEventListener("change", event => renderTopic(event.target.value));
 panel.addEventListener("click", event => {
+  const chartHeading = event.target.closest(".chart-card > summary, .product-evidence > summary");
+  if (mobileLayout.matches && chartHeading && !TEXT_EDIT_MODE) { event.preventDefault(); chartHeading.parentElement.open = true; return; }
   const arrow = event.target.closest("[data-chart-step]");
   if (arrow) {
     const step = Number(arrow.dataset.chartStep);
@@ -1701,7 +2088,7 @@ panel.addEventListener("click", event => {
     sortButton.textContent = `Change ${ascending ? "↑" : "↓"}`;
     sortButton.setAttribute("aria-label", `Sort by absolute change, ${ascending ? "ascending" : "descending"}`);
     sortButton.title = `Sort by absolute change, ${ascending ? "ascending" : "descending"}`;
-    const metric = ({ land: "land", water: "water", climate: "greenhouse_gas", nitrogen: "fertilizer_n" })[document.querySelector("#topic-select").value];
+    const metric = ACTIVE_TOPIC === 'livestock' ? panel.querySelector('[data-chart="4"]').chartConfig.metric : ({ land: "land", water: "water", climate: "greenhouse_gas", nitrogen: "fertilizer_n" })[document.querySelector("#topic-select").value];
     const bars = panel.querySelector(".product-bars");
     if (metric && bars) bars.innerHTML = studyBarRows(metric);
     sendHeight();
@@ -1711,8 +2098,12 @@ panel.addEventListener("click", event => {
   if (modeButton) {
     CHANGE_MODE = modeButton.dataset.changeMode;
     panel.querySelectorAll("[data-change-mode]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.changeMode === CHANGE_MODE)));
-    const metric = ({ land: "land", water: "water", climate: "greenhouse_gas", nitrogen: "fertilizer_n" })[document.querySelector("#topic-select").value];
+    const metric = ACTIVE_TOPIC === 'livestock' ? panel.querySelector('[data-chart="4"]').chartConfig.metric : ({ land: "land", water: "water", climate: "greenhouse_gas", nitrogen: "fertilizer_n" })[document.querySelector("#topic-select").value];
     if (metric) panel.querySelector(".product-bars").innerHTML = studyBarRows(metric);
+    if (ACTIVE_TOPIC === 'livestock') {
+      const container = panel.querySelector('[data-chart="4"]');
+      drawChart(container, container.chartConfig);
+    }
     document.querySelector("#open-tracker").href = standaloneURL();
     sendHeight();
     return;
@@ -1759,13 +2150,13 @@ document.addEventListener("keydown", event => {
 });
 applySavedTextEdits(document);
 panel.innerHTML = '<div class="loading">Loading the tracker…</div>';
-Promise.all(["data.json", "product-studies.json", "text-edits.json", "biotech-decisions.json"].map(path => fetch(path).then(response => { if (!response.ok) throw new Error(`${path} failed to load`); return response.json(); }))).then(([data, studies, textEdits, biotech]) => {
-  DATA = data; BIOTECH = biotech; STUDIES = studies.studies; PROJECT_TEXT_EDITS = textEdits; applySavedTextEdits(document); const ghg2023 = { year: 2023, value: 595.4 }; [DATA.overview.ghg, DATA.climate.total].forEach(series => { if (!series.some(d => d.year === 2023)) series.push(ghg2023); });
+Promise.all(["data.json", "product-studies.json", "text-edits.json", "biotech-decisions.json", "rd-updated-sources.json"].map(path => fetch(path, { cache: "no-cache" }).then(response => { if (!response.ok) throw new Error(`${path} failed to load`); return response.json(); }))).then(([data, studies, textEdits, biotech, rdUpdated]) => {
+  DATA = data; RD_UPDATED = rdUpdated; BIOTECH = biotech; STUDIES = studies.studies; PROJECT_TEXT_EDITS = textEdits; applySavedTextEdits(document); const ghg2023 = { year: 2023, value: 595.4 }; [DATA.overview.ghg, DATA.climate.total].forEach(series => { if (!series.some(d => d.year === 2023)) series.push(ghg2023); });
   const requested = location.hash.slice(1), initial = TOPICS[requested] ? requested : "overview";
   const params = new URLSearchParams(location.search);
   const chartIndex = Math.max(0, Number.parseInt(params.get("chart"), 10) || 0);
   CHART_CHOICES.set(initial, chartIndex);
-  if (params.get("view")) CHART_STATES.set(`${initial}:${chartIndex}`, { view: params.get("view") });
+  if (params.get("view")) CHART_STATES.set(`${initial}:${chartIndex}`, { view: params.get("view") === "fda-annual" ? "fda-meetings" : params.get("view") });
   if (MATRIX_METRICS.includes(params.get("measure"))) selectedMatrixMetric = params.get("measure");
   if (params.get("change") === "total") CHANGE_MODE = "total";
   if (params.has("pathways")) selectedUSDAPathways = new Set(params.get("pathways").split(",").filter(key => Object.hasOwn(USDA_PATHWAYS, key)));

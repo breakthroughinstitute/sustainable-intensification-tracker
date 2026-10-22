@@ -1,0 +1,151 @@
+AGRICULTURAL R&D SPENDING: PUBLIC-SOURCE DATASET
+Version: October 21, 2026. Amounts are million U.S. dollars.
+
+Use each series for the population and accounting measure it actually covers.
+The file contains separate datasets, not components of one national total.
+
+RECOMMENDED USE
+
+1. National public agricultural and food R&D history:
+   Use ers_public_performers, total, 1970-2021. The two components distinguish
+   USDA intramural performers from state universities/cooperating institutions.
+   Both include funding from multiple sources. The university component does
+   not measure state-government funding. Preserve ERS's published 2022-dollar
+   series. Its USDA-only net intramural series also has a 2022 observation;
+   the national total and university component remain unavailable in 2022.
+
+2. More recent reported federal spending:
+   Use federal_reported_composite, 2003-2024. It combines USDA gross cash R&D
+   outlays, separate USDA R&D plant outlays, and non-USDA-funded university
+   agricultural-sciences expenditures. It includes forestry research. It is
+   a qualified composite, not a reconstruction of ERS or a comprehensive
+   national total. NIFA is the published NCSES agency R&D outlay amount.
+
+3. Recent expenditure detail across funding sources:
+   Use herd_university_all_sources, 2010-2024, for HERD-reported university
+   agricultural-sciences R&D. The six sources are federal government, state
+   and local government, institution funds, business, nonprofits, and other.
+   USDA and non-USDA are drilldowns of federal funding; do not add them again
+   to their federal parent. The separate wide file rd-herd-all-sources.csv
+   contains one row per year for this comparison.
+
+4. State and all nongovernment project support:
+   gateway_reported_support_diagnostic retains observed 2004-2021 aggregates.
+   These reports have mixed activities and incomplete nonformula reporting
+   in 2010-2014. They remain a coverage comparison. Missing later years do
+   not mean zero spending. All nongovernment support includes industry,
+   other nonfederal, and self-generated funds; industry is not added twice.
+
+ACCOUNTING AND ADDITION RULES
+
+Outlays are agency cash payments. Recipient expenditures record institutional
+research costs and need not occur in the payment year. Budget authority and
+obligations are different measures and are not included as spending here.
+Gross agency outlays retain grants and cooperative agreements. Do not add
+USDA-financed HERD or Gateway federal sources to those gross agency amounts.
+Count research plant once, separately from research outlays.
+
+HERD's published institutional totals include inter-university pass-through
+duplication. This dataset preserves that survey convention. No field-specific
+adjustment was inferred from national, all-field pass-through amounts.
+Its "other sources" includes foreign governments and other universities.
+Institution funds includes cost sharing and unrecovered indirect costs.
+Consequently the four non-U.S.-government source columns should not be
+described as an exact measure of private gifts or private-sector research.
+
+Do not add the ERS total to HERD, the federal composite, or the Gateway
+diagnostics. Within any dataset, add top-level components only; totals and
+nested detail rows are not independent additions. HERD-reported university
+spending is a narrower field/population than the ERS agricultural/food series.
+
+PERIODS, PRICES AND BREAKS
+
+USDA amounts use federal fiscal years. HERD institutions report their own
+fiscal years. Keep the year labels supplied by each survey.
+
+Nominal amounts are retained first. Common constant-2022 amounts use the
+March 2025 NIH/BEA Biomedical Research and Development Price Index (BRDPI):
+nominal million * 1858.2 / year index. The 2024 index is preliminary.
+The retained common-index table begins in 1993; earlier common-price cells
+remain blank. ERS's original published real values are separately available
+throughout its history and are not silently relabeled as the newer vintage.
+
+HERD series have definition breaks in 2010, 2016 and 2020. Do not describe
+changes across these boundaries as funding changes alone. Before 2010, the
+federal composite assigns university federal dollars without an agency code
+to non-USDA. Both allocation endpoints are retained in the wide federal CSV;
+they concern source assignment, not a confidence interval or a national bound.
+
+NIFA's newer capacity-reporting schema merges self-generated, industry and
+other nonfederal funds, and consolidates several federal source fields,
+including other USDA. Its federal residual therefore cannot be treated as
+non-USDA funding, and recent nongovernment subcategories cannot be spliced
+to the older detail without a compatible crosswalk. Research and extension
+capacity fields are separately identified. These rules do not establish the
+financial definition of a historical REEIS funding-summary extract.
+
+VALIDATION AND COVERAGE DECISION
+
+A fresh ERS download on October 21, 2026 agrees with all 583 retained records.
+HERD's 15 annual agricultural-sciences totals agree with the latest FY2024
+published historical table. Its seven 2024 total/source values agree with
+the independently published funding-source table. Federal agency worksheet
+headers, first/final years, units and overlaps were checked separately.
+The reproduced 2003-2024 federal composite matches the existing tracker.
+Missing values, source estimates and reporting gaps are retained explicitly.
+
+The latest checked public ERS national total still ends in 2021. FY2025 in
+the checked Federal Funds release is preliminary, and no matching FY2025
+HERD source was established. The release therefore ends the recent series
+in 2024. No national 2022-2024 values have been imputed from a narrower series.
+The directly shared author workbook is not an input to these public datasets.
+
+Remaining improvements are a publicly documented, compatible national
+recipient series after 2021; the historical REEIS financial-field definition
+and research scope; and a field-specific treatment of university pass-throughs.
+They would expand or harmonize coverage. They are not reasons to alter the
+published NCSES outlay observations or prevent release under the stated scope.
+
+PUBLIC SOURCES AND METHODS
+
+ERS series and methodology:
+https://www.ers.usda.gov/data-products/agricultural-and-food-research-and-development-expenditures-in-the-united-states
+https://www.ers.usda.gov/data-products/agricultural-and-food-research-and-development-expenditures-in-the-united-states/documentation
+
+NCSES Federal Funds for Research and Development, FY2024-2025; historical
+outlay tables 64-69 and earlier editions for 2003-2004:
+https://ncses.nsf.gov/surveys/federal-funds-research-development/2024-2025
+
+NCSES HERD public-use files and FY2024 tables 9-11:
+https://ncses.nsf.gov/explore-data/microdata/higher-education-research-development
+https://ncses.nsf.gov/pubs/nsf26304/assets/data-tables/tables/nsf26304-tab009.pdf
+https://ncses.nsf.gov/pubs/nsf26304/assets/data-tables/tables/nsf26304-tab010.pdf
+https://ncses.nsf.gov/surveys/higher-education-research-development/2024
+
+NIH/BEA BRDPI, March 2025 vintage, updated June 2025 on the landing page:
+https://officeofbudget.od.nih.gov/gbipriceindexes.html
+
+NIFA annual Financial Details and reporting crosswalk, Appendix B pp.12-13:
+https://portal.nifa.usda.gov/enterprise-search/
+https://www.nifa.usda.gov/sites/default/files/2024-12/NRS%20Financial%20Report%20Guidance%20for%20Capacity%20Funds_remediated.pdf
+
+FILES AND MACHINE-READABLE FIELDS
+
+rd-spending-public-series.csv: all four separate datasets. dataset_id, series_id,
+parent_id and row_role identify totals, top-level components, nested details
+and diagnostics. nominal_usd_million is the observation before deflation.
+constant_2022_usd_million uses the shared vintage; the separate
+published_ERS_constant_2022_usd_million preserves ERS originals. An empty
+amount means unavailable. observation_status, accounting_basis, scope, flags,
+source_url and source_locator give the interpretation of each row.
+
+rd-herd-all-sources.csv: one row per year, 2010-2024, with all six source
+categories and the federal agency split. All-other-sources is retained apart
+from business and nonprofits. The combined institution/business/nonprofit/
+other column is a subtotal and is not an additional source.
+
+rd-federal-spending-public.csv: one row per year, 2003-2024, with research
+outlays, plant, non-USDA university expenditures and allocation endpoints.
+
+public-source-manifest.json and the local audit folder retain checksums,
+source-period mappings, raw-record anchors and reconciliation results.

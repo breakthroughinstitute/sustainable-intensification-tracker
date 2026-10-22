@@ -1,0 +1,705 @@
+year,funder_id,detail_label,nominal_usd,billion_2022,source,Minnesota_NIH_subtraction_usd,billion_2024
+2002,NIFA,Formula / capacity,222349459.0,0.395870235425697,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.42565317532
+2002,NIFA,AFRI competitive grants,0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2002,NIFA,National Research Initiative,128546576.0,0.228863895298649,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.246082263915
+2002,NIFA,SBIR grants,17246959.0,0.03070642829721184,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.033016598718
+2002,NIFA,Smith-Lever 3(d),0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2002,NIFA,Special research grants,93595110.0,0.16663642177062374,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.179173162575
+2002,NIFA,Other NIFA grants and agreements,69240420.0,0.12327541290025869,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.132549927335
+2003,NIFA,Formula / capacity,217976404.0,0.3749016604154017,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.403107048493
+2003,NIFA,AFRI competitive grants,0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2003,NIFA,National Research Initiative,111996463.0,0.19262479410088854,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.207116746644
+2003,NIFA,SBIR grants,16947623.0,0.02914853115383191,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.031341494589
+2003,NIFA,Smith-Lever 3(d),0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2003,NIFA,Special research grants,118544790.0,0.20388738317104774,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.219226666438
+2003,NIFA,Other NIFA grants and agreements,119006830.0,0.20468205433728245,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.220081123973
+2004,NIFA,Formula / capacity,217130589.0,0.360050027199536,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.387138066056
+2004,NIFA,AFRI competitive grants,0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2004,NIFA,National Research Initiative,129160030.0,0.21417559142066753,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.230288898751
+2004,NIFA,SBIR grants,18778290.0,0.031138513723005537,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0334811917009
+2004,NIFA,Smith-Lever 3(d),0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2004,NIFA,Special research grants,114682982.0,0.19016947809423526,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.204476707153
+2004,NIFA,Other NIFA grants and agreements,125527852.0,0.20815264553489204,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.223812821967
+2005,NIFA,Formula / capacity,221670172.0,0.3538116419948462,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.38043034157
+2005,NIFA,AFRI competitive grants,0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2005,NIFA,National Research Initiative,172731588.0,0.2756999113739907,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.296441945391
+2005,NIFA,SBIR grants,18933747.0,0.030220485032984024,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0324940959509
+2005,NIFA,Smith-Lever 3(d),446668.0,0.0007129346139838515,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.000766571606253
+2005,NIFA,Special research grants,125168590.0,0.1997837776481704,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.214814329857
+2005,NIFA,Other NIFA grants and agreements,149292543.0,0.23828844133533755,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.256215857167
+2006,NIFA,Formula / capacity,218883591.0,0.33390484262063874,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.359025872111
+2006,NIFA,AFRI competitive grants,0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2006,NIFA,National Research Initiative,166142294.0,0.25344849413906906,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.272516462862
+2006,NIFA,SBIR grants,16904253.0,0.025787277665708895,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0277273602282
+2006,NIFA,Smith-Lever 3(d),8052037.0,0.012283306094245139,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0132074295427
+2006,NIFA,Special research grants,131373758.0,0.20040942214563667,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.215487044154
+2006,NIFA,Other NIFA grants and agreements,160151911.0,0.24431022167326166,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.262690680714
+2007,NIFA,Formula / capacity,258366139.0,0.3797025937122746,Current official REEIS Funding Mechanism export,0,0.408269175674
+2007,NIFA,AFRI competitive grants,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2007,NIFA,National Research Initiative,157486658.0,0.23144709577317304,Current official REEIS Funding Mechanism export,0,0.248859809146
+2007,NIFA,SBIR grants,19502003.0,0.028660726015975958,Current official REEIS Funding Mechanism export,0,0.0308169898719
+2007,NIFA,Smith-Lever 3(d),15730844.0,0.023118518127807658,Current official REEIS Funding Mechanism export,0,0.024857818975
+2007,NIFA,Special research grants,13918078.0,0.020454423077823476,Current official REEIS Funding Mechanism export,0,0.0219932931382
+2007,NIFA,Other NIFA grants and agreements,151807215.0,0.22310041672967418,Current official REEIS Funding Mechanism export,0,0.239885175237
+2008,NIFA,Formula / capacity,300524492.0,0.4219377491759728,Current official REEIS Funding Mechanism export,0,0.453681854942
+2008,NIFA,AFRI competitive grants,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2008,NIFA,National Research Initiative,182468770.0,0.2561869802901398,Current official REEIS Funding Mechanism export,0,0.275460976547
+2008,NIFA,SBIR grants,18776321.0,0.02636203980521345,Current official REEIS Funding Mechanism export,0,0.0283453640786
+2008,NIFA,Smith-Lever 3(d),36717355.0,0.05155133287570835,Current official REEIS Funding Mechanism export,0,0.0554297508802
+2008,NIFA,Special research grants,93042645.0,0.13063229538269738,Current official REEIS Funding Mechanism export,0,0.140460298232
+2008,NIFA,Other NIFA grants and agreements,256141523.0,0.35962385949270875,Current official REEIS Funding Mechanism export,0,0.386679836006
+2009,NIFA,Formula / capacity,251691064.0,0.34331082369874477,Current official REEIS Funding Mechanism export,0,0.369139503686
+2009,NIFA,AFRI competitive grants,49808783.0,0.06794001363179916,Current official REEIS Funding Mechanism export,0,0.0730514192425
+2009,NIFA,National Research Initiative,100376448.0,0.1369151550125523,Current official REEIS Funding Mechanism export,0,0.147215843136
+2009,NIFA,SBIR grants,16828187.0,0.022953928711297072,Current official REEIS Funding Mechanism export,0,0.0246808468223
+2009,NIFA,Smith-Lever 3(d),31005571.0,0.042292117765690376,Current official REEIS Funding Mechanism export,0,0.0454739270777
+2009,NIFA,Special research grants,93613959.0,0.12769100683682008,Current official REEIS Funding Mechanism export,0,0.137297724497
+2009,NIFA,Other NIFA grants and agreements,355801920.0,0.4853197737238494,Current official REEIS Funding Mechanism export,0,0.521832368906
+2010,NIFA,Formula / capacity,253577827.0,0.33568306485103655,Current official REEIS Funding Mechanism export,0,0.360937877286
+2010,NIFA,AFRI competitive grants,136463386.0,0.18064847464928405,Current official REEIS Funding Mechanism export,0,0.194239399607
+2010,NIFA,National Research Initiative,358479.0,0.00047454988801025864,Current official REEIS Funding Mechanism export,0,0.00051025222056
+2010,NIFA,SBIR grants,23010737.0,0.03046131758452661,Current official REEIS Funding Mechanism export,0,0.0327530473221
+2010,NIFA,Smith-Lever 3(d),31840026.0,0.042149416765120754,Current official REEIS Funding Mechanism export,0,0.0453204900962
+2010,NIFA,Special research grants,97858987.0,0.12954446793716606,Current official REEIS Funding Mechanism export,0,0.13929062907
+2010,NIFA,Other NIFA grants and agreements,400364676.0,0.5299976069980765,Current official REEIS Funding Mechanism export,0,0.569871498645
+2011,NIFA,Formula / capacity,272720320.0,0.35097229629752746,Current official REEIS Funding Mechanism export,0,0.377377380262
+2011,NIFA,AFRI competitive grants,380541162.0,0.4897303048884271,Current official REEIS Funding Mechanism export,0,0.526574722402
+2011,NIFA,National Research Initiative,3270230.0,0.0042085611094951165,Current official REEIS Funding Mechanism export,0,0.0045251884064
+2011,NIFA,SBIR grants,22635200.0,0.02912994573031373,Current official REEIS Funding Mechanism export,0,0.031321510908
+2011,NIFA,Smith-Lever 3(d),31856152.0,0.040996676810305416,Current official REEIS Funding Mechanism export,0,0.0440810247912
+2011,NIFA,Special research grants,17627737.0,0.022685685222937874,Current official REEIS Funding Mechanism export,0,0.0243924222772
+2011,NIFA,Other NIFA grants and agreements,313816247.0,0.4038599280943278,Current official REEIS Funding Mechanism export,0,0.434243965306
+2012,NIFA,Formula / capacity,283625824.0,0.3603894325470459,Current official REEIS Funding Mechanism export,0,0.387503006258
+2012,NIFA,AFRI competitive grants,189437079.0,0.24070841096676693,Current official REEIS Funding Mechanism export,0,0.25881789103
+2012,NIFA,National Research Initiative,1827369.0,0.002321948219228665,Current official REEIS Funding Mechanism export,0,0.00249663789798
+2012,NIFA,SBIR grants,17055827.0,0.021672003372128008,Current official REEIS Funding Mechanism export,0,0.0233024769871
+2012,NIFA,Smith-Lever 3(d),30088990.0,0.038232604771608315,Current official REEIS Funding Mechanism export,0,0.0411090002872
+2012,NIFA,Special research grants,18603020.0,0.02363794568107221,Current official REEIS Funding Mechanism export,0,0.0254163251915
+2012,NIFA,Other NIFA grants and agreements,332377947.0,0.4223363656423687,Current official REEIS Funding Mechanism export,0,0.454110460959
+2013,NIFA,Formula / capacity,276433090.0,0.34478988309706,Current official REEIS Funding Mechanism export,0,0.370729838784
+2013,NIFA,AFRI competitive grants,226149353.0,0.2820719074671768,Current official REEIS Funding Mechanism export,0,0.303293332859
+2013,NIFA,National Research Initiative,429606.0,0.000535839622231172,Current official REEIS Funding Mechanism export,0,0.000576153032622
+2013,NIFA,SBIR grants,18149053.0,0.022636978308900522,Current official REEIS Funding Mechanism export,0,0.0243400509424
+2013,NIFA,Smith-Lever 3(d),27828481.0,0.034709949922271444,Current official REEIS Funding Mechanism export,0,0.0373213216794
+2013,NIFA,Special research grants,17358815.0,0.021651329059605314,Current official REEIS Funding Mechanism export,0,0.0232802472614
+2013,NIFA,Other NIFA grants and agreements,162001071.0,0.20206094115465162,Current official REEIS Funding Mechanism export,0,0.217262813705
+2014,NIFA,Formula / capacity,281750592.0,0.3440326915852281,Current official REEIS Funding Mechanism export,0,0.369915680652
+2014,NIFA,AFRI competitive grants,262087323.0,0.32002277802510193,Current official REEIS Funding Mechanism export,0,0.344099402914
+2014,NIFA,National Research Initiative,742431.0,0.0009065483533972928,Current official REEIS Funding Mechanism export,0,0.000974751700618
+2014,NIFA,SBIR grants,19028956.0,0.02323538312472073,Current official REEIS Funding Mechanism export,0,0.0249834762045
+2014,NIFA,Smith-Lever 3(d),16878313.0,0.02060933185477724,Current official REEIS Funding Mechanism export,0,0.0221598563372
+2014,NIFA,Special research grants,13663594.0,0.01668398631278749,Current official REEIS Funding Mechanism export,0,0.017939190966
+2014,NIFA,Other NIFA grants and agreements,246522954.0,0.3010178427669865,Current official REEIS Funding Mechanism export,0,0.323664648503
+2015,NIFA,Formula / capacity,296400394.0,0.3547183693764411,Current official REEIS Funding Mechanism export,0,0.381405285768
+2015,NIFA,AFRI competitive grants,282104453.0,0.3376096442098281,Current official REEIS Funding Mechanism export,0,0.363009401104
+2015,NIFA,National Research Initiative,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2015,NIFA,SBIR grants,22087860.0,0.026433735719714052,Current official REEIS Funding Mechanism export,0,0.0284224539705
+2015,NIFA,Smith-Lever 3(d),16883490.0,0.020205384889547245,Current official REEIS Funding Mechanism export,0,0.0217255187866
+2015,NIFA,Special research grants,13655802.0,0.01634263623133896,Current official REEIS Funding Mechanism export,0,0.0175721597192
+2015,NIFA,Other NIFA grants and agreements,342284407.0,0.40963024736742454,Current official REEIS Funding Mechanism export,0,0.440448409342
+2016,NIFA,Formula / capacity,297851021.0,0.3488602377700599,Current official REEIS Funding Mechanism export,0,0.375106422917
+2016,NIFA,AFRI competitive grants,247826541.0,0.2902686911353294,Current official REEIS Funding Mechanism export,0,0.312106794149
+2016,NIFA,National Research Initiative,187985.0,0.0002201788383233533,Current official REEIS Funding Mechanism export,0,0.000236743794516
+2016,NIFA,SBIR grants,27963951.0,0.03275298691976048,Current official REEIS Funding Mechanism export,0,0.0352171283315
+2016,NIFA,Smith-Lever 3(d),16883264.0,0.01977464933173653,Current official REEIS Funding Mechanism export,0,0.0212623772279
+2016,NIFA,Special research grants,14247498.0,0.016687488675449103,Current official REEIS Funding Mechanism export,0,0.0179429568257
+2016,NIFA,Other NIFA grants and agreements,318124165.0,0.37260530942514974,Current official REEIS Funding Mechanism export,0,0.400637933609
+2017,NIFA,Formula / capacity,312792903.0,0.3570877756064385,Current official REEIS Funding Mechanism export,0,0.383952952137
+2017,NIFA,AFRI competitive grants,311515853.0,0.35562988145518215,Current official REEIS Funding Mechanism export,0,0.382385374635
+2017,NIFA,National Research Initiative,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2017,NIFA,SBIR grants,24186090.0,0.02761110305215949,Current official REEIS Funding Mechanism export,0,0.0296883994716
+2017,NIFA,Smith-Lever 3(d),17058285.0,0.01947392344228052,Current official REEIS Funding Mechanism export,0,0.0209390264975
+2017,NIFA,Special research grants,14454121.0,0.016500981533574984,Current official REEIS Funding Mechanism export,0,0.0177424179873
+2017,NIFA,Other NIFA grants and agreements,308122410.0,0.35175589006696567,Current official REEIS Funding Mechanism export,0,0.378219927001
+2018,NIFA,Formula / capacity,287415960.0,0.3201320726919619,Current official REEIS Funding Mechanism export,0,0.344216920266
+2018,NIFA,AFRI competitive grants,355220973.0,0.3956552250965654,Current official REEIS Funding Mechanism export,0,0.425421988883
+2018,NIFA,National Research Initiative,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2018,NIFA,SBIR grants,28525555.0,0.031772574657435715,Current official REEIS Funding Mechanism export,0,0.0341629556375
+2018,NIFA,Smith-Lever 3(d),17056529.0,0.01899804722639813,Current official REEIS Funding Mechanism export,0,0.020427348164
+2018,NIFA,Special research grants,14699351.0,0.016372555312713543,Current official REEIS Funding Mechanism export,0,0.0176043297357
+2018,NIFA,Other NIFA grants and agreements,362316383.0,0.4035582946056465,Current official REEIS Funding Mechanism export,0,0.433919638694
+2019,NIFA,Formula / capacity,287288309.0,0.3133594363605307,Current official REEIS Funding Mechanism export,0,0.336934750753
+2019,NIFA,AFRI competitive grants,372848736.0,0.40668438673115764,Current official REEIS Funding Mechanism export,0,0.43728091954
+2019,NIFA,National Research Initiative,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2019,NIFA,SBIR grants,24389474.0,0.026602794427565163,Current official REEIS Funding Mechanism export,0,0.0286042316577
+2019,NIFA,Smith-Lever 3(d),17069115.0,0.018618120153204982,Current official REEIS Funding Mechanism export,0,0.0200188376203
+2019,NIFA,Special research grants,14930996.0,0.016285968987555768,Current official REEIS Funding Mechanism export,0,0.0175112291665
+2019,NIFA,Other NIFA grants and agreements,379057148.0,0.4134562059248651,Current official REEIS Funding Mechanism export,0,0.444562210439
+2020,NIFA,Formula / capacity,277494357.0,0.2974731822876428,Current official REEIS Funding Mechanism export,0,0.319853308692
+2020,NIFA,AFRI competitive grants,400987613.0,0.4298576107514711,Current official REEIS Funding Mechanism export,0,0.462197560156
+2020,NIFA,National Research Initiative,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2020,NIFA,SBIR grants,26735407.0,0.028660282270335756,Current official REEIS Funding Mechanism export,0,0.0308165127414
+2020,NIFA,Smith-Lever 3(d),17044693.0,0.018271863697127032,Current official REEIS Funding Mechanism export,0,0.0196465308723
+2020,NIFA,Special research grants,14931671.0,0.016006709964347526,Current official REEIS Funding Mechanism export,0,0.0172109603427
+2020,NIFA,Other NIFA grants and agreements,467578175.0,0.5012425088179301,Current official REEIS Funding Mechanism export,0,0.538953036604
+2021,NIFA,Formula / capacity,295840201.0,0.3094108524220183,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.332689098665
+2021,NIFA,AFRI competitive grants,492905083.0,0.5155154079082569,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.554299744377
+2021,NIFA,National Research Initiative,0.0,0.0,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0
+2021,NIFA,SBIR grants,27807341.0,0.02908290710091743,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.0312709333697
+2021,NIFA,Smith-Lever 3(d),19339200.0,0.020226319266055046,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.0217480281421
+2021,NIFA,Special research grants,15518191.0,0.01623003462385321,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.0174510866314
+2021,NIFA,Other NIFA grants and agreements,662342626.0,0.692725315266055,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.744841879185
+2022,NIFA,Formula / capacity,308218998.0,0.308218998,Current official REEIS Funding Mechanism export,0,0.331407576151
+2022,NIFA,AFRI competitive grants,410113501.0,0.41011350100000005,Current official REEIS Funding Mechanism export,0,0.440968020126
+2022,NIFA,National Research Initiative,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2022,NIFA,SBIR grants,34567729.0,0.034567729000000005,Current official REEIS Funding Mechanism export,0,0.0371684008944
+2022,NIFA,Smith-Lever 3(d),19627200.0,0.0196272,Current official REEIS Funding Mechanism export,0,0.0211038346787
+2022,NIFA,Special research grants,4107264.0,0.004107264,Current official REEIS Funding Mechanism export,0,0.00441627030029
+2022,NIFA,Other NIFA grants and agreements,650196527.0,0.6501965270000001,Current official REEIS Funding Mechanism export,0,0.699113475915
+2023,NIFA,Formula / capacity,320820891.0,0.3089657318767557,Current official REEIS Funding Mechanism export,0,0.332210489877
+2023,NIFA,AFRI competitive grants,606685228.0,0.5842666445553771,Current official REEIS Funding Mechanism export,0,0.628223418266
+2023,NIFA,National Research Initiative,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2023,NIFA,SBIR grants,40429340.0,0.03893537164446748,Current official REEIS Funding Mechanism export,0,0.0418646391915
+2023,NIFA,Smith-Lever 3(d),20375450.0,0.019622524586680488,Current official REEIS Funding Mechanism export,0,0.0210988075149
+2023,NIFA,Special research grants,4994851.0,0.004810278376885204,Current official REEIS Funding Mechanism export,0,0.00517217532936
+2023,NIFA,Other NIFA grants and agreements,1055011268.0,1.0160258814188132,Current official REEIS Funding Mechanism export,0,1.09246567166
+2024,NIFA,Formula / capacity,326377654.0,0.30354101935075073,Current official REEIS Funding Mechanism export,0,0.326377654
+2024,NIFA,AFRI competitive grants,506780206.0,0.4713208102048048,Current official REEIS Funding Mechanism export,0,0.506780206
+2024,NIFA,National Research Initiative,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2024,NIFA,SBIR grants,40330865.0,0.037508915587087084,Current official REEIS Funding Mechanism export,0,0.040330865
+2024,NIFA,Smith-Lever 3(d),17946547.0,0.016690827645345345,Current official REEIS Funding Mechanism export,0,0.017946547
+2024,NIFA,Special research grants,4789199.0,0.00445409888978979,Current official REEIS Funding Mechanism export,0,0.004789199
+2024,NIFA,Other NIFA grants and agreements,630559597.0,0.5864393609336337,Current official REEIS Funding Mechanism export,0,0.630559597
+2002,other_federal,Agency for International Development,24090682.0,0.04289096990744466,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0461178333199
+2002,other_federal,Department of Defense,17660384.0,0.03144248878873239,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0338080360563
+2002,other_federal,Department of Energy,19246777.0,0.03426689759643575,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0368449367117
+2002,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2002,other_federal,Health and Human Services,62089744.0,0.11054437319229662,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.118861079345
+2002,other_federal,National Aeronautics and Space Administration,17132878.0,0.030503318865191142,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0327982085312
+2002,other_federal,National Institutes of Health,188877743.0,0.33627730386375393,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.361576823334
+2002,other_federal,National Science Foundation,105748536.0,0.18827434089795916,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.20243899102
+2002,other_federal,Other Federal Funds,160654164.0,0.2860281379177924,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.307547206738
+2002,other_federal,Public Health Service,21946135.0,0.03907282557918942,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.042012434349
+2002,other_federal,Tennessee Valley Authority,195064.0,0.00034729129519977,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.000373419442368
+2003,other_federal,Agency for International Development,24568696.0,0.04225615596741947,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.045435259726
+2003,other_federal,Department of Defense,15507908.0,0.026672338620510917,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0286790079452
+2003,other_federal,Department of Energy,25633558.0,0.04408763187300999,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0474045250685
+2003,other_federal,Foreign Agricultural Research (PL 480),6967.0,1.1982672528693074e-05,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,1.28841780822e-05
+2003,other_federal,Health and Human Services,71016631.0,0.12214282092206588,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.131332125822
+2003,other_federal,National Aeronautics and Space Administration,18013493.0,0.030981740737319508,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0333126240411
+2003,other_federal,National Institutes of Health,201184787.0,0.346021446874676,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.372054058151
+2003,other_federal,National Science Foundation,106776476.0,0.18364684163569048,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.197463346027
+2003,other_federal,Other Federal Funds,159776774.0,0.2748030372517586,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.295477595753
+2003,other_federal,Public Health Service,27785997.0,0.04778965163402443,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0513850629452
+2003,other_federal,Tennessee Valley Authority,141844.0,0.00024396012661977043,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.000262314246575
+2004,other_federal,Agency for International Development,27730021.0,0.04598244246135999,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0494418900214
+2004,other_federal,Department of Defense,21929308.0,0.03636359104551134,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0390993730002
+2004,other_federal,Department of Energy,24682774.0,0.040929440163126905,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0440087296555
+2004,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2004,other_federal,Health and Human Services,84488752.0,0.14010083791397468,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.150641198015
+2004,other_federal,National Aeronautics and Space Administration,18140162.0,0.030080357869355707,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0323434264465
+2004,other_federal,National Institutes of Health,214803637.0,0.35619143162002503,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.38298917252
+2004,other_federal,National Science Foundation,119504172.0,0.19816406604533288,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.213072760714
+2004,other_federal,Other Federal Funds,191701497.0,0.31788302848955924,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.341798671253
+2004,other_federal,Public Health Service,13423675.0,0.02225939040246297,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0239340555506
+2004,other_federal,Tennessee Valley Authority,623143.0,0.0010333074447617348,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.00111104739782
+2005,other_federal,Agency for International Development,25731905.0,0.041071144022504724,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0441610944769
+2005,other_federal,Department of Defense,22943593.0,0.03662067042827693,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0393757935183
+2005,other_federal,Department of Energy,28654905.0,0.045736595491324514,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0491775469765
+2005,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2005,other_federal,Health and Human Services,106474632.0,0.1699460240357327,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.18273175978
+2005,other_federal,National Aeronautics and Space Administration,18292432.0,0.02919687093489091,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0313934711699
+2005,other_federal,National Institutes of Health,176196497.0,0.2812303132841436,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.302388422098
+2005,other_federal,National Science Foundation,127078154.0,0.20283166617660195,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.218091523529
+2005,other_federal,Other Federal Funds,198829821.0,0.31735575793008075,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.341231731969
+2005,other_federal,Public Health Service,16606014.0,0.026505149643360246,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0284992406562
+2005,other_federal,Tennessee Valley Authority,793691.0,0.0012668240991238618,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.00136213246693
+2006,other_federal,Agency for International Development,23501713.0,0.03585164033872425,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.038548906144
+2006,other_federal,Department of Defense,24249381.0,0.03699220078335113,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0397752756243
+2006,other_federal,Department of Energy,28987218.0,0.04421972620277482,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0475465573959
+2006,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0
+2006,other_federal,Health and Human Services,116225346.0,0.1773006632765783,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.190639718667
+2006,other_federal,National Aeronautics and Space Administration,17015128.0,0.02595641642689435,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0279092239915
+2006,other_federal,National Institutes of Health,185833187.0,0.28348676470191286,Retained public REEIS extract; unknown extraction date; live query HTTP500,272184982.0,0.304814635601
+2006,other_federal,National Science Foundation,133480156.0,0.2036227123218127,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.218942083317
+2006,other_federal,Other Federal Funds,177973666.0,0.27149713994023483,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.291922982241
+2006,other_federal,Public Health Service,11817564.0,0.018027581828092935,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0193838706773
+2006,other_federal,Tennessee Valley Authority,373788.0,0.0005702100497496102,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.000613109288236
+2007,other_federal,Agency for International Development,23235829.0,0.034148068212432776,Current official REEIS Funding Mechanism export,0,0.0367171673062
+2007,other_federal,Department of Defense,25147369.0,0.036957324482600445,Current official REEIS Funding Mechanism export,0,0.0397377754366
+2007,other_federal,Department of Energy,28137225.0,0.04135130614916166,Current official REEIS Funding Mechanism export,0,0.0444623343483
+2007,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2007,other_federal,Health and Human Services,122909489.0,0.18063145559933566,Current official REEIS Funding Mechanism export,0,0.194221100144
+2007,other_federal,National Aeronautics and Space Administration,14263437.0,0.020961972978013287,Current official REEIS Funding Mechanism export,0,0.0225390280971
+2007,other_federal,National Institutes of Health,180834629.0,0.2657599712178108,Current official REEIS Funding Mechanism export,298202645.0,0.285754182808
+2007,other_federal,National Science Foundation,125445468.0,0.18435840607212908,Current official REEIS Funding Mechanism export,0,0.198228444372
+2007,other_federal,Other Federal Funds,177721254.0,0.26118446234008225,Current official REEIS Funding Mechanism export,0,0.280834439649
+2007,other_federal,Public Health Service,4168361.0,0.006125947809395761,Current official REEIS Funding Mechanism export,0,0.00658682796425
+2007,other_federal,Tennessee Valley Authority,301603.0,0.000443244775862069,Current official REEIS Funding Mechanism export,0,0.000476591896552
+2008,other_federal,Agency for International Development,16480320.0,0.023138443992444278,Current official REEIS Funding Mechanism export,0,0.0248792439441
+2008,other_federal,Department of Defense,22415096.0,0.031470896401360034,Current official REEIS Funding Mechanism export,0,0.0338385808901
+2008,other_federal,Department of Energy,40016388.0,0.05618319016365697,Current official REEIS Funding Mechanism export,0,0.0604100817711
+2008,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2008,other_federal,Health and Human Services,115173156.0,0.1617036331539101,Current official REEIS Funding Mechanism export,0,0.173869260059
+2008,other_federal,National Aeronautics and Space Administration,11974173.0,0.016811793176123913,Current official REEIS Funding Mechanism export,0,0.0180766132633
+2008,other_federal,National Institutes of Health,193545925.0,0.27173935612769173,Current official REEIS Funding Mechanism export,295318058.0,0.292183421345
+2008,other_federal,National Science Foundation,117774735.0,0.165356261863997,Current official REEIS Funding Mechanism export,0,0.177796690994
+2008,other_federal,Other Federal Funds,181216842.0,0.2544292677026067,Current official REEIS Funding Mechanism export,0,0.273571024039
+2008,other_federal,Public Health Service,3753819.0,0.005270378893690971,Current official REEIS Funding Mechanism export,0,0.00566689109331
+2008,other_federal,Tennessee Valley Authority,323790.0,0.0004546026278806196,Current official REEIS Funding Mechanism export,0,0.000488804246317
+2009,other_federal,Agency for International Development,16975612.0,0.023155018878661088,Current official REEIS Funding Mechanism export,0,0.0248970658269
+2009,other_federal,Department of Defense,19235418.0,0.02623743208368201,Current official REEIS Funding Mechanism export,0,0.0282113816076
+2009,other_federal,Department of Energy,42191292.0,0.05754962841841005,Current official REEIS Funding Mechanism export,0,0.0618793227747
+2009,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2009,other_federal,Health and Human Services,125375856.0,0.1710147659246862,Current official REEIS Funding Mechanism export,0,0.183880907501
+2009,other_federal,National Aeronautics and Space Administration,13954689.0,0.019034429347280335,Current official REEIS Funding Mechanism export,0,0.0204664674609
+2009,other_federal,National Institutes of Health,181652310.0,0.24777679104602512,Current official REEIS Funding Mechanism export,0,0.266418054305
+2009,other_federal,National Science Foundation,121195214.0,0.16531230026778243,Current official REEIS Funding Mechanism export,0,0.177749421986
+2009,other_federal,Other Federal Funds,203216113.0,0.27719017923849376,Current official REEIS Funding Mechanism export,0,0.298044332213
+2009,other_federal,Public Health Service,4333309.0,0.005910706,Current official REEIS Funding Mechanism export,0,0.00635539263158
+2009,other_federal,Tennessee Valley Authority,581370.0,0.000792998410041841,Current official REEIS Funding Mechanism export,0,0.000852658929751
+2010,other_federal,Agency for International Development,11596441.0,0.015351219396024792,Current official REEIS Funding Mechanism export,0,0.016506154533
+2010,other_federal,Department of Defense,16136872.0,0.021361783536653134,Current official REEIS Funding Mechanism export,0,0.0229689180423
+2010,other_federal,Department of Energy,34157501.0,0.04521726035349434,Current official REEIS Funding Mechanism export,0,0.0486191401282
+2010,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2010,other_federal,Health and Human Services,101209371.0,0.13397966317033555,Current official REEIS Funding Mechanism export,0,0.144059502214
+2010,other_federal,National Aeronautics and Space Administration,8775320.0,0.011616655712759136,Current official REEIS Funding Mechanism export,0,0.0124906243214
+2010,other_federal,National Institutes of Health,142842723.0,0.1890933588933533,Current official REEIS Funding Mechanism export,0,0.203319627096
+2010,other_federal,National Science Foundation,105368393.0,0.13948532298397096,Current official REEIS Funding Mechanism export,0,0.149979375375
+2010,other_federal,Other Federal Funds,187545446.0,0.24827024845565293,Current official REEIS Funding Mechanism export,0,0.266948636538
+2010,other_federal,Public Health Service,1069017.0,0.0014151509506304767,Current official REEIS Funding Mechanism export,0,0.00152161855525
+2010,other_federal,Tennessee Valley Authority,142713.0,0.00018892163325496901,Current official REEIS Funding Mechanism export,0,0.000203134981834
+2011,other_federal,Agency for International Development,15105802.0,0.019440128316642425,Current official REEIS Funding Mechanism export,0,0.0209026888261
+2011,other_federal,Department of Defense,24646488.0,0.03171833506586328,Current official REEIS Funding Mechanism export,0,0.0341046353792
+2011,other_federal,Department of Energy,35131693.0,0.04521207281155204,Current official REEIS Funding Mechanism export,0,0.0486135623063
+2011,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2011,other_federal,Health and Human Services,103924666.0,0.13374389802701017,Current official REEIS Funding Mechanism export,0,0.143805999493
+2011,other_federal,National Aeronautics and Space Administration,7048704.0,0.009071197293995428,Current official REEIS Funding Mechanism export,0,0.00975366063578
+2011,other_federal,National Institutes of Health,208235379.0,0.26798461199376683,Current official REEIS Funding Mechanism export,0,0.288146192425
+2011,other_federal,National Science Foundation,115657095.0,0.14884272728651568,Current official REEIS Funding Mechanism export,0,0.160040775545
+2011,other_federal,Other Federal Funds,223316913.0,0.28739350906337,Current official REEIS Funding Mechanism export,0,0.309015300349
+2011,other_federal,Public Health Service,7636477.0,0.00982762072262622,Current official REEIS Funding Mechanism export,0,0.0105669928984
+2011,other_federal,Tennessee Valley Authority,2283806.0,0.002939101259921047,Current official REEIS Funding Mechanism export,0,0.00316022189071
+2012,other_federal,Agency for International Development,19527212.0,0.024812271155908096,Current official REEIS Funding Mechanism export,0,0.0266789999836
+2012,other_federal,Department of Defense,29807877.0,0.037875408261351204,Current official REEIS Funding Mechanism export,0,0.0407249304199
+2012,other_federal,Department of Energy,34643662.0,0.0440200032333151,Current official REEIS Funding Mechanism export,0,0.0473318084491
+2012,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2012,other_federal,Health and Human Services,81118289.0,0.10307303379362691,Current official REEIS Funding Mechanism export,0,0.110827640469
+2012,other_federal,National Aeronautics and Space Administration,8073388.0,0.010258458411925601,Current official REEIS Funding Mechanism export,0,0.0110302442724
+2012,other_federal,National Institutes of Health,116114024.0,0.1475403989310722,Current official REEIS Funding Mechanism export,0,0.158640467691
+2012,other_federal,National Science Foundation,118276535.0,0.1502881956626094,Current official REEIS Funding Mechanism export,0,0.16159499243
+2012,other_federal,Other Federal Funds,199995763.0,0.25412481318832053,Current official REEIS Funding Mechanism export,0,0.273243664164
+2012,other_federal,Public Health Service,269375.0,0.0003422816089989059,Current official REEIS Funding Mechanism export,0,0.000368032856947
+2012,other_federal,Tennessee Valley Authority,2393713.0,0.0030415737804978115,Current official REEIS Funding Mechanism export,0,0.00327040383889
+2013,other_federal,Agency for International Development,10799203.0,0.013469646271043093,Current official REEIS Funding Mechanism export,0,0.0144830229521
+2013,other_federal,Department of Defense,21999821.0,0.027439970051147802,Current official REEIS Funding Mechanism export,0,0.0295043914337
+2013,other_federal,Department of Energy,29920834.0,0.03731970314055578,Current official REEIS Funding Mechanism export,0,0.0401274173258
+2013,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2013,other_federal,Health and Human Services,71377617.0,0.08902798221868706,Current official REEIS Funding Mechanism export,0,0.0957259221144
+2013,other_federal,National Aeronautics and Space Administration,7071699.0,0.008820399437374143,Current official REEIS Funding Mechanism export,0,0.00948399422876
+2013,other_federal,National Institutes of Health,88816618.0,0.11077932579379782,Current official REEIS Funding Mechanism export,0,0.119113708393
+2013,other_federal,National Science Foundation,105617680.0,0.1317349798469593,Current official REEIS Funding Mechanism export,0,0.141645942167
+2013,other_federal,Other Federal Funds,217570869.0,0.2713721229532823,Current official REEIS Funding Mechanism export,0,0.291788559714
+2013,other_federal,Public Health Service,1344919.0,0.001677492606927104,Current official REEIS Funding Mechanism export,0,0.0018036972493
+2013,other_federal,Tennessee Valley Authority,1708450.0,0.0021309181031010874,Current official REEIS Funding Mechanism export,0,0.00229123580346
+2014,other_federal,Agency for International Development,13129548.0,0.016031887300302278,Current official REEIS Funding Mechanism export,0,0.0172380318728
+2014,other_federal,Department of Defense,22620534.0,0.027620893861742678,Current official REEIS Funding Mechanism export,0,0.029698926884
+2014,other_federal,Department of Energy,23030077.0,0.028120967986200555,Current official REEIS Funding Mechanism export,0,0.0302366236339
+2014,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2014,other_federal,Health and Human Services,50986178.0,0.062256877355500076,Current official REEIS Funding Mechanism export,0,0.0669407173374
+2014,other_federal,National Aeronautics and Space Administration,7614154.0,0.00929729331239322,Current official REEIS Funding Mechanism export,0,0.00999676678407
+2014,other_federal,National Institutes of Health,58917169.0,0.07194104575883822,Current official REEIS Funding Mechanism export,0,0.0773534654107
+2014,other_federal,National Science Foundation,87869844.0,0.10729382581206467,Current official REEIS Funding Mechanism export,0,0.115365979966
+2014,other_federal,Other Federal Funds,175900267.0,0.2147837272568012,Current official REEIS Funding Mechanism export,0,0.230942787138
+2014,other_federal,Public Health Service,1954966.0,0.002387119083453805,Current official REEIS Funding Mechanism export,0,0.00256671183336
+2014,other_federal,Tennessee Valley Authority,83945.0,0.00010250137928768565,Current official REEIS Funding Mechanism export,0,0.000110212978052
+2015,other_federal,Agency for International Development,24778318.0,0.029653552204289307,Current official REEIS Funding Mechanism export,0,0.0318845104425
+2015,other_federal,Department of Defense,17682610.0,0.021161734979068723,Current official REEIS Funding Mechanism export,0,0.022753819012
+2015,other_federal,Department of Energy,22503690.0,0.026931381952727512,Current official REEIS Funding Mechanism export,0,0.0289575401687
+2015,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2015,other_federal,Health and Human Services,39676046.0,0.047482468395182595,Current official REEIS Funding Mechanism export,0,0.0510547690526
+2015,other_federal,National Aeronautics and Space Administration,6703744.0,0.008022732724157919,Current official REEIS Funding Mechanism export,0,0.00862631578025
+2015,other_federal,National Institutes of Health,60703190.0,0.07264678795517487,Current official REEIS Funding Mechanism export,0,0.0781123034843
+2015,other_federal,National Science Foundation,89581185.0,0.10720664517743288,Current official REEIS Funding Mechanism export,0,0.115272240375
+2015,other_federal,Other Federal Funds,177816603.0,0.2128027382589039,Current official REEIS Funding Mechanism export,0,0.22881276022
+2015,other_federal,Public Health Service,1505859.0,0.00180214284394925,Current official REEIS Funding Mechanism export,0,0.0019377254344
+2015,other_federal,Tennessee Valley Authority,36814.0,4.405730327816063e-05,Current official REEIS Funding Mechanism export,0,4.73719147292e-05
+2016,other_federal,Agency for International Development,33213774.0,0.03890188140359282,Current official REEIS Funding Mechanism export,0,0.0418286293426
+2016,other_federal,Department of Defense,19798833.0,0.023189531346107788,Current official REEIS Funding Mechanism export,0,0.0249341748087
+2016,other_federal,Department of Energy,23755029.0,0.027823255523353296,Current official REEIS Funding Mechanism export,0,0.0299165130425
+2016,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2016,other_federal,Health and Human Services,41422863.0,0.048516838340119765,Current official REEIS Funding Mechanism export,0,0.0521669588869
+2016,other_federal,National Aeronautics and Space Administration,11622663.0,0.01361313103473054,Current official REEIS Funding Mechanism export,0,0.0146373026625
+2016,other_federal,National Institutes of Health,63889312.0,0.07483083489341318,Current official REEIS Funding Mechanism export,0,0.0804606652228
+2016,other_federal,National Science Foundation,97121788.0,0.11375462115449103,Current official REEIS Funding Mechanism export,0,0.122312847415
+2016,other_federal,Other Federal Funds,178141626.0,0.2086497128479042,Current official REEIS Funding Mechanism export,0,0.224347285691
+2016,other_federal,Public Health Service,1216397.0,0.001424714091017964,Current official REEIS Funding Mechanism export,0,0.00153190116987
+2016,other_federal,Tennessee Valley Authority,1895436.0,0.0022200436023952098,Current official REEIS Funding Mechanism export,0,0.00238706657926
+2017,other_federal,Agency for International Development,40907019.0,0.046699897220495175,Current official REEIS Funding Mechanism export,0,0.0502133218419
+2017,other_federal,Department of Defense,14524026.0,0.01658078584087977,Current official REEIS Funding Mechanism export,0,0.0178282262997
+2017,other_federal,Department of Energy,24320363.0,0.02776439056742643,Current official REEIS Funding Mechanism export,0,0.0298532194348
+2017,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2017,other_federal,Health and Human Services,24209345.0,0.027637651212754192,Current official REEIS Funding Mechanism export,0,0.0297169449591
+2017,other_federal,National Aeronautics and Space Administration,9022724.0,0.010300439722799041,Current official REEIS Funding Mechanism export,0,0.0110753840093
+2017,other_federal,National Institutes of Health,63925734.0,0.07297831229268292,Current official REEIS Funding Mechanism export,0,0.0784687697561
+2017,other_federal,National Science Foundation,92769399.0,0.1059065535552006,Current official REEIS Funding Mechanism export,0,0.113874337533
+2017,other_federal,Other Federal Funds,162755094.0,0.18580298314849172,Current official REEIS Funding Mechanism export,0,0.199781702901
+2017,other_federal,Public Health Service,5697016.0,0.006503775346316889,Current official REEIS Funding Mechanism export,0,0.00699308101493
+2017,other_federal,Tennessee Valley Authority,149039.0,0.00017014454125453094,Current official REEIS Funding Mechanism export,0,0.000182945212263
+2018,other_federal,Agency for International Development,32244416.0,0.03591474783384284,Current official REEIS Funding Mechanism export,0,0.0386167614746
+2018,other_federal,Department of Defense,19510013.0,0.021730807502607447,Current official REEIS Funding Mechanism export,0,0.0233657051933
+2018,other_federal,Department of Energy,32700117.0,0.036422320571479955,Current official REEIS Funding Mechanism export,0,0.039162520989
+2018,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2018,other_federal,Health and Human Services,37220808.0,0.04145759481244381,Current official REEIS Funding Mechanism export,0,0.0445766195432
+2018,other_federal,National Aeronautics and Space Administration,11115130.0,0.01238034799856141,Current official REEIS Funding Mechanism export,0,0.0133117723071
+2018,other_federal,National Institutes of Health,75803106.0,0.08443165591871966,Current official REEIS Funding Mechanism export,0,0.0907837953534
+2018,other_federal,National Science Foundation,95505449.0,0.1063766860467542,Current official REEIS Funding Mechanism export,0,0.114379840018
+2018,other_federal,Other Federal Funds,147471034.0,0.16425743294299588,Current official REEIS Funding Mechanism export,0,0.17661519267
+2018,other_federal,Public Health Service,4924059.0,0.005484556994425464,Current official REEIS Funding Mechanism export,0,0.00589718269016
+2018,other_federal,Tennessee Valley Authority,62819.0,6.996958928250316e-05,Current official REEIS Funding Mechanism export,0,7.52336881856e-05
+2019,other_federal,Agency for International Development,37984811.0,0.04143189469370745,Current official REEIS Funding Mechanism export,0,0.0445489858993
+2019,other_federal,Department of Defense,23768963.0,0.025925972673514916,Current official REEIS Funding Mechanism export,0,0.0278764898298
+2019,other_federal,Department of Energy,31771589.0,0.034654828997299846,Current official REEIS Funding Mechanism export,0,0.0372620537814
+2019,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2019,other_federal,Health and Human Services,27899054.0,0.030430865310401508,Current official REEIS Funding Mechanism export,0,0.0327203039986
+2019,other_federal,National Aeronautics and Space Administration,7851197.0,0.008563685293143932,Current official REEIS Funding Mechanism export,0,0.00920796642757
+2019,other_federal,National Institutes of Health,92864094.0,0.10129141786264384,Current official REEIS Funding Mechanism export,0,0.108911986271
+2019,other_federal,National Science Foundation,109048225.0,0.11894424260096269,Current official REEIS Funding Mechanism export,0,0.127892905347
+2019,other_federal,Other Federal Funds,143414908.0,0.1564296677891524,Current official REEIS Funding Mechanism export,0,0.16819851267
+2019,other_federal,Public Health Service,6150751.0,0.006708925515496597,Current official REEIS Funding Mechanism export,0,0.00721366547194
+2019,other_federal,Tennessee Valley Authority,172006.0,0.00018761537285747832,Current official REEIS Funding Mechanism export,0,0.000201730446114
+2020,other_federal,Agency for International Development,28145518.0,0.030171917357563173,Current official REEIS Funding Mechanism export,0,0.0324418743302
+2020,other_federal,Department of Defense,22997605.0,0.02465336887677397,Current official REEIS Funding Mechanism export,0,0.0265081428349
+2020,other_federal,Department of Energy,30652094.0,0.032858959888542746,Current official REEIS Funding Mechanism export,0,0.035331074081
+2020,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2020,other_federal,Health and Human Services,254339346.0,0.2726510746147456,Current official REEIS Funding Mechanism export,0,0.29316373215
+2020,other_federal,National Aeronautics and Space Administration,6606561.0,0.007082215097611631,Current official REEIS Funding Mechanism export,0,0.00761503915888
+2020,other_federal,National Institutes of Health,97757126.0,0.10479536837037037,Current official REEIS Funding Mechanism export,0,0.112679553333
+2020,other_federal,National Science Foundation,81198942.0,0.08704504097403946,Current official REEIS Funding Mechanism export,0,0.0935937960748
+2020,other_federal,Other Federal Funds,143829436.0,0.15418475711041885,Current official REEIS Funding Mechanism export,0,0.165784708162
+2020,other_federal,Public Health Service,9851594.0,0.01056088148771201,Current official REEIS Funding Mechanism export,0,0.0113554198754
+2020,other_federal,Tennessee Valley Authority,635674.0,0.0006814407677397024,Current official REEIS Funding Mechanism export,0,0.00073270834891
+2021,other_federal,Agency for International Development,19943121.0,0.02085794306422018,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.0224271715866
+2021,other_federal,Department of Defense,29237689.0,0.03057886739449541,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.0328794408859
+2021,other_federal,Department of Energy,44094728.0,0.04611742194495413,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.0495870245646
+2021,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0
+2021,other_federal,Health and Human Services,43462917.0,0.04545662878899082,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.0488765172319
+2021,other_federal,National Aeronautics and Space Administration,8285893.0,0.008665979834862385,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.00931795700681
+2021,other_federal,National Institutes of Health,105492635.0,0.1103317466972477,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.118632456087
+2021,other_federal,National Science Foundation,77418947.0,0.0809702748440367,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.0870620003974
+2021,other_federal,Other Federal Funds,165920257.0,0.17353127796330275,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.186586747051
+2021,other_federal,Public Health Service,8862033.0,0.009268548275229358,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.00996585913998
+2021,other_federal,Tennessee Valley Authority,560400.0,0.0005861064220183486,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.000630201609726
+2022,other_federal,Agency for International Development,17771660.0,0.01777166,Current official REEIS Funding Mechanism export,0,0.0191086948014
+2022,other_federal,Department of Defense,21624680.0,0.02162468,Current official REEIS Funding Mechanism export,0,0.0232515932838
+2022,other_federal,Department of Energy,33993634.0,0.033993634,Current official REEIS Funding Mechanism export,0,0.0365511143752
+2022,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2022,other_federal,Health and Human Services,58514256.0,0.058514256,Current official REEIS Funding Mechanism export,0,0.0629165232418
+2022,other_federal,National Aeronautics and Space Administration,5663908.0,0.0056639080000000005,Current official REEIS Funding Mechanism export,0,0.00609002700678
+2022,other_federal,National Institutes of Health,101703538.0,0.10170353800000001,Current official REEIS Funding Mechanism export,0,0.109355111895
+2022,other_federal,National Science Foundation,88800865.0,0.088800865,Current official REEIS Funding Mechanism export,0,0.0954817179367
+2022,other_federal,Other Federal Funds,220282030.0,0.22028203000000002,Current official REEIS Funding Mechanism export,0,0.236854749726
+2022,other_federal,Public Health Service,9264863.0,0.009264863,Current official REEIS Funding Mechanism export,0,0.00996189660639
+2022,other_federal,Tennessee Valley Authority,527809.0,0.0005278090000000001,Current official REEIS Funding Mechanism export,0,0.000567518233775
+2023,other_federal,Agency for International Development,1207642.0,0.0011630165143301375,Current official REEIS Funding Mechanism export,0,0.00125051501218
+2023,other_federal,Department of Defense,1991786.0,0.0019181843717025137,Current official REEIS Funding Mechanism export,0,0.00206249724177
+2023,other_federal,Department of Energy,6114650.0,0.005888697916558694,Current official REEIS Funding Mechanism export,0,0.00633172878984
+2023,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2023,other_federal,Health and Human Services,8468152.0,0.008155231949416948,Current official REEIS Funding Mechanism export,0,0.00876878346515
+2023,other_federal,National Aeronautics and Space Administration,1162670.0,0.001119706345685411,Current official REEIS Funding Mechanism export,0,0.00120394644208
+2023,other_federal,National Institutes of Health,9963352.0,0.009595180454210936,Current official REEIS Funding Mechanism export,0,0.0103170651962
+2023,other_federal,National Science Foundation,9248199.0,0.00890645420150298,Current official REEIS Funding Mechanism export,0,0.0095765232454
+2023,other_federal,Other Federal Funds,713747429.0,0.6873726211805131,Current official REEIS Funding Mechanism export,0,0.739086479991
+2023,other_federal,Public Health Service,586697.0,0.000565017033117388,Current official REEIS Funding Mechanism export,0,0.000607525579684
+2023,other_federal,Tennessee Valley Authority,17255.0,1.6617383259911895e-05,Current official REEIS Funding Mechanism export,0,1.78675770925e-05
+2024,other_federal,Agency for International Development,538465.0,0.0005007886201201201,Current official REEIS Funding Mechanism export,0,0.000538465
+2024,other_federal,Department of Defense,5296081.0,0.004925514371471471,Current official REEIS Funding Mechanism export,0,0.005296081
+2024,other_federal,Department of Energy,7007592.0,0.006517270998198198,Current official REEIS Funding Mechanism export,0,0.007007592
+2024,other_federal,Foreign Agricultural Research (PL 480),0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2024,other_federal,Health and Human Services,8077055.0,0.007511903704204204,Current official REEIS Funding Mechanism export,0,0.008077055
+2024,other_federal,National Aeronautics and Space Administration,3286113.0,0.003056183772072072,Current official REEIS Funding Mechanism export,0,0.003286113
+2024,other_federal,National Institutes of Health,10864655.0,0.010104455415915916,Current official REEIS Funding Mechanism export,0,0.010864655
+2024,other_federal,National Science Foundation,12589607.0,0.011708712576276276,Current official REEIS Funding Mechanism export,0,0.012589607
+2024,other_federal,Other Federal Funds,738359834.0,0.686696818587988,Current official REEIS Funding Mechanism export,0,0.738359834
+2024,other_federal,Public Health Service,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2024,other_federal,Tennessee Valley Authority,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2002,all_nongovernment,Industry grants and agreements,235775844.0,0.41977452651221614,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.451355884174
+2002,all_nongovernment,Institution-generated funds,152181480.0,0.27094339957459035,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.291327581719
+2002,all_nongovernment,Other nonfederal funds,232832724.0,0.414534605477436,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.445721742409
+2002,all_nongovernment,Trust funds,10374683.0,0.01847105102098304,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0198607038747
+2003,all_nongovernment,Industry grants and agreements,240832261.0,0.4142118728158089,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.445374729247
+2003,all_nongovernment,Institution-generated funds,166928583.0,0.2871035662075157,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.308703543904
+2003,all_nongovernment,Other nonfederal funds,231983617.0,0.39899292586949275,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.429010798562
+2003,all_nongovernment,Trust funds,10926749.0,0.018793118281932617,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0202070015753
+2004,all_nongovernment,Industry grants and agreements,248853302.0,0.4126532266432269,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.443698819736
+2004,all_nongovernment,Institution-generated funds,185727048.0,0.3079760847703017,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.331146387564
+2004,all_nongovernment,Other nonfederal funds,232313398.0,0.38522644669248624,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.414208610748
+2004,all_nongovernment,Trust funds,8184362.0,0.013571463027306802,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0145924998001
+2005,all_nongovernment,Industry grants and agreements,246870315.0,0.394034031380347,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.423678826121
+2005,all_nongovernment,Institution-generated funds,189312728.0,0.30216535919051707,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.324898497289
+2005,all_nongovernment,Other nonfederal funds,263413687.0,0.42043919703092253,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.452070560579
+2005,all_nongovernment,Trust funds,6644515.0,0.010605426707610376,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.0114033164147
+2006,all_nongovernment,Industry grants and agreements,251248473.0,0.3832771632284706,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.412112674702
+2006,all_nongovernment,Institution-generated funds,221795917.0,0.33834756831902146,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.363802842267
+2006,all_nongovernment,Other nonfederal funds,261629369.0,0.399113121645021,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.429140037158
+2006,all_nongovernment,Trust funds,3825693.0,0.00583605839635498,Retained public REEIS extract; unknown extraction date; live query HTTP500,0,0.00627512898284
+2007,all_nongovernment,Industry grants and agreements,261232983.0,0.3839157932700095,Current official REEIS Funding Mechanism export,0,0.412799351498
+2007,all_nongovernment,Institution-generated funds,228255816.0,0.3354515638177792,Current official REEIS Funding Mechanism export,0,0.360688959481
+2007,all_nongovernment,Other nonfederal funds,273175340.0,0.40146663776336605,Current official REEIS Funding Mechanism export,0,0.431670617937
+2007,all_nongovernment,Trust funds,6571824.0,0.009658148811135718,Current official REEIS Funding Mechanism export,0,0.0103847709206
+2008,all_nongovernment,Industry grants and agreements,281100217.0,0.3946659790173026,Current official REEIS Funding Mechanism export,0,0.424358317768
+2008,all_nongovernment,Institution-generated funds,238726731.0,0.3351734125758972,Current official REEIS Funding Mechanism export,0,0.360389881782
+2008,all_nongovernment,Other nonfederal funds,290645003.0,0.4080669018319607,Current official REEIS Funding Mechanism export,0,0.438767446917
+2008,all_nongovernment,Trust funds,9671842.0,0.013579310014658104,Current official REEIS Funding Mechanism export,0,0.0146009371485
+2009,all_nongovernment,Industry grants and agreements,295962930.0,0.40369838987447704,Current official REEIS Funding Mechanism export,0,0.434070273904
+2009,all_nongovernment,Institution-generated funds,253730110.0,0.34609211656903766,Current official REEIS Funding Mechanism export,0,0.372130044616
+2009,all_nongovernment,Other nonfederal funds,311091577.0,0.42433411758159,Current official REEIS Funding Mechanism export,0,0.456258511962
+2009,all_nongovernment,Trust funds,11025166.0,0.015038510945606695,Current official REEIS Funding Mechanism export,0,0.0161699197445
+2010,all_nongovernment,Industry grants and agreements,252806485.0,0.3346619722355204,Current official REEIS Funding Mechanism export,0,0.359839963689
+2010,all_nongovernment,Institution-generated funds,205749184.0,0.2723681226108143,Current official REEIS Funding Mechanism export,0,0.292859492507
+2010,all_nongovernment,Other nonfederal funds,240552288.0,0.31844002390938236,Current official REEIS Funding Mechanism export,0,0.34239757172
+2010,all_nongovernment,Trust funds,5062567.0,0.006701761059628126,Current official REEIS Funding Mechanism export,0,0.0072059620047
+2011,all_nongovernment,Industry grants and agreements,277253225.0,0.356805833295242,Current official REEIS Funding Mechanism export,0,0.383649798151
+2011,all_nongovernment,Institution-generated funds,210752104.0,0.27122346398836483,Current official REEIS Funding Mechanism export,0,0.291628716526
+2011,all_nongovernment,Other nonfederal funds,233405987.0,0.3003774534548099,Current official REEIS Funding Mechanism export,0,0.322976080079
+2011,all_nongovernment,Trust funds,1613563.0,0.0020765446129233324,Current official REEIS Funding Mechanism export,0,0.00223277157282
+2012,all_nongovernment,Industry grants and agreements,271936207.0,0.34553600919543215,Current official REEIS Funding Mechanism export,0,0.371532099006
+2012,all_nongovernment,Institution-generated funds,243302016.0,0.30915194620568925,Current official REEIS Funding Mechanism export,0,0.332410713873
+2012,all_nongovernment,Other nonfederal funds,236371225.0,0.30034532979690914,Current official REEIS Funding Mechanism export,0,0.322941539627
+2012,all_nongovernment,Trust funds,1872791.0,0.002379663728254923,Current official REEIS Funding Mechanism export,0,0.00255869558124
+2013,all_nongovernment,Industry grants and agreements,268495889.0,0.3348899590144986,Current official REEIS Funding Mechanism export,0,0.360085102847
+2013,all_nongovernment,Institution-generated funds,191895247.0,0.23934739426459925,Current official REEIS Funding Mechanism export,0,0.257354479464
+2013,all_nongovernment,Other nonfederal funds,223681717.0,0.2789940707003625,Current official REEIS Funding Mechanism export,0,0.299983937821
+2013,all_nongovernment,Trust funds,2356440.0,0.0029391440515505437,Current official REEIS Funding Mechanism export,0,0.00316026790173
+2014,all_nongovernment,Industry grants and agreements,246536296.0,0.3010341340696544,Current official REEIS Funding Mechanism export,0,0.323682165467
+2014,all_nongovernment,Institution-generated funds,208836529.0,0.2550006822104088,Current official REEIS Funding Mechanism export,0,0.274185428402
+2014,all_nongovernment,Other nonfederal funds,217954423.0,0.2661341232872914,Current official REEIS Funding Mechanism export,0,0.28615648387
+2014,all_nongovernment,Trust funds,2704626.0,0.0033024944363254046,Current official REEIS Funding Mechanism export,0,0.00355095462479
+2015,all_nongovernment,Industry grants and agreements,260034795.0,0.31119769180717466,Current official REEIS Funding Mechanism export,0,0.334610369299
+2015,all_nongovernment,Institution-generated funds,208913386.0,0.2500179389870548,Current official REEIS Funding Mechanism export,0,0.268827812989
+2015,all_nongovernment,Other nonfederal funds,256861273.0,0.30739976652837,Current official REEIS Funding Mechanism export,0,0.330526710539
+2015,all_nongovernment,Trust funds,4500364.0,0.005385828804534038,Current official REEIS Funding Mechanism export,0,0.00579102677401
+2016,all_nongovernment,Industry grants and agreements,278586457.0,0.3262964729892216,Current official REEIS Funding Mechanism export,0,0.350845093656
+2016,all_nongovernment,Institution-generated funds,184410865.0,0.21599260595209582,Current official REEIS Funding Mechanism export,0,0.232242614731
+2016,all_nongovernment,Other nonfederal funds,280371741.0,0.32838750023712576,Current official REEIS Funding Mechanism export,0,0.353093437452
+2016,all_nongovernment,Trust funds,1460449.0,0.0017105618227544913,Current official REEIS Funding Mechanism export,0,0.00183925439773
+2017,all_nongovernment,Industry grants and agreements,214253714.0,0.2445943671160533,Current official REEIS Funding Mechanism export,0,0.262996203583
+2017,all_nongovernment,Institution-generated funds,183081912.0,0.20900829936622228,Current official REEIS Funding Mechanism export,0,0.224732850142
+2017,all_nongovernment,Other nonfederal funds,280995710.0,0.32078775469804016,Current official REEIS Funding Mechanism export,0,0.344921931916
+2017,all_nongovernment,Trust funds,5225244.0,0.005965195306751859,Current official REEIS Funding Mechanism export,0,0.00641398139215
+2018,all_nongovernment,Industry grants and agreements,187091180.0,0.20838747867649704,Current official REEIS Funding Mechanism export,0,0.224065322568
+2018,all_nongovernment,Institution-generated funds,161367861.0,0.17973611419420968,Current official REEIS Funding Mechanism export,0,0.193258398536
+2018,all_nongovernment,Other nonfederal funds,358197993.0,0.39897111466319013,Current official REEIS Funding Mechanism export,0,0.428987346409
+2018,all_nongovernment,Trust funds,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2019,all_nongovernment,Industry grants and agreements,192258777.0,0.20970606916024892,Current official REEIS Funding Mechanism export,0,0.225483116017
+2019,all_nongovernment,Institution-generated funds,189415295.0,0.20660454400622216,Current official REEIS Funding Mechanism export,0,0.222148250417
+2019,all_nongovernment,Other nonfederal funds,356388115.0,0.3887299808012445,Current official REEIS Funding Mechanism export,0,0.417975730083
+2019,all_nongovernment,Trust funds,2548873.0,0.002780180681263208,Current official REEIS Funding Mechanism export,0,0.00298934506574
+2020,all_nongovernment,Industry grants and agreements,168516736.0,0.18064947434821738,Current official REEIS Funding Mechanism export,0,0.194240474517
+2020,all_nongovernment,Institution-generated funds,181800715.0,0.1948898630512288,Current official REEIS Funding Mechanism export,0,0.209552226012
+2020,all_nongovernment,Other nonfederal funds,327228508.0,0.3507880544395985,Current official REEIS Funding Mechanism export,0,0.377179277134
+2020,all_nongovernment,Trust funds,1798368.0,0.0019278455160955349,Current official REEIS Funding Mechanism export,0,0.00207288523364
+2021,all_nongovernment,Industry grants and agreements,168885041.0,0.1766320612293578,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.189920814948
+2021,all_nongovernment,Institution-generated funds,160346352.0,0.16770168924770643,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.18031857449
+2021,all_nongovernment,Other nonfederal funds,314245571.0,0.3286605054495413,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.353386981965
+2021,all_nongovernment,Trust funds,524469.0,0.0005485272110091743,"Current LMD NIFA grants + archived formula; other-federal/nongovernment retained extract, unknown vintage",0,0.000589795160691
+2022,all_nongovernment,Industry grants and agreements,168786826.0,0.168786826,Current official REEIS Funding Mechanism export,0,0.181485350526
+2022,all_nongovernment,Institution-generated funds,189056186.0,0.18905618600000001,Current official REEIS Funding Mechanism export,0,0.203279657533
+2022,all_nongovernment,Other nonfederal funds,292850675.0,0.292850675,Current official REEIS Funding Mechanism export,0,0.31488303124
+2022,all_nongovernment,Trust funds,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2023,all_nongovernment,Industry grants and agreements,16225831.0,0.015626244708059085,Current official REEIS Funding Mechanism export,0,0.0168018711262
+2023,all_nongovernment,Institution-generated funds,16985162.0,0.016357516469759005,Current official REEIS Funding Mechanism export,0,0.0175881594589
+2023,all_nongovernment,Other nonfederal funds,604581002.0,0.5822401751315885,Current official REEIS Funding Mechanism export,0,0.626044489244
+2023,all_nongovernment,Trust funds,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2024,all_nongovernment,Industry grants and agreements,15348306.0,0.01427438549009009,Current official REEIS Funding Mechanism export,0,0.015348306
+2024,all_nongovernment,Institution-generated funds,14683425.0,0.013656026193693695,Current official REEIS Funding Mechanism export,0,0.014683425
+2024,all_nongovernment,Other nonfederal funds,614753869.0,0.5717395592471471,Current official REEIS Funding Mechanism export,0,0.614753869
+2024,all_nongovernment,Trust funds,0.0,0.0,Current official REEIS Funding Mechanism export,0,0
+2007,state,1890 Land Grant College or University,22973250.0,0.03376217427238216,current_public_report; current public REEIS export,0,0.0363022409839
+2007,state,Cooperative Extension Service,0.0,0.0,current_public_report; current public REEIS export,0,0
+2007,state,Forestry School,60819090.0,0.08938155096330276,current_public_report; current public REEIS export,0,0.0961060912844
+2007,state,Other Cooperating Institution,1284866.0,0.0018882774447959508,current_public_report; current public REEIS export,0,0.00203034029421
+2007,state,School of Veterinary Medicine,86912053.0,0.1277285486274913,current_public_report; current public REEIS export,0,0.13733809071
+2007,state,Small Business Innovative Research Grant Recipient,0.0,0.0,current_public_report; current public REEIS export,0,0
+2007,state,State Agricultural Experiment Station,1192619352.0,1.75270901604429,current_public_report; current public REEIS export,0,1.88457249707
+2007,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2007,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2007,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2007,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2008,state,1890 Land Grant College or University,19441977.0,0.027296623846921043,current_public_report; current public REEIS export,0,0.0293502607072
+2008,state,Cooperative Extension Service,0.0,0.0,current_public_report; current public REEIS export,0,0
+2008,state,Forestry School,60840330.0,0.08542009913562523,current_public_report; current public REEIS export,0,0.0918466032036
+2008,state,Other Cooperating Institution,1451645.0,0.0020381161609369096,current_public_report; current public REEIS export,0,0.00219145199093
+2008,state,School of Veterinary Medicine,83493404.0,0.11722511772784285,current_public_report; current public REEIS export,0,0.126044443666
+2008,state,Small Business Innovative Research Grant Recipient,20500.0,2.8782092935398563e-05,current_public_report; current public REEIS export,0,3.09474877219e-05
+2008,state,State Agricultural Experiment Station,1291806070.0,1.8137015785976578,current_public_report; current public REEIS export,0,1.95015378002
+2008,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2008,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2008,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2008,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2009,state,1890 Land Grant College or University,20750411.0,0.02830390789121339,current_public_report; current public REEIS export,0,0.0304333268575
+2009,state,Cooperative Extension Service,0.0,0.0,current_public_report; current public REEIS export,0,0
+2009,state,Forestry School,62219098.0,0.0848678909958159,current_public_report; current public REEIS export,0,0.0912528501828
+2009,state,Other Cooperating Institution,789890.0,0.001077423179916318,current_public_report; current public REEIS export,0,0.0011584821405
+2009,state,School of Veterinary Medicine,79513680.0,0.10845799029288704,current_public_report; current public REEIS export,0,0.116617729311
+2009,state,Small Business Innovative Research Grant Recipient,215000.0,0.00029326359832635985,current_public_report; current public REEIS export,0,0.00031532702048
+2009,state,State Agricultural Experiment Station,1250478373.0,1.7056734292803348,current_public_report; current public REEIS export,0,1.83399823039
+2009,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2009,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2009,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2009,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2010,state,1890 Land Grant College or University,26751020.0,0.035412656097456724,current_public_report; current public REEIS export,0,0.0380768953195
+2010,state,Cooperative Extension Service,0.0,0.0,current_public_report; current public REEIS export,0,0
+2010,state,Forestry School,53355650.0,0.07063152299636676,current_public_report; current public REEIS export,0,0.075945421885
+2010,state,Other Cooperating Institution,334300.0,0.00044254203889720027,current_public_report; current public REEIS export,0,0.000475836289806
+2010,state,School of Veterinary Medicine,55245763.0,0.07313363026757855,current_public_report; current public REEIS export,0,0.0786357729387
+2010,state,Small Business Innovative Research Grant Recipient,0.0,0.0,current_public_report; current public REEIS export,0,0
+2010,state,State Agricultural Experiment Station,1054340322.0,1.395722153124172,current_public_report; current public REEIS export,0,1.50072804969
+2010,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2010,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2010,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2010,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2011,state,1890 Land Grant College or University,28189560.0,0.03627802506544774,current_public_report; current public REEIS export,0,0.0390073695408
+2011,state,Cooperative Extension Service,0.0,0.0,current_public_report; current public REEIS export,0,0
+2011,state,Forestry School,51873434.0,0.06675754211427383,current_public_report; current public REEIS export,0,0.0717799855475
+2011,state,Other Cooperating Institution,1690.0,2.1749137751921873e-06,current_public_report; current public REEIS export,0,2.33854145024e-06
+2011,state,School of Veterinary Medicine,58400941.0,0.07515799471306876,current_public_report; current public REEIS export,0,0.0808124386162
+2011,state,Small Business Innovative Research Grant Recipient,0.0,0.0,current_public_report; current public REEIS export,0,0
+2011,state,State Agricultural Experiment Station,991160409.0,1.275555282224392,current_public_report; current public REEIS export,0,1.37152053271
+2011,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2011,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2011,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2011,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2012,state,1890 Land Grant College or University,23932070.0,0.03040930831099562,current_public_report; current public REEIS export,0,0.0326971251778
+2012,state,Cooperative Extension Service,0.0,0.0,current_public_report; current public REEIS export,0,0
+2012,state,Forestry School,52097383.0,0.06619759100834245,current_public_report; current public REEIS export,0,0.0711779070254
+2012,state,Other Cooperating Institution,0.0,0.0,current_public_report; current public REEIS export,0,0
+2012,state,School of Veterinary Medicine,57260251.0,0.07275779431632931,current_public_report; current public REEIS export,0,0.0782316613088
+2012,state,Small Business Innovative Research Grant Recipient,0.0,0.0,current_public_report; current public REEIS export,0,0
+2012,state,State Agricultural Experiment Station,971661608.0,1.2346427789835885,current_public_report; current public REEIS export,0,1.32753001421
+2012,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2012,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2012,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2012,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2013,state,1890 Land Grant College or University,25552922.0,0.03187168724687878,current_public_report; current public REEIS export,0,0.0342695248731
+2013,state,Cooperative Extension Service,0.0,0.0,current_public_report; current public REEIS export,0,0
+2013,state,Forestry School,38412198.0,0.04791082448892468,current_public_report; current public REEIS export,0,0.0515153521305
+2013,state,Other Cooperating Institution,0.0,0.0,current_public_report; current public REEIS export,0,0
+2013,state,School of Veterinary Medicine,50241813.0,0.0626656845996778,current_public_report; current public REEIS export,0,0.0673802808256
+2013,state,Small Business Innovative Research Grant Recipient,0.0,0.0,current_public_report; current public REEIS export,0,0
+2013,state,State Agricultural Experiment Station,946593570.0,1.1806686614136126,current_public_report; current public REEIS export,0,1.26949520262
+2013,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2013,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2013,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2013,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2014,state,1890 Land Grant College or University,24707192.0,0.030168815990537525,current_public_report; current public REEIS export,0,0.0324385396346
+2014,state,Cooperative Extension Service,0.0,0.0,current_public_report; current public REEIS export,0,0
+2014,state,Forestry School,42799873.0,0.05226095676738074,current_public_report; current public REEIS export,0,0.056192762685
+2014,state,Other Cooperating Institution,0.0,0.0,current_public_report; current public REEIS export,0,0
+2014,state,School of Veterinary Medicine,21810264.0,0.026631510425023004,current_public_report; current public REEIS export,0,0.0286351080773
+2014,state,Small Business Innovative Research Grant Recipient,0.0,0.0,current_public_report; current public REEIS export,0,0
+2014,state,State Agricultural Experiment Station,931936649.0,1.1379449869705613,current_public_report; current public REEIS export,0,1.22355725109
+2014,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2014,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2014,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2014,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2015,state,1890 Land Grant College or University,22475349.0,0.026897464746441686,current_public_report; current public REEIS export,0,0.028921071232
+2015,state,Cooperative Extension Service,1535606.0,0.001837742686417209,current_public_report; current public REEIS export,0,0.00197600359889
+2015,state,Forestry School,56263886.0,0.0673340329524055,current_public_report; current public REEIS export,0,0.0723998481535
+2015,state,Other Cooperating Institution,34297391.0,0.04104554128691956,current_public_report; current public REEIS export,0,0.0441335655426
+2015,state,School of Veterinary Medicine,19367079.0,0.023177630062343017,current_public_report; current public REEIS export,0,0.0249213781426
+2015,state,Small Business Innovative Research Grant Recipient,182258.0,0.0002181179980678818,current_public_report; current public REEIS export,0,0.000234527908804
+2015,state,State Agricultural Experiment Station,988462456.0,1.182946438938108,current_public_report; current public REEIS export,0,1.27194434668
+2015,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2015,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2015,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2015,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2016,state,1890 Land Grant College or University,20060932.0,0.023496516761676647,current_public_report; current public REEIS export,0,0.025264255995
+2016,state,Cooperative Extension Service,2505819.0,0.0029349592598802397,current_public_report; current public REEIS export,0,0.00315576827104
+2016,state,Forestry School,56505493.0,0.06618248162155689,current_public_report; current public REEIS export,0,0.0711616608976
+2016,state,Other Cooperating Institution,2450497.0,0.0028701629532934133,current_public_report; current public REEIS export,0,0.0030860970728
+2016,state,School of Veterinary Medicine,16279782.0,0.01906781652215569,current_public_report; current public REEIS export,0,0.0205023664898
+2016,state,Small Business Innovative Research Grant Recipient,209454.0,0.0002453245652694611,current_public_report; current public REEIS export,0,0.000263781337535
+2016,state,State Agricultural Experiment Station,980422498.0,1.1483271892742517,current_public_report; current public REEIS export,0,1.23472054901
+2016,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2016,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2016,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2016,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2017,state,1890 Land Grant College or University,20555125.0,0.023465953968790317,current_public_report; current public REEIS export,0,0.0252313938379
+2017,state,Cooperative Extension Service,1706557.0,0.0019482240077409842,current_public_report; current public REEIS export,0,0.00209479688272
+2017,state,Forestry School,63195616.0,0.07214480165337593,current_public_report; current public REEIS export,0,0.0775725506961
+2017,state,Other Cooperating Institution,32814326.0,0.03746119098924863,current_public_report; current public REEIS export,0,0.0402795498851
+2017,state,School of Veterinary Medicine,15220354.0,0.017375721449161392,current_public_report; current public REEIS export,0,0.018682968171
+2017,state,Small Business Innovative Research Grant Recipient,182052.0,0.0002078325406401671,current_public_report; current public REEIS export,0,0.000223468634269
+2017,state,State Agricultural Experiment Station,1050462170.0,1.1992190233421391,current_public_report; current public REEIS export,0,1.28944118428
+2017,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2017,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2017,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2017,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2018,state,1890 Land Grant College or University,20716646.0,0.02307478966444884,current_public_report; current public REEIS export,0,0.0248108006402
+2018,state,Cooperative Extension Service,7005318.0,0.007802722476532999,current_public_report; current public REEIS export,0,0.0083897532602
+2018,state,Forestry School,64707129.0,0.07207264107642511,current_public_report; current public REEIS export,0,0.0774949611832
+2018,state,Other Cooperating Institution,67572737.0,0.07526443678798778,current_public_report; current public REEIS export,0,0.0809268887646
+2018,state,School of Veterinary Medicine,19856243.0,0.022116448326200324,current_public_report; current public REEIS export,0,0.0237803593562
+2018,state,Small Business Innovative Research Grant Recipient,793241.0,0.0008835343920158246,current_public_report; current public REEIS export,0,0.000950006304621
+2018,state,State Agricultural Experiment Station,963685823.0,1.0733806847081462,current_public_report; current public REEIS export,0,1.15413551181
+2018,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2018,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2018,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2018,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2019,state,1890 Land Grant College or University,23625592.0,0.025769590898332948,current_public_report; current public REEIS export,0,0.0277083428129
+2019,state,Cooperative Extension Service,444556.0,0.00048489901338342345,current_public_report; current public REEIS export,0,0.000521379953041
+2019,state,Forestry School,59401879.0,0.0647925402428974,current_public_report; current public REEIS export,0,0.0696671485337
+2019,state,Other Cooperating Institution,10834322.0,0.01181752591007279,current_public_report; current public REEIS export,0,0.0127066068068
+2019,state,School of Veterinary Medicine,20199271.0,0.02203233468666354,current_public_report; current public REEIS export,0,0.0236899175029
+2019,state,Small Business Innovative Research Grant Recipient,850290.0,0.0009274529690068093,current_public_report; current public REEIS export,0,0.000997229056116
+2019,state,State Agricultural Experiment Station,940528998.0,1.025881066027002,current_public_report; current public REEIS export,0,1.10306230219
+2019,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2019,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2019,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2019,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2020,state,1890 Land Grant College or University,20262165.0,0.02172098477154725,current_public_report; current public REEIS export,0,0.0233551434579
+2020,state,Cooperative Extension Service,290967.0,0.0003119158182762202,current_public_report; current public REEIS export,0,0.000335382523364
+2020,state,Forestry School,58942144.0,0.06318581514987885,current_public_report; current public REEIS export,0,0.0679395429283
+2020,state,Other Cooperating Institution,12947055.0,0.013879207107995846,current_public_report; current public REEIS export,0,0.014923396729
+2020,state,School of Veterinary Medicine,19723799.0,0.021143857910349603,current_public_report; current public REEIS export,0,0.0227345969782
+2020,state,Small Business Innovative Research Grant Recipient,394240.0,0.00042262418830045,current_public_report; current public REEIS export,0,0.000454419937695
+2020,state,State Agricultural Experiment Station,905571467.0,0.9707701049840776,current_public_report; current public REEIS export,0,1.04380511773
+2020,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2020,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2020,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2020,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2021,state,1890 Land Grant College or University,28676466.0,0.029991900220183484,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0.032248313766
+2021,state,Cooperative Extension Service,603166.0,0.0006308341651376147,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0.000678294404233
+2021,state,Forestry School,48393578.0,0.05061346689908257,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0.0544213254033
+2021,state,Other Cooperating Institution,10198757.0,0.010666589889908257,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0.0114690811538
+2021,state,School of Veterinary Medicine,7375381.0,0.007713701229357797,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0.00829403457984
+2021,state,Small Business Innovative Research Grant Recipient,81254.0,8.498124770642202e-05,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,9.13747351832e-05
+2021,state,State Agricultural Experiment Station,884097100.0,0.9246520128440366,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0.994217372545
+2021,state,ARS,0.0,0.0,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0
+2021,state,ERS,0.0,0.0,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0
+2021,state,FS,0.0,0.0,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0
+2021,state,Unknown,0.0,0.0,retained_workbook_crosswalk; unknown; retained Fuglie workbook supplied October 2026,0,0
+2022,state,1890 Land Grant College or University,22060399.0,0.022060399,current_public_report; current public REEIS export,0,0.0237200932096
+2022,state,Cooperative Extension Service,576924.0,0.000576924,current_public_report; current public REEIS export,0,0.000620328356474
+2022,state,Forestry School,25677035.0,0.025677035,current_public_report; current public REEIS export,0,0.0276088235551
+2022,state,Other Cooperating Institution,12538077.0,0.012538077000000002,current_public_report; current public REEIS export,0,0.0134813679077
+2022,state,School of Veterinary Medicine,1901120.0,0.00190112,current_public_report; current public REEIS export,0,0.00204414904747
+2022,state,Small Business Innovative Research Grant Recipient,333652.0,0.00033365200000000004,current_public_report; current public REEIS export,0,0.000358754007104
+2022,state,State Agricultural Experiment Station,924546706.0,0.9245467060000001,current_public_report; current public REEIS export,0,0.994104143035
+2022,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2022,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2022,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2022,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2023,state,1890 Land Grant College or University,24782746.0,0.023866959635760562,current_public_report; current public REEIS export,0,0.0256625688044
+2023,state,Cooperative Extension Service,491940.0,0.0004737615485877171,current_public_report; current public REEIS export,0,0.000509404571132
+2023,state,Forestry School,50322152.0,0.04846261873355792,current_public_report; current public REEIS export,0,0.0521086601171
+2023,state,Other Cooperating Institution,18494594.0,0.017811171065457373,current_public_report; current public REEIS export,0,0.0191511784462
+2023,state,School of Veterinary Medicine,1058505.0,0.001019390511013216,current_public_report; current public REEIS export,0,0.00109608343612
+2023,state,Small Business Innovative Research Grant Recipient,416988.0,0.0004015792182430682,current_public_report; current public REEIS export,0,0.000431791668308
+2023,state,State Agricultural Experiment Station,996461956.0,0.9596401174600675,current_public_report; current public REEIS export,0,1.03183777564
+2023,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2023,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2023,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2023,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0
+2024,state,1890 Land Grant College or University,40614240.0,0.03777246284684685,current_public_report; current public REEIS export,0,0.04061424
+2024,state,Cooperative Extension Service,473265.0,0.00044015066216216217,current_public_report; current public REEIS export,0,0.000473265
+2024,state,Forestry School,47221003.0,0.04391695083813814,current_public_report; current public REEIS export,0,0.047221003
+2024,state,Other Cooperating Institution,21031497.0,0.019559923786486487,current_public_report; current public REEIS export,0,0.021031497
+2024,state,School of Veterinary Medicine,2141363.0,0.0019915318951951953,current_public_report; current public REEIS export,0,0.002141363
+2024,state,Small Business Innovative Research Grant Recipient,450194.0,0.00041869393933933937,current_public_report; current public REEIS export,0,0.000450194
+2024,state,State Agricultural Experiment Station,994698491.0,0.9250994674555556,current_public_report; current public REEIS export,0,0.994698491
+2024,state,ARS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2024,state,ERS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2024,state,FS,0.0,0.0,current_public_report; current public REEIS export,0,0
+2024,state,Unknown,0.0,0.0,current_public_report; current public REEIS export,0,0

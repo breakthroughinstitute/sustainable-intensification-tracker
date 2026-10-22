@@ -1,0 +1,111 @@
+year,performer_id,billion_2022,source,source_break,billion_2024
+1970,usda_net,2.283121,ERS published history,False,2.45488954795
+1971,usda_net,2.292057,ERS published history,False,2.46449783985
+1972,usda_net,2.486754,ERS published history,False,2.67384269293
+1973,usda_net,2.288296,ERS published history,False,2.4604538844
+1974,usda_net,2.314281,ERS published history,False,2.48839384243
+1975,usda_net,2.319714,ERS published history,False,2.49423558928
+1976,usda_net,2.3967240000000003,ERS published history,False,2.57703936713
+1977,usda_net,2.538873,ERS published history,False,2.72988281886
+1978,usda_net,2.457135,ERS published history,False,2.64199533419
+1979,usda_net,2.439784,ERS published history,False,2.62333894737
+1980,usda_net,2.411053,ERS published history,False,2.59244639651
+1981,usda_net,2.445574,ERS published history,False,2.62956455279
+1982,usda_net,2.342832,ERS published history,False,2.51909285115
+1983,usda_net,2.3106060000000004,ERS published history,False,2.48444235712
+1984,usda_net,2.240177,ERS published history,False,2.40871469487
+1985,usda_net,2.21845,ERS published history,False,2.38535308363
+1986,usda_net,2.185701,ERS published history,False,2.35014024217
+1987,usda_net,2.145079,ERS published history,False,2.30646208266
+1988,usda_net,2.131393,ERS published history,False,2.2917464288
+1989,usda_net,2.1149400000000003,ERS published history,False,2.2740556022
+1990,usda_net,2.104937,ERS published history,False,2.26330003552
+1991,usda_net,2.099026,ERS published history,False,2.25694432677
+1992,usda_net,2.234389,ERS published history,False,2.40249123991
+1993,usda_net,2.266734833739,ERS published history,False,2.43727058326
+1994,usda_net,2.173612422806,ERS published history,False,2.33714219178
+1995,usda_net,2.1202984007629997,ERS published history,False,2.2798171374
+1996,usda_net,1.9923219281229998,ERS published history,False,2.14221247034
+1997,usda_net,1.999347080457,ERS published history,False,2.14976615367
+1998,usda_net,2.006203179381,ERS published history,False,2.15713806501
+1999,usda_net,2.102502241884,ERS published history,False,2.26068210057
+2000,usda_net,2.172729381405,ERS published history,False,2.33619271556
+2001,usda_net,2.361622837656,ERS published history,False,2.53929740051
+2002,usda_net,2.5158941299287148,Calculated REEIS/NCSES performer estimate,True,2.70517515423
+2003,usda_net,2.430560383632728,Calculated REEIS/NCSES performer estimate,False,2.61342140055
+2004,usda_net,2.514737038467607,Calculated REEIS/NCSES performer estimate,False,2.70393101004
+2005,usda_net,2.515458788886102,Calculated REEIS/NCSES performer estimate,False,2.7047070607
+2006,usda_net,2.4921783008112635,Calculated REEIS/NCSES performer estimate,False,2.67967508612
+2007,usda_net,2.449223963822999,Calculated REEIS/NCSES performer estimate,False,2.63348911835
+2008,usda_net,2.253290089474726,Calculated REEIS/NCSES performer estimate,False,2.42281433579
+2009,usda_net,2.066210795447699,Calculated REEIS/NCSES performer estimate,False,2.22166029992
+2010,usda_net,2.1941179470497967,Calculated REEIS/NCSES performer estimate,False,2.35919043063
+2011,usda_net,2.0708444805036357,Calculated REEIS/NCSES performer estimate,False,2.22664259609
+2012,usda_net,1.8849388004126095,Calculated REEIS/NCSES performer estimate,False,2.02675046993
+2013,usda_net,1.7603396718815951,Calculated REEIS/NCSES performer estimate,False,1.89277723841
+2014,usda_net,1.6758168299148377,Calculated REEIS/NCSES performer estimate,False,1.80189539671
+2015,usda_net,1.7003616521026599,Calculated REEIS/NCSES performer estimate,False,1.82828682645
+2016,usda_net,1.7306337805724552,Calculated REEIS/NCSES performer estimate,False,1.86083645118
+2017,usda_net,1.7024092574718928,Calculated REEIS/NCSES performer estimate,False,1.83048848156
+2018,usda_net,1.6356616104610682,Calculated REEIS/NCSES performer estimate,False,1.75871913556
+2019,usda_net,1.6345755645419113,Calculated REEIS/NCSES performer estimate,False,1.75755138196
+2020,usda_net,1.7566209599293872,Calculated REEIS/NCSES performer estimate,False,1.88877875252
+2021,usda_net,1.8324227822752293,Calculated REEIS/NCSES performer estimate,False,1.97028345656
+2022,usda_net,1.851170687,Calculated REEIS/NCSES performer estimate,False,1.99044184298
+2023,usda_net,2.1497910312376267,Calculated REEIS/NCSES performer estimate,False,2.31152861932
+2024,usda_net,2.2780411062705705,Calculated REEIS/NCSES performer estimate,False,2.449427473
+1970,cooperators,3.18449,ERS published history,False,3.42407223119
+1971,cooperators,3.2282669999999998,ERS published history,False,3.47114275428
+1972,cooperators,3.256463,ERS published history,False,3.50146005489
+1973,cooperators,3.382712,ERS published history,False,3.63720728447
+1974,cooperators,3.5416350000000003,ERS published history,False,3.80808671295
+1975,cooperators,3.632151,ERS published history,False,3.90541260252
+1976,cooperators,3.663182,ERS published history,False,3.9387781918
+1977,cooperators,3.897948,ERS published history,False,4.19120659994
+1978,cooperators,3.974105,ERS published history,False,4.2730932031
+1979,cooperators,4.130851,ERS published history,False,4.44163184695
+1980,cooperators,4.186746,ERS published history,False,4.50173205683
+1981,cooperators,4.190384,ERS published history,False,4.50564375848
+1982,cooperators,4.3289539999999995,ERS published history,False,4.65463894737
+1983,cooperators,4.226782,ERS published history,False,4.54478012916
+1984,cooperators,4.231724,ERS published history,False,4.55009393607
+1985,cooperators,4.338247,ERS published history,False,4.66463109784
+1986,cooperators,4.516927,ERS published history,False,4.85675392638
+1987,cooperators,4.549615,ERS published history,False,4.89190117856
+1988,cooperators,4.6106229999999995,ERS published history,False,4.95749906038
+1989,cooperators,4.775003,ERS published history,False,5.13424604133
+1990,cooperators,4.872139,ERS published history,False,5.23868998063
+1991,cooperators,4.877672,ERS published history,False,5.24463925089
+1992,cooperators,4.830215,ERS published history,False,5.19361186632
+1993,cooperators,4.8231306760670005,ERS published history,False,5.18599455967
+1994,cooperators,4.888460280637,ERS published history,False,5.25623917808
+1995,cooperators,4.860192580391,ERS published history,False,5.22584478292
+1996,cooperators,4.7813660167480005,ERS published history,False,5.1410877739
+1997,cooperators,4.782084113387,ERS published history,False,5.14185989589
+1998,cooperators,4.8530949232789995,ERS published history,False,5.21821313998
+1999,cooperators,4.9679527008269995,ERS published history,False,5.34171213876
+2000,cooperators,5.07524842467,ERS published history,False,5.45708015956
+2001,cooperators,5.1846557550979995,ERS published history,False,5.57471865175
+2002,cooperators,5.590046952923254,Calculated REEIS/NCSES performer estimate,True,6.01060909049
+2003,cooperators,5.51190900157886,Calculated REEIS/NCSES performer estimate,False,5.92659250089
+2004,cooperators,5.488264086413887,Calculated REEIS/NCSES performer estimate,False,5.90116868187
+2005,cooperators,5.501137520255282,Calculated REEIS/NCSES performer estimate,False,5.91501063689
+2006,cooperators,5.467130936641162,Calculated REEIS/NCSES performer estimate,False,5.87844559865
+2007,cooperators,5.18045104025087,Calculated REEIS/NCSES performer estimate,False,5.57019759898
+2008,cooperators,5.54443691697348,Calculated REEIS/NCSES performer estimate,False,5.96156762464
+2009,cooperators,5.448318895422594,Calculated REEIS/NCSES performer estimate,False,5.85821825049
+2010,cooperators,4.659575424840779,Calculated REEIS/NCSES performer estimate,False,5.01013437673
+2011,cooperators,4.755248581396218,Calculated REEIS/NCSES performer estimate,False,5.11300541687
+2012,cooperators,4.358588160139085,Calculated REEIS/NCSES performer estimate,False,4.6865026068
+2013,cooperators,3.8407400585392675,Calculated REEIS/NCSES performer estimate,False,4.12969467063
+2014,cooperators,3.7303286535069002,Calculated REEIS/NCSES performer estimate,False,4.01097656318
+2015,cooperators,4.000286170507246,Calculated REEIS/NCSES performer estimate,False,4.30124409034
+2016,cooperators,3.870686052014371,Calculated REEIS/NCSES performer estimate,False,4.1618936239
+2017,cooperators,3.8494954124226823,Calculated REEIS/NCSES performer estimate,False,4.13910872566
+2018,cooperators,3.8679532593720554,Calculated REEIS/NCSES performer estimate,False,4.15895523207
+2019,cooperators,3.8151577835413244,Calculated REEIS/NCSES performer estimate,False,4.10218773626
+2020,cooperators,3.949240662922811,Calculated REEIS/NCSES performer estimate,False,4.24635822006
+2021,cooperators,3.937540147266055,Calculated REEIS/NCSES performer estimate,False,4.23377742667
+2022,cooperators,3.7836537,Calculated REEIS/NCSES performer estimate,False,4.06831347142
+2023,cooperators,4.332901336406323,Calculated REEIS/NCSES performer estimate,False,4.65888325807
+2024,cooperators,3.7572786041120123,Calculated REEIS/NCSES performer estimate,False,4.039954069

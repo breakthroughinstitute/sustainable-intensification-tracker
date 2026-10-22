@@ -445,7 +445,7 @@ body:not(.local-preview) .text-edit-tools { display: none !important; }
   .mobile-chart-frame:not(.mobile-selected-frame) { display: none; }
   .mobile-chart-frame > .product-evidence { margin-top: 0; }
   .mobile-chart-frame:has(> .product-evidence) { margin-top: 12px; }
-  .has-chart-navigation > summary { display: block; padding: 14px 54px 6px; text-align: center; list-style: none; }
+  .has-chart-navigation > summary, .chart-card.has-chart-navigation > .chart-card-heading { display: block; padding: 14px 54px 6px; text-align: center; list-style: none; }
   .has-chart-navigation > summary::-webkit-details-marker { display: none; }
   .has-chart-navigation > summary::marker { content: ""; }
   .has-chart-navigation[open] > .chart-card-heading { padding-bottom: 6px; }
@@ -559,3 +559,75 @@ body:not(.local-preview) .text-edit-tools { display: none !important; }
 .series-breakdown-legend h4 { font-family: var(--sans); font-size: .75rem; margin: 0 0 8px; color: var(--teal-dark); }
 .series-breakdown-legend h4:last-child { margin: 14px 0 -4px; }
 .series-breakdown-legend > .change-note { margin-top: 12px; }
+
+/* FDA source records remain readable beside the chart on small screens. */
+.plant-records { margin: 12px 2px; color: var(--teal-dark); font-size: .85rem; }
+.plant-records > summary { padding: 10px 0; min-height: 44px; cursor: pointer; font-family: var(--sans); font-weight: 600; }
+.record-controls { display: flex; flex-wrap: wrap; gap: 16px; margin: 12px 0; }
+.record-controls label { display: grid; gap: 5px; font-family: var(--sans); font-size: .75rem; }
+.record-controls select { padding: 8px; font: inherit; color: var(--teal-dark); background: white; border: 1px solid var(--line); border-radius: 4px; }
+.record-table-scroll { max-height: 420px; overflow: auto; position: relative; overscroll-behavior: contain; }
+.record-table-scroll table { width: 100%; min-width: 950px; table-layout: fixed; border-collapse: collapse; font-size: .8rem; }
+.record-table-scroll caption { text-align: left; padding: 8px 0; font-weight: 600; }
+.record-table-scroll th { position: sticky; top: 0; background: var(--teal-dark); color: white; z-index: 1; text-align: left; font-family: var(--sans); }
+.record-table-scroll th, .record-table-scroll td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.record-table-scroll td:first-child { white-space: nowrap; }
+.record-table-scroll th:first-child { width: 100px; }
+.record-table-scroll th:nth-child(2) { width: 95px; }
+.record-table-scroll th:nth-child(3) { width: 170px; }
+.record-table-scroll th:nth-child(5) { width: 165px; }
+.record-table-scroll th:last-child { width: 90px; }
+.record-table-scroll td:last-child { white-space: nowrap; }
+.record-table-scroll td:nth-child(3) { min-width: 150px; max-width: 280px; overflow-wrap: anywhere; }
+.record-table-scroll td:nth-child(4) { min-width: 170px; }
+.record-table-scroll .record-selected { background: #e6f1ef; }
+.record-table-scroll .record-selected td:first-child { border-left: 4px solid var(--teal-dark); font-weight: 700; }
+.record-table-scroll:focus-visible, .crop-counts button:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
+.crop-counts button { border: 0; padding: 4px 0; background: transparent; color: var(--teal-dark); text-align: left; font: inherit; text-decoration: underline; cursor: pointer; }
+
+.record-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.record-panel-heading h4 { margin: 0; font-family: var(--sans); }
+.record-launch, .record-panel-heading button { min-height: 40px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px; background: white; color: var(--teal-dark); font-family: var(--sans); font-size: .75rem; cursor: pointer; }
+.record-launch { margin: 8px 2px; }
+.record-launch:has(+ .plant-records:not([hidden])) { display: none; }
+section.plant-records { border-top: 1px solid var(--line); padding-top: 16px; }
+section.crop-breakdown { margin-top: 8px; }
+section.plant-records .record-controls { margin: 8px 0; }
+.record-launch:focus-visible, .record-panel-heading button:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
+@media (max-width: 900px) { .record-controls select { font-size: 16px; } }
+.record-table-scroll .record-table-compact { min-width: 780px; }
+.record-table-scroll .record-table-compact th:nth-child(2) { width: 150px; }
+.record-table-scroll .record-table-compact th:nth-child(3) { width: auto; }
+.record-table-scroll .record-table-compact th:nth-child(4) { width: 165px; }
+.record-table-scroll .record-table-compact th:last-child { width: 90px; }
+.record-table-scroll .record-table-compact td:nth-child(2) { overflow-wrap: anywhere; }
+.record-table-scroll .record-table-compact td:nth-child(3) { max-width: none; }
+/* Agency columns follow the source: USDA descriptions need the widest column. */
+.record-table-scroll .record-table-usda th:nth-child(2), .record-table-scroll .record-table-epa th:nth-child(2) { width: auto; }
+.record-table-scroll .record-table-usda th:nth-child(3) { width: 180px; }
+.record-table-scroll .record-table-usda th:nth-child(4) { width: 160px; }
+.record-table-scroll .record-table-epa th:nth-child(3) { width: 150px; }
+.record-table-scroll .record-table-epa th:nth-child(4) { width: 130px; }
+.livestock-study-controls { margin: 12px 0; }
+.livestock-study-note { font-size: .84rem; color: var(--muted); line-height: 1.5; margin: 16px 0 0; }
+
+/* Funding additions retain the same domain and source colors. */
+.funding-addons { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.funding-addons label { display: flex; align-items: center; gap: 5px; min-height: 44px; font-family: var(--sans); font-size: .8rem; cursor: pointer; }
+.funding-addons input { accent-color: var(--teal-dark); width: 18px; height: 18px; }
+.legend-change-heading { grid-column: 1 / -1; margin: 8px 0 4px; color: var(--teal-dark); font-family: var(--sans); font-size: .78rem; font-weight: 650; }
+@media (max-width: 900px) {
+  .chart-card > summary, .product-evidence > summary { cursor: default; list-style: none; }
+  .chart-card > summary::marker, .product-evidence > summary::marker { content: ""; }
+  .chart-card > summary::-webkit-details-marker, .product-evidence > summary::-webkit-details-marker { display: none; }
+  .chart-card > summary::after, .product-evidence > summary::after { display: none; }
+}
+.legend-hide { grid-column: 2; justify-self: start; margin: 2px 0 0; padding: 5px 8px; min-height: 32px; font: inherit; color: var(--teal-dark); background: transparent; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; }
+.legend-hide:hover { background: #e6f1ef; }
+.legend-hide:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
+.dual-axis-units { display: flex; justify-content: space-between; gap: 12px; margin: 10px 6px 4px; font-family: var(--sans); font-size: .75rem; font-weight: 650; }
+.dual-axis-units span:last-child { text-align: right; }
+.series-summary > .series-muted:has([data-enable-addon]) { opacity: 1; }
+.series-summary > .series-muted:has([data-enable-addon]) > i { opacity: .45; }
+.series-summary [data-enable-addon] { color: var(--muted); }
+.series-summary [data-enable-addon] small { color: var(--teal-dark); text-decoration: underline; font-weight: 700; }
