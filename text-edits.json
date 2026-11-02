@@ -13,7 +13,7 @@
   "topic:soil:chart:1:subtitle": "",
   "topic:practices:chart:1:subtitle": "Less disturbance and more winter cover help curb erosion, retain moisture, and protect yield potential.",
   "topic:practices:chart:3:subtitle": "A range of emerging technologies help better target inputs while supporting yields.",
-  "topic:water:chart:2:subtitle": "Average aquifer water level across eight states below predevelopment (~1950).",
+  "topic:water:chart:2:subtitle": "Change in average water level across eight states relative to predevelopment (~1950).",
   "topic:water:chart:0:subtitle": "U.S. irrigation and livestock withdrawals, including nonfarm irrigation.",
   "topic:practices:title": "Farm adoption of practices that raise yields or reduce impacts",
   "topic:practices:chart:0:title": "Genetically engineered seeds",
@@ -48,3 +48,4 @@
   "topic:rd:chart:2:caption": "\n",
   "topic:rd:chart:3:caption": "Budget authority for USDA R&D; amounts differ from obligations, outlays and expenditures. The negative facilities value in 2011 cancels earlier authority. 2025 is preliminary, mainly reflecting annualized continuing-resolution funding; reconciliation funding is excluded. Values are in 2024 dollars using BRDPI, using  a projected 2025 index."
 }
+

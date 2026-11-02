@@ -756,11 +756,14 @@ const TOPICS = {
         decimals: 0
       },
       {
-        title: "High Plains groundwater decline",
-        subtitle: "Average aquifer water level across eight states below predevelopment (~1950).",
-        yLabel: "Feet below predevelopment",
+        title: "High Plains groundwater levels",
+        subtitle: "Change in average water level across eight states relative to predevelopment (~1950).",
+        yLabel: "Change in water level (feet)",
         tooltipUnit: "feet below predevelopment",
-        series: single("High Plains aquifer", DATA.water.high_plains_decline),
+        belowBaseline: true,
+        comparisonMode: "water-level",
+        yMin: -20, yMax: 0, yTicks: [-20, -15, -10, -5, 0],
+        series: single("High Plains aquifer", DATA.water.high_plains_decline.map(point => ({ ...point, value: -point.value }))),
         summaryMode: "latest",
         fullWidth: true,
         caption: "",
@@ -773,12 +776,12 @@ const TOPICS = {
   herbicides: () => ({
     title: "Herbicide risk has fallen by some but not all measures",
     intro: "",
-    why: "Herbicides help control weeds, but some products can harm workers, wildlife, and aquatic ecosystems. The screening quotients shown here combine the amount applied with toxicological benchmarks and indicate potential hazard to mammals.",
+    why: "Herbicides help control weeds, but some products can harm people and the environment. These charts combine the amount applied per acre with toxicity benchmarks from rat studies. A lower score indicates a less toxic mix or less herbicide applied, or both. The scores do not measure actual exposure or health effects, and do not capture risks to wildlife or aquatic life.",
     happened: "From the early 1990s to 2015, acute toxicity quotients declined for four of the five crops studied, while chronic hazard quotients declined for two. Much of the acute improvement came as comparatively hazardous products such as alachlor and cyanazine were phased out of corn production.",
     charts: [
       {
         title: "Acute toxicity quotient",
-        subtitle: "Lower values indicate lower hazard",
+        subtitle: "Short-term toxicity: based on the dose that kills half of the rats in a laboratory test. Lower scores indicate lower potential hazard.",
         yLabel: "Acute quotient",
         tooltipUnit: "acute quotient",
         series: DATA.herbicides.acute.filter(d => d.name !== "Rice"),
@@ -787,7 +790,7 @@ const TOPICS = {
       },
       {
         title: "Chronic hazard quotient",
-        subtitle: "Lower values indicate lower hazard",
+        subtitle: "Long-term toxicity: based on the daily dose at which no effects were observed in a two-year rat study. Lower scores indicate lower potential hazard.",
         yLabel: "Chronic quotient",
         tooltipUnit: "chronic quotient",
         series: DATA.herbicides.chronic.filter(d => d.name !== "Rice"),
@@ -1125,6 +1128,7 @@ function chartCard(chart, index, topicId) {
 
 function formatValue(chart, value, series) {
   if (series?.tooltipUnit !== undefined) chart = { ...chart, tooltipUnit: series.tooltipUnit, decimals: series.decimals ?? chart.decimals };
+  if (chart.belowBaseline) return value < 0 ? `${format(Math.abs(value), chart.decimals ?? 1)} feet below predevelopment` : value > 0 ? `${format(value, chart.decimals ?? 1)} feet above predevelopment` : "At predevelopment level";
   if (chart.currency) {
     const millions = Math.abs(value) < 0.1;
     return `${format(millions ? value * 1000 : value, Math.min(chart.decimals ?? 2, 2))} ${millions ? "million" : "billion"} 2024 dollars`;
@@ -1713,7 +1717,7 @@ function attachChartInteractions(container, chart) {
     const rescissionYears = name(activeSeries).toLowerCase().includes("facilities") ? activeSeries.values.filter(point => point.value < 0 && point.year >= first.year && point.year <= last.year).map(point => point.year) : [];
     const rescission = rescissionYears.length ? ` Includes cancellation of prior authority in ${rescissionYears.join(", ")}.` : "";
     const percentagePoints = chart.tooltipUnit === "%" && first.year !== last.year ? ` (${format(last.value - first.value, 1)} percentage points)` : "";
-    const rangeDescription = activeSeries.comparisonMode === "percentage-points" && first.year !== last.year ? `${format(last.value - first.value, 2)} percentage points` : chart.comparisonMode === "absolute" && first.year !== last.year ? `${format(last.value - first.value, 0)} ${chart.comparisonLabel || "additional records"}` : rangeChangeText(first, last);
+    const rangeDescription = chart.comparisonMode === "water-level" && first.year !== last.year ? `${format(Math.abs(last.value - first.value), 1)} feet ${last.value < first.value ? "lower" : last.value > first.value ? "higher" : "change"}` : activeSeries.comparisonMode === "percentage-points" && first.year !== last.year ? `${format(last.value - first.value, 2)} percentage points` : chart.comparisonMode === "absolute" && first.year !== last.year ? `${format(last.value - first.value, 0)} ${chart.comparisonLabel || "additional records"}` : rangeChangeText(first, last);
     result.innerHTML = `<strong>${escapeHTML(name(activeSeries))} · ${first.year}–${last.year}: ${rangeDescription}${percentagePoints}</strong><br>${first.approximate ? "≈" : ""}${formatValue(chart, first.value, activeSeries)} → ${last.approximate ? "≈" : ""}${formatValue(chart, last.value, activeSeries)}${caution || approximate || rescission ? `<br><span>${escapeHTML(caution + approximate + rescission)}</span>` : ""}`;
     drawSelection(a, b);
   };
@@ -2167,3 +2171,4 @@ Promise.all(["data.json", "product-studies.json", "text-edits.json", "biotech-de
   : '<div class="loading">The data could not be loaded. Please refresh the page.</div>'; });
 
 new ResizeObserver(sendHeight).observe(document.body);
+
