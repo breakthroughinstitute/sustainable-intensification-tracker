@@ -1,0 +1,18 @@
+.public-chart-source { margin-top: .7rem; color: #555; font-size: .78rem; line-height: 1.45; }
+.public-chart-source a, .public-chart-source-details { color: inherit; text-decoration: underline; text-underline-offset: .15em; }
+.public-chart-source-details { padding: 0; border: 0; background: none; font: inherit; cursor: pointer; }
+.public-chart-source-dialog { width: min(38rem, calc(100% - 2rem)); max-height: min(80vh, 48rem); padding: 0; border: 0; border-radius: .4rem; color: #0d4459; background: #fff; box-shadow: 0 1rem 3rem #0004; }
+.public-chart-source-dialog::backdrop { background: #0008; }
+.public-chart-source-dialog header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.4rem; border-bottom: 1px solid #ddd; }
+.public-chart-source-dialog h2 { margin: 0; font-size: 1.15rem; }
+.public-chart-source-close { padding: .1rem .4rem; border: 0; background: none; color: inherit; font-size: 1.7rem; cursor: pointer; }
+.public-chart-source-dialog-body { padding: 0 1.4rem 1.2rem; font-size: .9rem; line-height: 1.5; }
+.public-chart-source-dialog-body h3 { margin: 1.2rem 0 .4rem; font-size: .95rem; }
+.public-chart-source-dialog-body p { margin: .5rem 0; }
+.public-chart-source-dialog-body ul { padding-left: 1.2rem; }
+.public-chart-source-dialog-body li { margin: .35rem 0; }
+.public-chart-source-dialog-body a { color: inherit; overflow-wrap: anywhere; }
+
+.public-chart-source-close { min-width: 44px; min-height: 44px; }
+.public-chart-source-details:focus-visible, .public-chart-source-close:focus-visible { outline: 3px solid #0d4459; outline-offset: 3px; }
+.public-chart-source-dialog header { position: sticky; top: 0; z-index: 1; background: white; }

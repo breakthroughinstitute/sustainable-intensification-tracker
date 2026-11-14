@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive tracker of U.S. agricultural output, resource use, and environmental pressures.">
+  <title>U.S. Sustainable Intensification Tracker</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230d4459'/%3E%3Cpath d='M14 43c14 0 25-8 36-25-1 22-11 32-28 32' fill='none' stroke='%230dc3a8' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M20 36c8 0 14-4 22-12' fill='none' stroke='%23f8f9f9' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manuale:ital,wght@0,400;0,600;1,400&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20261106-dairy-colors">
+  <link rel="stylesheet" href="chart-sources.css?v=20261106-dairy-colors">
+  <link rel="stylesheet" href="chart-downloads.css?v=20261106-dairy-colors">
+</head>
+<body>
+  <a class="skip-link" href="#tracker-panel">Skip to visualization</a>
+  <main class="tracker-shell">
+    <header class="tracker-header">
+      <div class="tracker-header-copy">
+        <h1 data-editable-key="header:title">Sustainable Intensification Tracker</h1>
+        <p class="standfirst" data-editable-key="header:standfirst">As agricultural productivity has grown, output has risen faster than environmental impacts and resource use.</p>
+      </div>
+      <div class="text-edit-tools" hidden>
+        <button type="button" id="edit-text-toggle" aria-pressed="false">Edit text</button>
+        <button type="button" id="save-text-edits" hidden>Save to project</button>
+        <button type="button" id="reset-text-edits" hidden>Discard unsaved edits</button>
+        <p id="text-edit-status" aria-live="polite" hidden>Click highlighted text to edit, then save your changes to the tracker project.</p>
+      </div>
+    </header>
+
+    <div class="explorer-toolbar">
+    <div class="explorer-actions"><button type="button" id="fullscreen-toggle" title="Full screen" aria-pressed="false"><span aria-hidden="true">⛶</span> <span class="fullscreen-label sr-only">Full screen</span></button><a id="open-tracker" title="Open in new tab" target="_blank" rel="noopener" href="./"><span class="sr-only">Open in new tab</span><span aria-hidden="true">↗</span></a><span id="display-status" class="sr-only" role="status"></span></div>
+    <nav class="topic-nav" role="tablist" aria-label="Choose a topic">
+      <button type="button" data-topic="overview" aria-selected="true">Overview</button>
+      <button type="button" data-topic="land">Land</button>
+      <button type="button" data-topic="nitrogen">Nitrogen</button>
+      <button type="button" data-topic="water">Water</button>
+      <button type="button" data-topic="herbicides">Herbicides</button>
+      <button type="button" data-topic="soil">Soil erosion</button>
+      <button type="button" data-topic="practices">Crop Drivers</button>
+      <button type="button" data-topic="livestock">Livestock Drivers</button>
+      <button type="button" data-topic="climate">Climate</button>
+      <button type="button" data-topic="rd">R&amp;D</button>
+      <button type="button" data-topic="products">By product</button>
+    </nav>
+
+    <div class="topic-picker">
+      <label for="topic-select"><span>Explore a topic</span></label>
+      <div class="select-shell">
+        <select id="topic-select" aria-label="Choose a topic">
+          <option value="overview">Overview</option>
+          <option value="land">Land</option>
+          <option value="nitrogen">Nitrogen</option>
+          <option value="water">Water</option>
+          <option value="herbicides">Herbicides</option>
+          <option value="soil">Soil erosion</option>
+          <option value="practices">Crop Drivers</option>
+          <option value="livestock">Livestock Drivers</option>
+          <option value="climate">Climate</option>
+          <option value="rd">R&amp;D</option>
+          <option value="products">By product</option>
+        </select>
+      </div>
+    </div>
+
+    </div>
+
+    <section id="tracker-panel" class="topic-panel" role="tabpanel" tabindex="-1"></section>
+    <span id="chart-position" class="sr-only" role="status"></span>
+  </main>
+  <div id="tooltip" class="tooltip" role="status" aria-hidden="true"></div>
+  <script src="chart-presentation.js?v=20261106-dairy-colors" defer></script>
+  <script src="chart-sources.js?v=20261113-source-mappings" defer></script>
+  <script src="chart-downloads.js?v=20261113-source-mappings" defer></script>
+  <script src="app.js?v=20261113-source-mappings" defer></script>
+</body>
+</html>

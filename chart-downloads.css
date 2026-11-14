@@ -1,0 +1,29 @@
+.chart-download-dialog { border: 0; border-radius: 10px; padding: 0; width: min(32rem, calc(100vw - 2rem)); max-height: calc(100vh - 2rem); color: #0d4459; box-shadow: 0 12px 45px #0004; }
+.chart-download-dialog::backdrop { background: #0d4459a8; }
+.chart-download-panel { padding: 1.5rem; display: flex; flex-direction: column; align-items: stretch; gap: .7rem; }
+.chart-download-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.chart-download-heading h2 { margin: 0; font-size: 1.35rem; }
+.chart-download-panel p { margin: 0; line-height: 1.45; }
+.chart-download-panel button, .chart-download-panel select { font: inherit; }
+.chart-download-panel button:not(.chart-download-close) { cursor: pointer; padding: .7rem 1rem; border: 1px solid #0d4459; border-radius: 4px; background: #0d4459; color: white; font-weight: 600; }
+.chart-download-panel button:disabled { opacity: .65; cursor: wait; }
+.chart-download-panel select { width: 100%; padding: .65rem; border: 1px solid color-mix(in srgb, #0d4459 40%, white); border-radius: 4px; background: white; color: #0d4459; }
+.chart-download-panel label { font-weight: 700; margin-top: .4rem; }
+.chart-download-close { border: 0; background: transparent; color: inherit; font-size: 1.7rem !important; line-height: 1; cursor: pointer; }
+.chart-download-panel :focus-visible { outline: 3px solid #0d4459; outline-offset: 3px; }
+.chart-download-hint, .chart-download-description, .chart-download-status { font-size: .9rem; }
+.chart-download-status:empty { display: none; }
+
+.chart-data-dialog { width: min(850px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); box-sizing: border-box; border: 1px solid color-mix(in srgb, #0d4459 40%, white); border-radius: 10px; padding: 20px; color: #0d4459; background: white; font-family: var(--sans); }
+.chart-data-dialog::backdrop { background: #0d445980; }
+.chart-data-dialog header { display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; }
+.chart-data-dialog h2 { margin: 0; font-size: 1.1rem; }
+.chart-data-dialog header button { flex: 0 0 44px; width: 44px; height: 44px; border: 1px solid color-mix(in srgb, #0d4459 40%, white); background: white; border-radius: 5px; font-size: 26px; color: inherit; cursor: pointer; }
+.chart-data-dialog p, .chart-data-dialog caption { font-size: .8rem; text-align: left; line-height: 1.5; }
+.chart-data-scroll { max-height: 55dvh; overflow: auto; border: 1px solid color-mix(in srgb, #0d4459 40%, white); }
+.chart-data-scroll table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+.chart-data-scroll caption { padding: 10px; }
+.chart-data-scroll th { position: sticky; top: 0; background: #0d4459; color: white; text-align: left; }
+.chart-data-scroll th, .chart-data-scroll td { padding: 9px; border-bottom: 1px solid color-mix(in srgb, #0d4459 15%, white); }
+.chart-data-download { min-height: 44px; margin-top: 12px; padding: 8px 12px; background: white; border: 1px solid color-mix(in srgb, #0d4459 40%, white); border-radius: 5px; color: inherit; font: inherit; cursor: pointer; }
+.chart-data-dialog :focus-visible { outline: 3px solid #0d4459; outline-offset: 2px; }

@@ -1,0 +1,265 @@
+crop,year,planted_1000_acres,harvested_1000_acres,reported_yield_per_acre,production,production_unit,harvested_hectares_per_metric_tonne,source,yield_unit
+Corn,1961,65919.0,57634.0,62.4,3597803.0,1000 bushels,0.255215,NASS Historical Track Records April 2026,bushels/acre
+Corn,1962,65017.0,55726.0,64.7,3606311.0,1000 bushels,0.246183,NASS Historical Track Records April 2026,bushels/acre
+Corn,1963,68771.0,59227.0,67.9,4019238.0,1000 bushels,0.234769,NASS Historical Track Records April 2026,bushels/acre
+Corn,1964,65823.0,55369.0,62.9,3484253.0,1000 bushels,0.253175,NASS Historical Track Records April 2026,bushels/acre
+Corn,1965,65171.0,55392.0,74.1,4102867.0,1000 bushels,0.215092,NASS Historical Track Records April 2026,bushels/acre
+Corn,1966,66347.0,57002.0,73.1,4167608.0,1000 bushels,0.217905,NASS Historical Track Records April 2026,bushels/acre
+Corn,1967,71156.0,60694.0,80.1,4860372.0,1000 bushels,0.198948,NASS Historical Track Records April 2026,bushels/acre
+Corn,1968,65126.0,55980.0,79.5,4449542.0,1000 bushels,0.200439,NASS Historical Track Records April 2026,bushels/acre
+Corn,1969,64264.0,54574.0,85.9,4687057.0,1000 bushels,0.185502,NASS Historical Track Records April 2026,bushels/acre
+Corn,1970,66863.0,57358.0,72.4,4152243.0,1000 bushels,0.220077,NASS Historical Track Records April 2026,bushels/acre
+Corn,1971,74179.0,64123.0,88.1,5646260.0,1000 bushels,0.180933,NASS Historical Track Records April 2026,bushels/acre
+Corn,1972,67126.0,57513.0,97.0,5579832.0,1000 bushels,0.164214,NASS Historical Track Records April 2026,bushels/acre
+Corn,1973,72253.0,62143.0,91.3,5670712.0,1000 bushels,0.17459,NASS Historical Track Records April 2026,bushels/acre
+Corn,1974,77935.0,65405.0,71.9,4701402.0,1000 bushels,0.22164,NASS Historical Track Records April 2026,bushels/acre
+Corn,1975,78719.0,67625.0,86.4,5840757.0,1000 bushels,0.18446,NASS Historical Track Records April 2026,bushels/acre
+Corn,1976,84588.0,71506.0,88.0,6289169.0,1000 bushels,0.18114,NASS Historical Track Records April 2026,bushels/acre
+Corn,1977,84328.0,71614.0,90.8,6505041.0,1000 bushels,0.175393,NASS Historical Track Records April 2026,bushels/acre
+Corn,1978,81675.0,71930.0,101.0,7267927.0,1000 bushels,0.157675,NASS Historical Track Records April 2026,bushels/acre
+Corn,1979,81394.0,72400.0,109.5,7928139.0,1000 bushels,0.145489,NASS Historical Track Records April 2026,bushels/acre
+Corn,1980,84043.0,72961.0,91.0,6639396.0,1000 bushels,0.175076,NASS Historical Track Records April 2026,bushels/acre
+Corn,1981,84097.0,74524.0,108.9,8118650.0,1000 bushels,0.146243,NASS Historical Track Records April 2026,bushels/acre
+Corn,1982,81857.0,72719.0,113.2,8235101.0,1000 bushels,0.140683,NASS Historical Track Records April 2026,bushels/acre
+Corn,1983,60207.0,51479.0,81.1,4174251.0,1000 bushels,0.196479,NASS Historical Track Records April 2026,bushels/acre
+Corn,1984,80517.0,71897.0,106.7,7672130.0,1000 bushels,0.1493,NASS Historical Track Records April 2026,bushels/acre
+Corn,1985,83398.0,75209.0,118.0,8875453.0,1000 bushels,0.135003,NASS Historical Track Records April 2026,bushels/acre
+Corn,1986,76580.0,68907.0,119.4,8225764.0,1000 bushels,0.13346,NASS Historical Track Records April 2026,bushels/acre
+Corn,1987,66200.0,59505.0,119.8,7131300.0,1000 bushels,0.132938,NASS Historical Track Records April 2026,bushels/acre
+Corn,1988,67717.0,58250.0,84.6,4928681.0,1000 bushels,0.188291,NASS Historical Track Records April 2026,bushels/acre
+Corn,1989,72322.0,64783.0,116.3,7531953.0,1000 bushels,0.137031,NASS Historical Track Records April 2026,bushels/acre
+Corn,1990,74166.0,66952.0,118.5,7934028.0,1000 bushels,0.134442,NASS Historical Track Records April 2026,bushels/acre
+Corn,1991,75957.0,68822.0,108.6,7474765.0,1000 bushels,0.146688,NASS Historical Track Records April 2026,bushels/acre
+Corn,1992,79311.0,72077.0,131.5,9476698.0,1000 bushels,0.121172,NASS Historical Track Records April 2026,bushels/acre
+Corn,1993,73239.0,62933.0,100.7,6337730.0,1000 bushels,0.158201,NASS Historical Track Records April 2026,bushels/acre
+Corn,1994,78921.0,72514.0,138.6,10050520.0,1000 bushels,0.114947,NASS Historical Track Records April 2026,bushels/acre
+Corn,1995,71479.0,65210.0,113.5,7400051.0,1000 bushels,0.140392,NASS Historical Track Records April 2026,bushels/acre
+Corn,1996,79229.0,72644.0,127.1,9232557.0,1000 bushels,0.125355,NASS Historical Track Records April 2026,bushels/acre
+Corn,1997,79537.0,72671.0,126.7,9206832.0,1000 bushels,0.125752,NASS Historical Track Records April 2026,bushels/acre
+Corn,1998,80165.0,72589.0,134.4,9758685.0,1000 bushels,0.118507,NASS Historical Track Records April 2026,bushels/acre
+Corn,1999,77386.0,70487.0,133.8,9430612.0,1000 bushels,0.119078,NASS Historical Track Records April 2026,bushels/acre
+Corn,2000,79551.0,72440.0,136.9,9915051.0,1000 bushels,0.116399,NASS Historical Track Records April 2026,bushels/acre
+Corn,2001,75702.0,68768.0,138.2,9502580.0,1000 bushels,0.115295,NASS Historical Track Records April 2026,bushels/acre
+Corn,2002,78894.0,69330.0,129.3,8966787.0,1000 bushels,0.123182,NASS Historical Track Records April 2026,bushels/acre
+Corn,2003,78603.0,70944.0,142.2,10087292.0,1000 bushels,0.112048,NASS Historical Track Records April 2026,bushels/acre
+Corn,2004,80929.0,73631.0,160.3,11805581.0,1000 bushels,0.099366,NASS Historical Track Records April 2026,bushels/acre
+Corn,2005,81779.0,75117.0,147.9,11112187.0,1000 bushels,0.107697,NASS Historical Track Records April 2026,bushels/acre
+Corn,2006,78327.0,70638.0,149.1,10531123.0,1000 bushels,0.106863,NASS Historical Track Records April 2026,bushels/acre
+Corn,2007,93527.0,86520.0,150.7,13037875.0,1000 bushels,0.105724,NASS Historical Track Records April 2026,bushels/acre
+Corn,2008,85982.0,78570.0,153.3,12043203.0,1000 bushels,0.103939,NASS Historical Track Records April 2026,bushels/acre
+Corn,2009,86382.0,79490.0,164.4,13067156.0,1000 bushels,0.096916,NASS Historical Track Records April 2026,bushels/acre
+Corn,2010,88192.0,81446.0,152.6,12425330.0,1000 bushels,0.10443,NASS Historical Track Records April 2026,bushels/acre
+Corn,2011,91936.0,83879.0,146.8,12313956.0,1000 bushels,0.108522,NASS Historical Track Records April 2026,bushels/acre
+Corn,2012,97291.0,87365.0,123.1,10755111.0,1000 bushels,0.129416,NASS Historical Track Records April 2026,bushels/acre
+Corn,2013,95365.0,87461.0,158.1,13830704.0,1000 bushels,0.100747,NASS Historical Track Records April 2026,bushels/acre
+Corn,2014,90597.0,83146.0,171.0,14217292.0,1000 bushels,0.093173,NASS Historical Track Records April 2026,bushels/acre
+Corn,2015,88019.0,80753.0,168.4,13601964.0,1000 bushels,0.094585,NASS Historical Track Records April 2026,bushels/acre
+Corn,2016,94004.0,86748.0,174.6,15148038.0,1000 bushels,0.091236,NASS Historical Track Records April 2026,bushels/acre
+Corn,2017,90167.0,82733.0,176.6,14609407.0,1000 bushels,0.090222,NASS Historical Track Records April 2026,bushels/acre
+Corn,2018,88821.0,81169.0,176.4,14321674.0,1000 bushels,0.090294,NASS Historical Track Records April 2026,bushels/acre
+Corn,2019,89370.0,80991.0,167.5,13568306.0,1000 bushels,0.095099,NASS Historical Track Records April 2026,bushels/acre
+Corn,2020,90432.0,82168.0,171.4,14086699.0,1000 bushels,0.09293,NASS Historical Track Records April 2026,bushels/acre
+Corn,2021,92901.0,84988.0,176.7,15017788.0,1000 bushels,0.09016,NASS Historical Track Records April 2026,bushels/acre
+Corn,2022,88162.0,78705.0,173.4,13650531.0,1000 bushels,0.091858,NASS Historical Track Records April 2026,bushels/acre
+Corn,2023,94641.0,86506.0,177.3,15340520.0,1000 bushels,0.08984,NASS Historical Track Records April 2026,bushels/acre
+Corn,2024,90909.0,83046.0,179.3,14891756.0,1000 bushels,0.088846,NASS Historical Track Records April 2026,bushels/acre
+Corn,2025,98713,90948,186.5,16963628,1000 bushels,0.085416,NASS Crop Production October 2026,bushels/acre
+Corn,2026,96777,,,,,,NASS Crop Production October 2026: planted area estimate,
+Cotton,1961,16588.0,15634.0,438.0,14318.0,1000 500-lb gross-weight bales,2.036939,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1962,16293.0,15569.0,457.0,14867.0,1000 500-lb gross-weight bales,1.952252,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1963,14843.0,14212.0,517.0,15334.0,1000 500-lb gross-weight bales,1.725685,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1964,14835.6,14054.6,517.0,15144.9,1000 500-lb gross-weight bales,1.725685,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1965,14152.3,13612.7,527.0,14937.9,1000 500-lb gross-weight bales,1.69294,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1966,10349.4,9552.6,480.0,9556.8,1000 500-lb gross-weight bales,1.858707,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1967,9449.6,7997.3,447.0,7443.4,1000 500-lb gross-weight bales,1.995926,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1968,10912.9,10159.3,516.0,10925.7,1000 500-lb gross-weight bales,1.729029,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1969,11882.5,11051.1,434.0,9990.2,1000 480-lb net-weight bales,2.055712,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1970,11945.2,11155.0,438.0,10192.1,1000 480-lb net-weight bales,2.036939,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1971,12354.9,11470.9,438.0,10477.0,1000 480-lb net-weight bales,2.036939,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1972,14001.3,12983.8,507.0,13704.1,1000 480-lb net-weight bales,1.759722,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1973,12479.7,11970.2,520.0,12974.0,1000 480-lb net-weight bales,1.715729,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1974,13679.4,12546.6,442.0,11540.1,1000 480-lb net-weight bales,2.018505,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1975,9477.6,8796.0,453.0,8301.6,1000 480-lb net-weight bales,1.96949,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1976,11635.5,10913.5,465.0,10580.6,1000 480-lb net-weight bales,1.918665,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1977,13679.5,13275.3,520.0,14389.2,1000 480-lb net-weight bales,1.715729,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1978,13375.1,12400.0,420.0,10855.8,1000 480-lb net-weight bales,2.124236,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1979,13977.5,12830.9,547.0,14629.3,1000 480-lb net-weight bales,1.63104,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1980,14533.8,13214.8,404.0,11122.1,1000 480-lb net-weight bales,2.208364,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1981,14330.1,13841.2,542.0,15645.7,1000 480-lb net-weight bales,1.646087,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1982,11345.4,9733.9,590.0,11962.7,1000 480-lb net-weight bales,1.512168,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1983,7926.3,7347.5,508.0,7771.4,1000 480-lb net-weight bales,1.756258,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1984,11145.4,10379.1,600.0,12981.8,1000 480-lb net-weight bales,1.486965,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1985,10684.6,10229.0,630.0,13432.2,1000 480-lb net-weight bales,1.416157,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1986,10044.6,8468.4,552.0,9731.1,1000 480-lb net-weight bales,1.616267,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1987,10397.2,10030.3,706.0,14759.9,1000 480-lb net-weight bales,1.26371,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1988,12514.8,11948.2,619.0,15411.5,1000 480-lb net-weight bales,1.441323,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1989,10586.6,9537.7,614.0,12195.6,1000 480-lb net-weight bales,1.45306,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1990,12348.1,11731.6,634.0,15505.4,1000 480-lb net-weight bales,1.407223,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1991,14052.1,12959.5,652.0,17614.3,1000 480-lb net-weight bales,1.368373,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1992,13240.0,11123.3,700.0,16218.5,1000 480-lb net-weight bales,1.274542,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1993,13438.3,12783.3,606.0,16133.6,1000 480-lb net-weight bales,1.472243,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1994,13720.1,13322.3,708.0,19662.0,1000 480-lb net-weight bales,1.26014,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1995,16931.4,16006.7,537.0,17899.8,1000 480-lb net-weight bales,1.661414,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1996,14652.5,12888.1,705.0,18942.0,1000 480-lb net-weight bales,1.265502,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1997,13898.0,13406.0,673.0,18793.0,1000 480-lb net-weight bales,1.325675,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1998,13392.5,10683.6,625.0,13918.2,1000 480-lb net-weight bales,1.427487,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,1999,14873.5,13424.9,607.0,16968.0,1000 480-lb net-weight bales,1.469817,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2000,15517.2,13053.0,632.0,17188.3,1000 480-lb net-weight bales,1.411676,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2001,15768.5,13827.7,705.0,20302.8,1000 480-lb net-weight bales,1.265502,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2002,13957.9,12416.6,665.0,17208.6,1000 480-lb net-weight bales,1.341623,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2003,13479.6,12003.4,730.0,18255.2,1000 480-lb net-weight bales,1.222163,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2004,13658.6,13057.0,855.0,23250.7,1000 480-lb net-weight bales,1.043484,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2005,14245.4,13802.6,831.0,23890.2,1000 480-lb net-weight bales,1.073621,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2006,15274.0,12731.5,814.0,21587.8,1000 480-lb net-weight bales,1.096043,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2007,10827.2,10489.1,879.0,19206.9,1000 480-lb net-weight bales,1.014993,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2008,9471.0,7568.7,813.0,12825.4,1000 480-lb net-weight bales,1.097391,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2009,9149.5,7533.7,776.0,12183.0,1000 480-lb net-weight bales,1.149715,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2010,10974.2,10698.7,812.0,18101.8,1000 480-lb net-weight bales,1.098743,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2011,14735.4,9460.9,790.0,15573.2,1000 480-lb net-weight bales,1.129341,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2012,12264.4,9321.8,892.0,17313.8,1000 480-lb net-weight bales,1.000201,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2013,10407.0,7539.4,822.0,12909.2,1000 480-lb net-weight bales,1.085376,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2014,11148.4,9351.8,838.0,16319.4,1000 480-lb net-weight bales,1.064653,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2015,8580.5,8074.9,766.0,12888.0,1000 480-lb net-weight bales,1.164725,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2016,10073.5,9507.8,867.0,17169.9,1000 480-lb net-weight bales,1.029042,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2017,12717.5,11100.4,905.0,20922.5,1000 480-lb net-weight bales,0.985833,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2018,14081.3,9976.8,884.0,18367.0,1000 480-lb net-weight bales,1.009252,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2019,13722.7,11489.4,832.0,19912.5,1000 480-lb net-weight bales,1.072331,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2020,12086.0,8210.5,854.0,14607.5,1000 480-lb net-weight bales,1.044706,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2021,11206.5,10263.2,820.0,17523.0,1000 480-lb net-weight bales,1.088023,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2022,13749.0,7289.6,953.0,14468.0,1000 480-lb net-weight bales,0.93618,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2023,10230.0,6438.5,900.0,12066.0,1000 480-lb net-weight bales,0.99131,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2024,11183.0,7805.2,886.0,14413.0,1000 480-lb net-weight bales,1.006974,NASS Historical Track Records April 2026,lb lint/acre
+Cotton,2025,9282.5,7827.3,852,13897.0,1000 480-lb net-weight bales,1.047159,NASS Crop Production October 2026,lb lint/acre
+Cotton,2026,10447,,,,,,NASS Crop Production October 2026: planted area estimate,
+Soy,1961,27787.0,27003.0,25.1,678554.0,1000 bushels,0.591737,NASS Historical Track Records April 2026,bushels/acre
+Soy,1962,28418.0,27608.0,24.2,669186.0,1000 bushels,0.613464,NASS Historical Track Records April 2026,bushels/acre
+Soy,1963,29462.0,28615.0,24.4,699165.0,1000 bushels,0.608576,NASS Historical Track Records April 2026,bushels/acre
+Soy,1964,31721.0,30793.0,22.8,700921.0,1000 bushels,0.653256,NASS Historical Track Records April 2026,bushels/acre
+Soy,1965,35227.0,34449.0,24.5,845608.0,1000 bushels,0.605771,NASS Historical Track Records April 2026,bushels/acre
+Soy,1966,37294.0,36546.0,25.4,928481.0,1000 bushels,0.585285,NASS Historical Track Records April 2026,bushels/acre
+Soy,1967,40819.0,39805.0,24.5,976439.0,1000 bushels,0.606168,NASS Historical Track Records April 2026,bushels/acre
+Soy,1968,42265.0,41391.0,26.7,1106958.0,1000 bushels,0.556001,NASS Historical Track Records April 2026,bushels/acre
+Soy,1969,42534.0,41337.0,27.4,1133120.0,1000 bushels,0.542455,NASS Historical Track Records April 2026,bushels/acre
+Soy,1970,43082.0,42249.0,26.7,1127100.0,1000 bushels,0.557384,NASS Historical Track Records April 2026,bushels/acre
+Soy,1971,43476.0,42705.0,27.5,1176101.0,1000 bushels,0.539927,NASS Historical Track Records April 2026,bushels/acre
+Soy,1972,46866.0,45683.0,27.8,1270608.0,1000 bushels,0.534618,NASS Historical Track Records April 2026,bushels/acre
+Soy,1973,56549.0,55667.0,27.8,1547543.0,1000 bushels,0.534879,NASS Historical Track Records April 2026,bushels/acre
+Soy,1974,52479.0,51341.0,23.7,1216287.0,1000 bushels,0.627667,NASS Historical Track Records April 2026,bushels/acre
+Soy,1975,54590.0,53617.0,28.9,1548344.0,1000 bushels,0.514915,NASS Historical Track Records April 2026,bushels/acre
+Soy,1976,50269.0,49401.0,26.1,1288608.0,1000 bushels,0.570054,NASS Historical Track Records April 2026,bushels/acre
+Soy,1977,58978.0,57830.0,30.6,1767267.0,1000 bushels,0.486577,NASS Historical Track Records April 2026,bushels/acre
+Soy,1978,64708.0,63663.0,29.4,1868754.0,1000 bushels,0.506566,NASS Historical Track Records April 2026,bushels/acre
+Soy,1979,71411.0,70343.0,32.1,2260665.0,1000 bushels,0.462685,NASS Historical Track Records April 2026,bushels/acre
+Soy,1980,69930.0,67813.0,26.5,1797543.0,1000 bushels,0.560963,NASS Historical Track Records April 2026,bushels/acre
+Soy,1981,67543.0,66163.0,30.1,1989110.0,1000 bushels,0.494604,NASS Historical Track Records April 2026,bushels/acre
+Soy,1982,70884.0,69442.0,31.5,2190297.0,1000 bushels,0.471433,NASS Historical Track Records April 2026,bushels/acre
+Soy,1983,63779.0,62525.0,26.2,1635772.0,1000 bushels,0.568371,NASS Historical Track Records April 2026,bushels/acre
+Soy,1984,67755.0,66113.0,28.1,1860863.0,1000 bushels,0.528291,NASS Historical Track Records April 2026,bushels/acre
+Soy,1985,63145.0,61599.0,34.1,2099056.0,1000 bushels,0.436366,NASS Historical Track Records April 2026,bushels/acre
+Soy,1986,60405.0,58312.0,33.3,1942558.0,1000 bushels,0.446359,NASS Historical Track Records April 2026,bushels/acre
+Soy,1987,58180.0,57172.0,33.9,1937722.0,1000 bushels,0.438725,NASS Historical Track Records April 2026,bushels/acre
+Soy,1988,58840.0,57373.0,27.0,1548841.0,1000 bushels,0.55081,NASS Historical Track Records April 2026,bushels/acre
+Soy,1989,60820.0,59538.0,32.3,1923666.0,1000 bushels,0.46022,NASS Historical Track Records April 2026,bushels/acre
+Soy,1990,57795.0,56512.0,34.1,1925947.0,1000 bushels,0.436312,NASS Historical Track Records April 2026,bushels/acre
+Soy,1991,59180.0,58011.0,34.2,1986539.0,1000 bushels,0.434224,NASS Historical Track Records April 2026,bushels/acre
+Soy,1992,59180.0,58233.0,37.6,2190354.0,1000 bushels,0.395326,NASS Historical Track Records April 2026,bushels/acre
+Soy,1993,60085.0,57307.0,32.6,1869718.0,1000 bushels,0.455756,NASS Historical Track Records April 2026,bushels/acre
+Soy,1994,61620.0,60809.0,41.4,2514869.0,1000 bushels,0.359545,NASS Historical Track Records April 2026,bushels/acre
+Soy,1995,62495.0,61544.0,35.3,2174254.0,1000 bushels,0.420897,NASS Historical Track Records April 2026,bushels/acre
+Soy,1996,64195.0,63349.0,37.6,2380274.0,1000 bushels,0.395743,NASS Historical Track Records April 2026,bushels/acre
+Soy,1997,70005.0,69110.0,38.9,2688750.0,1000 bushels,0.382201,NASS Historical Track Records April 2026,bushels/acre
+Soy,1998,72025.0,70441.0,38.9,2741014.0,1000 bushels,0.382133,NASS Historical Track Records April 2026,bushels/acre
+Soy,1999,73730.0,72446.0,36.6,2653758.0,1000 bushels,0.405933,NASS Historical Track Records April 2026,bushels/acre
+Soy,2000,74266.0,72408.0,38.1,2757810.0,1000 bushels,0.390412,NASS Historical Track Records April 2026,bushels/acre
+Soy,2001,74075.0,72975.0,39.6,2890682.0,1000 bushels,0.375383,NASS Historical Track Records April 2026,bushels/acre
+Soy,2002,73963.0,72497.0,38.0,2756147.0,1000 bushels,0.391128,NASS Historical Track Records April 2026,bushels/acre
+Soy,2003,73404.0,72476.0,33.9,2453845.0,1000 bushels,0.439185,NASS Historical Track Records April 2026,bushels/acre
+Soy,2004,75208.0,73958.0,42.2,3123790.0,1000 bushels,0.35205,NASS Historical Track Records April 2026,bushels/acre
+Soy,2005,72032.0,71251.0,43.1,3068342.0,1000 bushels,0.345293,NASS Historical Track Records April 2026,bushels/acre
+Soy,2006,75522.0,74602.0,42.9,3196726.0,1000 bushels,0.347013,NASS Historical Track Records April 2026,bushels/acre
+Soy,2007,64741.0,64146.0,41.7,2677117.0,1000 bushels,0.35629,NASS Historical Track Records April 2026,bushels/acre
+Soy,2008,75718.0,74681.0,39.7,2967007.0,1000 bushels,0.374276,NASS Historical Track Records April 2026,bushels/acre
+Soy,2009,77451.0,76372.0,44.0,3360931.0,1000 bushels,0.33789,NASS Historical Track Records April 2026,bushels/acre
+Soy,2010,77404.0,76610.0,43.5,3331306.0,1000 bushels,0.341957,NASS Historical Track Records April 2026,bushels/acre
+Soy,2011,75046.0,73776.0,42.0,3097179.0,1000 bushels,0.354201,NASS Historical Track Records April 2026,bushels/acre
+Soy,2012,77198.0,76144.0,40.0,3042044.0,1000 bushels,0.372195,NASS Historical Track Records April 2026,bushels/acre
+Soy,2013,76820.0,76233.0,44.0,3357004.0,1000 bushels,0.33767,NASS Historical Track Records April 2026,bushels/acre
+Soy,2014,83296.0,82611.0,47.5,3928070.0,1000 bushels,0.312723,NASS Historical Track Records April 2026,bushels/acre
+Soy,2015,82660.0,81742.0,48.0,3926779.0,1000 bushels,0.309535,NASS Historical Track Records April 2026,bushels/acre
+Soy,2016,83453.0,82706.0,51.9,4296496.0,1000 bushels,0.286235,NASS Historical Track Records April 2026,bushels/acre
+Soy,2017,90162.0,89542.0,49.3,4411633.0,1000 bushels,0.301806,NASS Historical Track Records April 2026,bushels/acre
+Soy,2018,89167.0,87594.0,50.6,4428150.0,1000 bushels,0.294139,NASS Historical Track Records April 2026,bushels/acre
+Soy,2019,76100.0,74918.0,47.4,3551070.0,1000 bushels,0.31371,NASS Historical Track Records April 2026,bushels/acre
+Soy,2020,83354.0,82603.0,51.0,4216302.0,1000 bushels,0.291316,NASS Historical Track Records April 2026,bushels/acre
+Soy,2021,87195.0,86292.0,51.7,4464492.0,1000 bushels,0.287408,NASS Historical Track Records April 2026,bushels/acre
+Soy,2022,87450.0,86174.0,49.6,4270381.0,1000 bushels,0.300062,NASS Historical Track Records April 2026,bushels/acre
+Soy,2023,83600.0,82271.0,50.6,4162057.0,1000 bushels,0.293927,NASS Historical Track Records April 2026,bushels/acre
+Soy,2024,87260.0,86208.0,50.7,4374228.0,1000 bushels,0.293054,NASS Historical Track Records April 2026,bushels/acre
+Soy,2025,81215,80417,53.0,4261038,1000 bushels,0.280629,NASS Crop Production October 2026,bushels/acre
+Soy,2026,86865,,,,,,NASS Crop Production October 2026: planted area estimate,
+Wheat,1961,55707.0,51571.0,23.9,1232359.0,1000 bushels,0.622256,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1962,49274.0,43688.0,25.0,1091958.0,1000 bushels,0.594918,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1963,53364.0,45506.0,25.2,1146821.0,1000 bushels,0.59003,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1964,55672.0,49762.0,25.8,1283371.0,1000 bushels,0.576563,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1965,57361.0,49560.0,26.5,1315603.0,1000 bushels,0.560154,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1966,54105.0,49613.0,26.3,1304889.0,1000 bushels,0.565357,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1967,67264.0,58353.0,25.8,1507598.0,1000 bushels,0.575544,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1968,61860.0,54765.0,28.4,1556635.0,1000 bushels,0.523139,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1969,53450.0,47146.0,30.6,1442679.0,1000 bushels,0.485933,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1970,48739.0,43564.0,31.0,1351558.0,1000 bushels,0.479285,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1971,53822.0,47685.0,33.9,1618636.0,1000 bushels,0.43806,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1972,54913.0,47303.0,32.7,1546209.0,1000 bushels,0.454906,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1973,59254.0,54148.0,31.6,1710787.0,1000 bushels,0.470638,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1974,71044.0,65368.0,27.3,1781918.0,1000 bushels,0.545479,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1975,74900.0,69499.0,30.6,2126927.0,1000 bushels,0.485877,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1976,80395.0,70927.0,30.3,2148780.0,1000 bushels,0.490818,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1977,75410.0,66686.0,30.7,2045527.0,1000 bushels,0.484764,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1978,65989.0,56495.0,31.4,1775524.0,1000 bushels,0.473134,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1979,71424.0,62454.0,34.2,2134060.0,1000 bushels,0.435165,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1980,80788.0,71125.0,33.5,2380934.0,1000 bushels,0.444197,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1981,88251.0,80642.0,34.5,2785357.0,1000 bushels,0.430508,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1982,86232.0,77937.0,35.5,2764967.0,1000 bushels,0.419136,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1983,76419.0,61390.0,39.4,2419824.0,1000 bushels,0.377237,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1984,79213.0,66928.0,38.8,2594777.0,1000 bushels,0.383538,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1985,75535.0,64704.0,37.5,2424115.0,1000 bushels,0.396898,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1986,71998.0,60688.0,34.4,2090570.0,1000 bushels,0.431657,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1987,65829.0,55945.0,37.7,2107685.0,1000 bushels,0.39469,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1988,65529.0,53189.0,34.1,1812201.0,1000 bushels,0.436432,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1989,76615.0,62189.0,32.7,2036618.0,1000 bushels,0.454051,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1990,77041.0,69103.0,39.5,2729778.0,1000 bushels,0.376418,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1991,69881.0,57803.0,34.3,1980139.0,1000 bushels,0.434066,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1992,72219.0,62761.0,39.3,2466798.0,1000 bushels,0.378318,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1993,72168.0,62712.0,38.2,2396440.0,1000 bushels,0.389121,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1994,70349.0,61770.0,37.6,2320981.0,1000 bushels,0.395737,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1995,69031.0,60955.0,35.8,2182708.0,1000 bushels,0.415255,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1996,75105.0,62819.0,36.3,2277388.0,1000 bushels,0.410161,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1997,70412.0,62840.0,39.5,2481466.0,1000 bushels,0.376555,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1998,65821.0,59002.0,43.2,2547321.0,1000 bushels,0.344416,NASS Historical Track Records April 2026,bushels/acre
+Wheat,1999,62664.0,53773.0,42.7,2295560.0,1000 bushels,0.348318,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2000,62549.0,53063.0,42.0,2228160.0,1000 bushels,0.354117,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2001,59432.0,48473.0,40.2,1947453.0,1000 bushels,0.370112,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2002,60318.0,45824.0,35.0,1605878.0,1000 bushels,0.424308,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2003,62141.0,53063.0,44.2,2344415.0,1000 bushels,0.336557,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2004,59644.0,49969.0,43.2,2156790.0,1000 bushels,0.344503,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2005,57214.0,50104.0,42.0,2103325.0,1000 bushels,0.354215,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2006,57334.0,46800.0,38.6,1808416.0,1000 bushels,0.384812,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2007,60460.0,50999.0,40.2,2051088.0,1000 bushels,0.369724,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2008,63617.0,56036.0,44.8,2511896.0,1000 bushels,0.331716,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2009,59017.0,49841.0,44.3,2208918.0,1000 bushels,0.335512,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2010,52620.0,46883.0,46.1,2163023.0,1000 bushels,0.322296,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2011,54277.0,45687.0,43.6,1993111.0,1000 bushels,0.340849,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2012,55294.0,48758.0,46.2,2252307.0,1000 bushels,0.321899,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2013,56236.0,45332.0,47.1,2134979.0,1000 bushels,0.315727,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2014,56841.0,46385.0,43.7,2026310.0,1000 bushels,0.340387,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2015,54999.0,47318.0,43.6,2061939.0,1000 bushels,0.341233,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2016,50116.0,43848.0,52.7,2308663.0,1000 bushels,0.282416,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2017,46052.0,37555.0,46.4,1740910.0,1000 bushels,0.320769,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2018,47820.0,39615.0,47.6,1885361.0,1000 bushels,0.31244,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2019,45485.0,37394.0,51.7,1932017.0,1000 bushels,0.287801,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2020,44450.0,36609.0,49.7,1819673.0,1000 bushels,0.299154,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2021,46740.0,37145.0,44.3,1646254.0,1000 bushels,0.335509,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2022,45769.0,35485.0,46.5,1649713.0,1000 bushels,0.319843,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2023,49575.0,37077.0,48.7,1803942.0,1000 bushels,0.305621,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2024,46274.0,38633.0,51.2,1978697.0,1000 bushels,0.290322,NASS Historical Track Records April 2026,bushels/acre
+Wheat,2025,45488,37345,53.3,1989176,1000 bushels,0.279164,NASS Crop Production October 2026,bushels/acre
+Wheat,2026,42521,,,,,,NASS Crop Production October 2026: planted area estimate,
