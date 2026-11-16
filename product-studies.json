@@ -735,5 +735,5 @@
       "comparison_note": "Derived as Field to Market soil loss (tons/crop acre) × its land-use indicator (planted acres/unit of crop output) × 2,000 lb/ton, using matched crop and reference year. This is an output-intensity index, not directly measured soil loss per harvested unit. Falling intensity can coexist with substantial erosion per acre. The 2020 erosion input is the report’s published smoothed trend estimate, using USDA erosion-model inputs through 2017."
     }
   ],
-  "export_created_at": "2026-11-14T18:34:03+00:00"
+  "export_created_at": "2026-11-16T20:58:23+00:00"
 }

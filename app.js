@@ -475,7 +475,7 @@ function biotechDecisionChart() {
         series: withCropBreakdown(BIOTECH.fdaMeetings.byCrop, BIOTECH.fdaMeetings.otherCrops), otherCrops: BIOTECH.fdaMeetings.otherCrops, recordRows: BIOTECH.fdaMeetings.records, recordKind: "meetings", recordUnit: "meeting records", recordPanel: "Premarket meeting records", recordAgency: "FDA", recordColumns: ["Meeting date", "Plant line / designation", "Trait", "Developer", "FDA file"],
         caption: "Voluntary meetings for certain gene-edited foods, not FDA food-safety evaluations or approvals. Partial 2026: meetings listed through July 9; publication may lag.",
         explanationTitle: "About premarket meetings", explanations: [{ title: "How do meetings differ from consultations?", body: "FDA offers these voluntary meetings for certain gene-edited foods. Developers share the steps they have taken to ensure safe, lawful food. A meeting does not represent FDA’s evaluation of a food-safety assessment, and does not replace a full consultation when food-safety questions warrant one. Counts do not confirm sales or cover every gene-edited variety." }],
-        source: '<a href="https://hfpappexternal.fda.gov/scripts/fdcc/index.cfm?set=GenomeEditedPlants&showAll=true" target="_blank" rel="noopener">Source: FDA, premarket meeting inventory</a>; <a href="https://www.fda.gov/food/programs-food-new-plant-varieties/premarket-meetings-food-genome-edited-plants" target="_blank" rel="noopener">FDA program description</a>.<p>One record per published VPM identifier: 12 entries across nine crops. VPM 0005-A and 0005-B describe separate rice entries with the same meeting date; both are counted, so the total is inventory records, not distinct meeting sessions. A record can cover multiple plant lines or edits. Dates are meeting dates. Retrieved October 9, 2026; inventory updated August 21, 2026; latest listed meeting July 9, 2026. Publication may lag. <a href="fda-premarket-meetings.csv" download>Download meeting records (CSV)</a>.</p>' }
+        source: '<a href="https://hfpappexternal.fda.gov/scripts/fdcc/index.cfm?set=GenomeEditedPlants&showAll=true" target="_blank" rel="noopener">Source: FDA, premarket meeting inventory</a>; <a href="https://www.fda.gov/food/programs-food-new-plant-varieties/premarket-meetings-food-genome-edited-plants" target="_blank" rel="noopener">FDA program description</a>.<p>One record per published VPM identifier: 12 entries across nine crops. VPM 0005-A and 0005-B describe separate rice entries with the same meeting date; both are counted, so the total is inventory records, not distinct meeting sessions. A record can cover multiple plant lines or edits. Dates are meeting dates. Retrieved October 9, 2026; inventory updated August 21, 2026; latest listed meeting July 9, 2026. Publication may lag. <a href="fda-premarket-meetings.csv" download>Download meeting records (CSV)</a></p>' }
 
 
     ]
@@ -489,7 +489,7 @@ function federalAgencyBudgetView() {
     title: "USDA R&D budget authority",
     subtitle: `Authority to commit federal research and facilities funds, ${Math.min(...series.flatMap(item => item.values.map(point => point.year)))}–${Math.max(...series.flatMap(item => item.values.map(point => point.year)))}`,
     yLabel: "Billion 2024 dollars", tooltipUnit: "billion 2024 dollars", currency: true, hideTooltipSource: true, drilldownOnly: true, type: "stacked", series,
-    totalLabel: "USDA budget total", showChangeYears: true, fullWidth: true,
+    totalLabel: "USDA budget total", showChangeYears: true, fullWidth: true, hideSourceLists: true,
     caption: `Budget authority for USDA R&D; amounts differ from obligations, outlays and expenditures. ${series.filter(item => item.name.includes("facilities")).flatMap(item => item.values.filter(point => point.value < 0).map(point => `The negative facilities value in ${point.year} cancels earlier authority.`)).join(" ")} 2025 is preliminary, mainly reflecting annualized continuing-resolution funding; reconciliation funding is excluded. BRDPI uses a preliminary 2024 index and projected 2025 index.`,
     source: `<a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab012.pdf" target="_blank" rel="noopener">NCSES, agricultural agency budgets (annual tables)</a>; <a href="https://ncses.nsf.gov/pubs/nsf26309/assets/data-tables/tables/nsf26309-tab011.pdf" target="_blank" rel="noopener">NCSES, Forest Service research (annual tables)</a>; <a href="https://files.eric.ed.gov/fulltext/ED458125.pdf" target="_blank" rel="noopener">NSF, 2000 agency budgets</a>; <a href="https://usda.azureedge.us/sites/default/files/documents/16ars2013notes.pdf" target="_blank" rel="noopener">USDA facility histories</a>; ${sourceLinks.brdpi}. <a href="rd-budget-authority.csv" download>Download budget authority in 2024 dollars</a>.`,
     decimals: 2
@@ -502,7 +502,7 @@ function performerExpenditureChart() {
     title: "Public agricultural R&D expenditures by performer",
     subtitle: "ERS history, 1970–2001; updated performer estimates, 2002–2024",
     type: "stacked", yLabel: "Billion 2024 dollars", tooltipUnit: "billion 2024 dollars", currency: true, decimals: 2,
-    hideTooltipSource: true, drilldownOnly: true, fullWidth: true, showChangeYears: true,
+    hideTooltipSource: true, drilldownOnly: true, fullWidth: true, showChangeYears: true, hideSourceLists: true,
     series: RD_UPDATED.performerUpdated, overviewLegendLabel: "All performers",
     caption: "ERS data cover 1970–2001. Estimates for 2002–2024 follow the ERS approach using REEIS institution funding and NCSES USDA outlays, with overlapping transfers deducted once. Private SBIR recipients are excluded. Nonagricultural Minnesota veterinary-school NIH funding is subtracted in 2006–2008. All amounts use 2024 dollars, adjusted with BRDPI.",
     source: sources
@@ -516,9 +516,9 @@ function agriculturalFundingChart() {
   const profileTotals = profileSeries.flatMap(series => series[0].values.map(point => series.reduce((sum, item) => sum + (item.values.find(value => value.year === point.year)?.value || 0), 0)));
   const fixedY = niceScale(Math.max(...profileTotals));
   const sourceYears = profileSeries.flatMap(series => series.flatMap(item => item.values.map(point => point.year)));
-  const common = { yMax: fixedY.max, yTicks: fixedY.ticks, xMin: Math.min(...sourceYears), xMax: Math.max(...sourceYears), type: "stacked", yLabel: "Billion 2024 dollars", tooltipUnit: "billion 2024 dollars", currency: true, decimals: 2, fullWidth: true, showChangeYears: true, hideTooltipSource: true, drilldownOnly: true,
+  const common = { yMax: fixedY.max, yTicks: fixedY.ticks, xMin: Math.min(...sourceYears), xMax: Math.max(...sourceYears), type: "stacked", yLabel: "Billion 2024 dollars", tooltipUnit: "billion 2024 dollars", currency: true, decimals: 2, fullWidth: true, showChangeYears: true, hideTooltipSource: true, drilldownOnly: true, hideSourceLists: true,
     caption: "USDA agencies and facilities use NCSES cash outlays. REEIS NIFA combines formula expenditure reports and nonformula grant obligations. REEIS state, nongovernment and other-federal values are reported project expenditures, which can include unliquidated obligations. Pre-2002 values use CRIS expenditure summaries. Nonagricultural Minnesota NIH funding is removed in 2006–2008. 2023–2024 industry and institution-generated amounts may be incomplete or regrouped; most other-federal support lacks agency detail. Values are in 2024 dollars using BRDPI.",
-    source: `<a href="https://www.nifa.usda.gov/data/reeis-research-education-and-economics-information-system" target="_blank" rel="noopener">REEIS State Snapshots</a>; <a href="https://ncses.nsf.gov/surveys/federal-funds-research-development" target="_blank" rel="noopener">NCSES agency outlays</a>; ${sourceLinks.herd}; ${sourceLinks.brdpi}.<p><a href="rd-funder-performer-reconciliation-2026-10-26.csv" download>Funder–performer reconciliation</a>; <a href="rd-funding-components.csv" download>Funding components and source provenance</a>; <a href="rd-funding-totals.csv" download>Totals by source option</a>; <a href="rd-funding-drilldowns.csv" download>Funding detail by program, agency and recipient</a>; <a href="rd-nonusda-source-comparison.csv" download>Other-federal recipient source comparison</a>; <a href="https://www.nifa.usda.gov/about-nifa/what-we-do/types-federal-assistance" target="_blank" rel="noopener">NIFA grant types</a>.</p><p>Scope: includes support reported for SBIR grant-recipient institutions; the performer chart excludes these institutions. The reconciliation CSV reports the remaining differences.</p>` };
+    source: `<a href="https://www.nifa.usda.gov/data/reeis-research-education-and-economics-information-system" target="_blank" rel="noopener">REEIS State Snapshots</a>; <a href="https://ncses.nsf.gov/surveys/federal-funds-research-development" target="_blank" rel="noopener">NCSES agency outlays</a>; ${sourceLinks.herd}; ${sourceLinks.brdpi}.<p><a href="rd-funder-performer-reconciliation-2026-10-26.csv" download>Funder–performer reconciliation</a>; <a href="rd-funding-components.csv" download>Funding components and source provenance</a>; <a href="rd-funding-totals.csv" download>Totals by source option</a>; <a href="rd-funding-drilldowns.csv" download>Funding detail by program, agency and recipient</a>; <a href="rd-nonusda-source-comparison.csv" download>Other-federal recipient source comparison</a>; <a href="https://www.nifa.usda.gov/about-nifa/what-we-do/types-federal-assistance" target="_blank" rel="noopener">NIFA grant types</a>.</p><p>Scope: includes support reported for SBIR grant-recipient institutions; the performer chart excludes these institutions.</p>` };
   const sourceViews = [
     { ...common, source: common.source.replace(`${sourceLinks.herd}; `, ""), id: "funding-reeis", label: "NIFA REEIS", subtitle: "Federal, state and nongovernment spending and support, with historical CRIS reports", series: RD_UPDATED.fundingProfiles.reeis_preferred },
     { ...common, id: "funding-ncses-herd", label: "NSF NCSES", subtitle: "NIFA outlays and other federal university expenditures from NSF NCSES; state and nongovernment support from REEIS", series: RD_UPDATED.fundingProfiles.ncses_herd_alternative }
@@ -680,12 +680,14 @@ function livestockCharts() {
   charts.forEach(chart => {
     chart.solidLines = true; chart.publicMethods = methods[chart.title]; chart.fullWidth = true; chart.hideLegendValues = true; chart.hideLabelYears = true; chart.latestYearLabel = false;
     if (['Broiler productivity', 'Pig productivity', 'Livestock operation size'].includes(chart.title)) chart.sourceDetails = false;
+    if (['Broiler productivity', 'Pig productivity'].includes(chart.title)) chart.hideSourceDetails = true;
     if (['Pig productivity', 'Livestock operation size'].includes(chart.title)) chart.useSourceLabels = true;
     chart.views?.forEach(view => {
       view.solidLines = true; view.publicMethods = methods[chart.title] + (view.id === 'dairy-sales' ? ' Milk-sales shares count all sales from farms reporting any use of a practice.' : ''); view.hideLegendValues = true; view.hideLabelYears = true; view.latestYearLabel = false;
       if (view.id === 'dairy-sales' || view.id === 'dairy-farms') {
-        view.sourceDetails = false;
+        view.sourceDetails = false; view.hideSourceDetails = true;
       }
+      if (chart.title === 'Environmental efficiency of livestock production') view.hideSourceDetails = true;
     });
   });
   return charts;
@@ -745,7 +747,7 @@ const TOPICS = {
     charts: [
       {
         title: "Land-use intensity",
-        xTicks: [1970, 1980, 1990, 2000, 2010, 2020], useSourceLabels: true, sourceDetails: false,
+        xTicks: [1970, 1980, 1990, 2000, 2010, 2020], useSourceLabels: true, sourceDetails: false, hideSourceDetails: true,
         preferDirectLabels: true,
         subtitle: "",
         yLabel: "Harvested hectares per metric ton",
@@ -757,7 +759,7 @@ const TOPICS = {
       },
       {
         title: "Planted area",
-        xTicks: [1970, 1980, 1990, 2000, 2010, 2020], useSourceLabels: true, sourceDetails: false,
+        xTicks: [1970, 1980, 1990, 2000, 2010, 2020], useSourceLabels: true, sourceDetails: false, hideSourceDetails: true,
         preferDirectLabels: true,
         subtitle: "",
         yLabel: "Million acres",
@@ -1046,7 +1048,7 @@ const TOPICS = {
         {
           title: "Public agricultural R&D intensity",
           fullWidth: true,
-          hideTooltipSource: true, drilldownOnly: true,
+          hideTooltipSource: true, drilldownOnly: true, hideSourceDetails: true,
           subtitle: "Public agricultural and food R&D spending as a share of gross farm value added, 1970–2024",
           yLabel: "% of gross farm value added",
           tooltipUnit: "%",
@@ -1619,7 +1621,10 @@ function renderChartOptions(container, fullChart, displayedChart, fullDataChart,
   }
   toolbar.append(breadcrumb);
   const options = document.createElement("details"); options.className = "chart-options";
-  options.innerHTML = `<summary aria-label="Chart options" title="Chart options"><span class="chart-options-label">Chart options</span><span aria-hidden="true">⋯</span></summary><div class="chart-options-panel">${breakdowns.length ? `<label>View breakdown<select aria-label="View breakdown"><option value="">Overview</option>${breakdowns.map(series => `<option value="${escapeHTML(series.name)}">${escapeHTML(series.name)}</option>`).join("")}</select></label>` : ""}${parent?.breakdownVariants?.length > 1 ? `<label>Detail level<select aria-label="Breakdown detail level">${parent.breakdownVariants.map(variant => `<option value="${escapeHTML(variant.id)}">${escapeHTML(variant.label)}</option>`).join("")}</select></label>` : ""}${presentation.modes.length > 1 ? `<label>Display<select aria-label="Chart display">${presentation.modes.map(mode => `<option value="${mode.id}">${mode.label}</option>`).join("")}</select></label>${["relative","points"].includes(presentation.state.mode) ? `<label>Baseline year<select aria-label="Baseline year">${presentation.baselineYears.slice(0,-1).map(year => `<option value="${year}">${year}</option>`).join("")}</select></label>` : ""}` : ""}<button type="button" data-chart-action="table">View data table</button><div class="chart-options-divider"></div><button type="button" data-chart-action="png">Download PNG image</button><button type="button" data-chart-action="csv-current">Download CSV · current selection</button><button type="button" data-chart-action="csv-all">Download CSV · all series in this view</button><p class="chart-download-inline-status" role="status" aria-live="polite"></p></div>`;
+  const csvOptions = displayedChart.type === 'stacked' && displayedChart.visibility
+    ? '<button type="button" data-chart-action="csv-current">Download CSV · current selection</button><button type="button" data-chart-action="csv-all">Download CSV · all series in this view</button>'
+    : '<button type="button" data-chart-action="csv-all">Download CSV</button>';
+  options.innerHTML = `<summary aria-label="Chart options" title="Chart options"><span class="chart-options-label">Chart options</span><span aria-hidden="true">⋯</span></summary><div class="chart-options-panel">${breakdowns.length ? `<label>View breakdown<select aria-label="View breakdown"><option value="">Overview</option>${breakdowns.map(series => `<option value="${escapeHTML(series.name)}">${escapeHTML(series.name)}</option>`).join("")}</select></label>` : ""}${parent?.breakdownVariants?.length > 1 ? `<label>Detail level<select aria-label="Breakdown detail level">${parent.breakdownVariants.map(variant => `<option value="${escapeHTML(variant.id)}">${escapeHTML(variant.label)}</option>`).join("")}</select></label>` : ""}${presentation.modes.length > 1 ? `<label>Display<select aria-label="Chart display">${presentation.modes.map(mode => `<option value="${mode.id}">${mode.label}</option>`).join("")}</select></label>${["relative","points"].includes(presentation.state.mode) ? `<label>Baseline year<select aria-label="Baseline year">${presentation.baselineYears.slice(0,-1).map(year => `<option value="${year}">${year}</option>`).join("")}</select></label>` : ""}` : ""}<button type="button" data-chart-action="table">View data table</button><div class="chart-options-divider"></div><button type="button" data-chart-action="png">Download PNG image</button>${csvOptions}<p class="chart-download-inline-status" role="status" aria-live="polite"></p></div>`;
   toolbar.append(options);
   let subtitleRow = content.querySelector(".chart-subtitle-row");
   if (!subtitleRow) { subtitleRow = document.createElement("div"); subtitleRow.className = "chart-subtitle-row"; const subtitle = content.querySelector(".chart-subtitle"); subtitle.before(subtitleRow); subtitleRow.append(subtitle); }

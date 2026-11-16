@@ -45,7 +45,7 @@ function renderPublicChartSource(container, chart) {
     return true;
   });
   if (chart.sourceSuffix) footer.append(document.createTextNode(chart.sourceSuffix));
-  if ((chart.sourceDetails !== false && additionalNotes.length) || unique.length > named.size || downloads.length) {
+  if (!chart.hideSourceDetails && ((chart.sourceDetails !== false && additionalNotes.length) || unique.length > named.size || downloads.length)) {
     if (unique.length) footer.append(document.createTextNode(' · '));
     const button = document.createElement('button');
     button.type = 'button'; button.className = 'public-chart-source-details'; button.textContent = additionalNotes.length && chart.sourceDetails !== false ? 'See details' : downloads.length ? 'Data downloads' : 'All sources';
@@ -102,7 +102,7 @@ function openPublicChartSourceDetails(trigger, chart, references, notes, downloa
   close.addEventListener('click', () => dialog.close());
   header.append(heading, close); dialog.append(header);
   const body = document.createElement('div'); body.className = 'public-chart-source-dialog-body';
-  const notesHeading = document.createElement('h3'); notesHeading.textContent = 'Methods and coverage'; if (notes.length) body.append(notesHeading);
+  const notesHeading = document.createElement('h3'); notesHeading.textContent = 'Methods and coverage'; if (notes.length && !chart.hideSourceLists) body.append(notesHeading);
   const distinct = [];
   [...new Set(notes)].forEach(note => {
     const tokens = value => new Set(value.toLowerCase().match(/[a-z0-9]+/g) || []);
@@ -111,12 +111,12 @@ function openPublicChartSourceDetails(trigger, chart, references, notes, downloa
     if(match<0)distinct.push(note); else if(note.length>distinct[match].length)distinct[match]=note;
   });
   distinct.forEach(note => { const p = document.createElement('p'); p.textContent = note; body.append(p); });
-  if (references.length > 1) {
+  if (!chart.hideSourceLists && references.length > 1) {
   const sourceHeading = document.createElement('h3'); sourceHeading.textContent = 'Original sources'; body.append(sourceHeading);
   const list = document.createElement('ul');
   references.forEach(reference => { const item = document.createElement('li'); item.append(publicSourceLink(reference.url, reference.label)); list.append(item); });
   body.append(list); }
-  if (downloads.length) {
+  if (!chart.hideSourceLists && downloads.length) {
     const title = document.createElement('h3'); title.textContent = 'Data downloads'; body.append(title);
     const list = document.createElement('ul');
     downloads.forEach(file => { const item = document.createElement('li'); const link = document.createElement('a'); link.href = file.url; link.download = ''; link.textContent = file.label; item.append(link); list.append(item); });
